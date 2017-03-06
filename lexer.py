@@ -113,18 +113,3 @@ t_ignore = " \t"
 
 
 lexer = lex()
-
-
-if __name__ == '__main__':
-    test_data = '''/
-    hello = "hello_world"
-    print(hello)
-    '''
-    lexer.input(test_data)
-
-
-    try:
-        for token in lexer:
-            print(token.value, token.type)
-    except LexError:
-        pass
