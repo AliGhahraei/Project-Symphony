@@ -55,6 +55,10 @@ def t_newline(t):
     t.lexer.lineno += len(t.value)
 
 
+def t_eof(t):
+    return None
+
+
 def t_error(t):
     print("The system found a problem with how you wrote your program, so "
           + "please find the character sequence '" + t.value[0] + "' on line "
