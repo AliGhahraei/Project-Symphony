@@ -14,8 +14,23 @@ class LexerTest(TestCase):
         self.assertEqual(actual_output, ''.join(expected_output.split()))
 
 
-    def test_int_right(self):
-        self.assertLexerIO('12', '''12 INT''')
+    def test_types_right(self):
+        self.assertLexerIO(
+            '''
+            12 4.75 .9 'a' "hello" true false void , ; ( ) { } [ ] = + - * / ** 
+            ++ -- % equals > < >= <= and or not fun while if else elseif hello
+            ''',
+            
+            '''
+            12 INT 4.75 DEC 0.9 DEC a CHAR hello STR true BOOL false BOOL 
+            void VOID , COMMA ; SEMICOLON ( LEFT_PARENTHESIS ) RIGHT_PARENTHESIS
+            { LEFT_BRACKET } RIGHT_BRACKET [ LEFT_SQUARE_BRACKET 
+            ] RIGHT_SQUARE_BRACKET = ASSIGNMENT + PLUS - MINUS * MULTIPLICATION 
+            / DIVISION ** EXPONENTIATION ++ INCREMENT -- DECREMENT % MODULUS
+            equals EQUALS > GREATER_THAN < LESS_THAN >= GREATER_EQUAL_THAN
+            <= LESS_EQUAL_THAN and AND or OR not NOT fun FUN while WHILE if IF
+            else ELSE elseif ELSEIF hello ID
+            ''')
 
 
 if __name__ == '__main__':
