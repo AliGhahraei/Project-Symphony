@@ -1,4 +1,5 @@
-from ply.lex import lex
+from ply.lex import lex, LexError
+
 
 
 tokens = (
@@ -58,7 +59,6 @@ def t_error(t):
     print("The system found a problem with how you wrote your program, so "
           + "please find the character sequence '" + t.value[0] + "' on line "
           + str(t.lexer.lineno) + " and correct it.")
-    t.lexer.skip(1)
 
 """
 def t_SINGLE_LINE_COMMENT(t):
@@ -87,6 +87,10 @@ if __name__ == '__main__':
     print(hello)
     '''
     lexer.input(test_data)
-    
-    for token in lexer:
-        print(token.value, token.type)
+
+
+    try:
+        for token in lexer:
+            print(token.value, token.type)
+    except LexError:
+        pass
