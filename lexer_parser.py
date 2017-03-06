@@ -66,27 +66,13 @@ def t_SINGLE_LINE_COMMENT(t):
 def t_MULTI_LINE_COMMENT(t):
 """ 
 
-t_GREATER_THAN = r'>'
-t_LESS_THAN = r'<'
+literals = ['>', '<', ',', ';', '(', ')', '{', '}', '[', ']', '=', '+', '-', 
+            '*', '/', '%']
 t_GREATER_EQUAL_THAN = r'>='
 t_LESS_EQUAL_THAN = r'<='
-t_COMMA = r','
-t_SEMICOLON = r';'
-t_LEFT_PARENTHESIS = r'\('
-t_RIGHT_PARENTHESIS = r'\)'
-t_LEFT_BRACKET = r'\{'
-t_RIGHT_BRACKET = r'\}'
-t_LEFT_SQUARE_BRACKET = r'\['
-t_RIGHT_SQUARE_BRACKET = r'\]'
-t_ASSIGNMENT = r'='
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_MULTIPLICATION = r'\*'
-t_DIVISION = r'/'
 t_EXPONENTIATION = r'\*\*'
 t_INCREMENT = r'\+\+'
 t_DECREMENT = r'--'
-t_MODULUS = r'%'
 
 t_ignore_SINGLE_LINE_COMMENT = r'//.*'
 t_ignore = " \t"
