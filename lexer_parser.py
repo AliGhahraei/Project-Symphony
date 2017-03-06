@@ -93,8 +93,10 @@ t_MODULUS = r'%'
 t_ignore = " \t"
 
 
+lexer = lex()
+
+
 if __name__ == '__main__':
-    lexer = lex()
     test_data = '''
     hello = "hello_world"
     print(hello)
