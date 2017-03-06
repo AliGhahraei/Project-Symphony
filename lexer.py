@@ -9,11 +9,12 @@ tokens = (
     'DECREMENT', 'MODULUS', 'EQUALS', 'GREATER_THAN', 'LESS_THAN',
     'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR', 'NOT', 'FUN', 'WHILE',
     'IF', 'ELSE', 'ELSEIF', 'SINGLE_LINE_COMMENT', 'ID', 'IDS_AND_KEYWORDS',
+    'PROGRAM',
 )
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
-                          'if', 'else', 'elseif']
+                           'if', 'else', 'elseif', 'program']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
 keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
