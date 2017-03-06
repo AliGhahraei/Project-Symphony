@@ -116,7 +116,7 @@ lexer = lex()
 
 
 if __name__ == '__main__':
-    test_data = '''
+    test_data = '''/
     hello = "hello_world"
     print(hello)
     '''
