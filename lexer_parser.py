@@ -21,11 +21,9 @@ keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
 
 def t_IDS_AND_KEYWORDS(t):
     r'[a-zA-Z_][0-9a-zA-Z_]*'
-    if t.value in keywords_to_types:
-        t.type = keywords_to_types[t.value]
-    else:
-        t.type = 'ID'
+    t.type = keywords_to_types.get(t.value, 'ID')
     return t
+
 
 def t_DEC(t):
     r'[+-]?[0-9]*\.[0-9]+'
@@ -57,7 +55,7 @@ def t_newline(t):
 
 
 def t_error(t):
-    print("The system found a problem with how you typed your program, so "
+    print("The system found a problem with how you wrote your program, so "
           + "please find the character sequence '" + t.value[0] + "' on line "
           + str(t.lexer.lineno) + " and correct it.")
     t.lexer.skip(1)
