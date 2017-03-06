@@ -20,6 +20,32 @@ keywords_to_types = {keyword: keyword.upper()
 keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
 
 
+states = (
+    ('MULTILINECOMMENT', 'exclusive'),
+)
+
+t_MULTILINECOMMENT_ignore = ' \t\n'
+
+
+def t_MULTILINECOMMENT(t):
+    r'/\*'
+    t.lexer.begin('MULTILINECOMMENT')
+
+
+def t_MULTILINECOMMENT_close(t):
+    r'\*/'
+    t.lexer.begin('INITIAL')
+
+
+def t_MULTILINECOMMENT_text(t):
+    r'[^(\*/)]'
+    pass
+
+
+def t_MULTILINECOMMENT_error(t):
+    t_error(t)
+
+
 def t_IDS_AND_KEYWORDS(t):
     r'[a-zA-Z_][0-9a-zA-Z_]*'
     t.type = keywords_to_types.get(t.value, 'ID')

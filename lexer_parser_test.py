@@ -17,6 +17,10 @@ class LexerTest(TestCase):
     def test_types_right(self):
         self.assertLexerIO(
             '''
+            /*
+            Multiline comments are ignored...
+            ... All of them
+            */
             12 4.75 .9 'a' "hello" true false void , ; ( ) { } [ ] = + - * / ** 
             ++ -- % equals > < >= <= and or not fun while if else elseif hello
             // This is a comment, so it should be ignored
