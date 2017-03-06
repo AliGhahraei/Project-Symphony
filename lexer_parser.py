@@ -2,7 +2,7 @@ from ply.lex import lex
 
 
 tokens = (
-    'INT', 'DEC', 'CHAR', 'STR', 'BOOLEAN', 'VOID', 'COMMA', 'SEMICOLON',
+    'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'COMMA', 'SEMICOLON',
     'LEFT_PARENTHESIS', 'RIGHT_PARENTHESIS', 'LEFT_BRACKET', 'RIGHT_BRACKET',
     'LEFT_SQUARE_BRACKET', 'RIGHT_SQUARE_BRACKET', 'ASSIGNMENT', 'PLUS',
     'MINUS', 'MULTIPLICATION', 'DIVISION', 'EXPONENTIATION', 'INCREMENT',
@@ -16,7 +16,7 @@ keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
                           'if', 'else', 'elseif']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
-keywords_to_types.update({keyword: 'BOOLEAN' for keyword in ['true', 'false']})
+keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
 
 
 def t_IDS_AND_KEYWORDS(t):
