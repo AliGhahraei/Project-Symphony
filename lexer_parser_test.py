@@ -25,6 +25,7 @@ class LexerTest(TestCase):
             ++ -- % equals > < >= <= and or not fun while if else elseif hello
             // This is a comment, so it should be ignored
             "my string"
+            program
             ''',
             
             '''
@@ -33,7 +34,7 @@ class LexerTest(TestCase):
             ** EXPONENTIATION ++ INCREMENT -- DECREMENT % % equals EQUALS > > 
             < < >= GREATER_EQUAL_THAN <= LESS_EQUAL_THAN and AND or OR not NOT
             fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID 
-            my string STR
+            my string STR program PROGRAM
             ''')
 
 
