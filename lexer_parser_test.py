@@ -1,4 +1,4 @@
-from lexer_parser import lexer
+from lexer import lexer
 from unittest import TestCase, main
 
 
