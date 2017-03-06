@@ -9,7 +9,7 @@ class LexerTest(TestCase):
 
     def assertLexerIO(self, lexer_input, expected_output):
         lexer.input(lexer_input)
-        actual_output = ''.join([str(token.value) + token.type
+        actual_output = ''.join([''.join(str(token.value).split()) + token.type
                                  for token in lexer])
         self.assertEqual(actual_output, ''.join(expected_output.split()))
 
@@ -20,6 +20,7 @@ class LexerTest(TestCase):
             12 4.75 .9 'a' "hello" true false void , ; ( ) { } [ ] = + - * / ** 
             ++ -- % equals > < >= <= and or not fun while if else elseif hello
             // This is a comment, so it should be ignored
+            "my string"
             ''',
             
             '''
@@ -31,6 +32,7 @@ class LexerTest(TestCase):
             equals EQUALS > GREATER_THAN < LESS_THAN >= GREATER_EQUAL_THAN
             <= LESS_EQUAL_THAN and AND or OR not NOT fun FUN while WHILE if IF
             else ELSE elseif ELSEIF hello ID
+            my string STR
             ''')
 
 
