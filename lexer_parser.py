@@ -88,6 +88,7 @@ t_INCREMENT = r'\+\+'
 t_DECREMENT = r'--'
 t_MODULUS = r'%'
 
+t_ignore_SINGLE_LINE_COMMENT = r'//.*'
 t_ignore = " \t"
 
 
