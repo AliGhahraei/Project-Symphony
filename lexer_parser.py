@@ -1,7 +1,6 @@
 from ply.lex import lex, LexError
 
 
-
 tokens = (
     'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'COMMA', 'SEMICOLON',
     'LEFT_PARENTHESIS', 'RIGHT_PARENTHESIS', 'LEFT_BRACKET', 'RIGHT_BRACKET',
