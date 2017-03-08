@@ -1,1 +1,161 @@
 Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMA
+    SEMICOLON
+    LEFT_PARENTHESIS
+    RIGHT_PARENTHESIS
+    LEFT_BRACKET
+    RIGHT_BRACKET
+    LEFT_SQUARE_BRACKET
+    RIGHT_SQUARE_BRACKET
+    ASSIGNMENT
+    PLUS
+    MINUS
+    MULTIPLICATION
+    DIVISION
+    EXPONENTIATION
+    INCREMENT
+    DECREMENT
+    MODULUS
+    EQUALS
+    GREATER_THAN
+    LESS_THAN
+    GREATER_EQUAL_THAN
+    LESS_EQUAL_THAN
+    AND
+    OR
+    NOT
+    WHILE
+    IF
+    ELSE
+    ELSEIF
+    SINGLE_LINE_COMMENT
+    IDS_AND_KEYWORDS
+
+Grammar
+
+Rule 0     S' -> empty
+Rule 1     empty -> <empty>
+Rule 2     program -> PROGRAM ID ; variable_declaration function_declaration block
+Rule 3     variable_declaration -> variables other_variable_declarations
+Rule 4     other_variable_declarations -> variable_declaration
+Rule 5     other_variable_declarations -> empty
+Rule 6     variables -> type ids ;
+Rule 7     ids -> id other_ids
+Rule 8     other_ids -> , ids
+Rule 9     other_ids -> empty
+Rule 10    id -> ID
+Rule 11    id -> ID [ expression ]
+Rule 12    expression -> grouping
+Rule 13    expression -> const
+Rule 14    expression -> call
+Rule 15    function_declaration -> function other_function_declarations
+Rule 16    other_function_declarations -> function_declaration
+Rule 17    other_function_declarations -> empty
+Rule 18    function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ;
+Rule 19    return_type -> type
+Rule 20    return_type -> VOID
+Rule 21    type -> INT
+Rule 22    type -> DEC
+Rule 23    type -> CHAR
+Rule 24    type -> STR
+Rule 25    type -> BOOL
+Rule 26    statutes -> call
+Rule 27    statutes -> assignment
+Rule 28    statutes -> condition
+Rule 29    statutes -> cycle
+Rule 30    statutes -> special
+Rule 31    call -> ID ( expressions )
+Rule 32    parameters -> TYPE ID other_parameters
+Rule 33    other_parameter -> , parameters
+Rule 34    other_parameter -> empty
+Rule 35    const -> id
+Rule 36    const -> INT
+Rule 37    const -> DEC
+Rule 38    block -> { statutes }
+
+Terminals, with rules where they appear
+
+(                    : 18 31
+)                    : 18 31
+,                    : 8 33
+;                    : 2 6 18
+AND                  : 
+ASSIGNMENT           : 
+BOOL                 : 25
+CHAR                 : 23
+COMMA                : 
+DEC                  : 22 37
+DECREMENT            : 
+DIVISION             : 
+ELSE                 : 
+ELSEIF               : 
+EQUALS               : 
+EXPONENTIATION       : 
+FUN                  : 18
+GREATER_EQUAL_THAN   : 
+GREATER_THAN         : 
+ID                   : 2 10 11 18 31 32
+IDS_AND_KEYWORDS     : 
+IF                   : 
+INCREMENT            : 
+INT                  : 21 36
+LEFT_BRACKET         : 
+LEFT_PARENTHESIS     : 
+LEFT_SQUARE_BRACKET  : 
+LESS_EQUAL_THAN      : 
+LESS_THAN            : 
+MINUS                : 
+MODULUS              : 
+MULTIPLICATION       : 
+NOT                  : 
+OR                   : 
+PLUS                 : 
+PROGRAM              : 2
+RIGHT_BRACKET        : 
+RIGHT_PARENTHESIS    : 
+RIGHT_SQUARE_BRACKET : 
+SEMICOLON            : 
+SINGLE_LINE_COMMENT  : 
+STR                  : 24
+VOID                 : 20
+WHILE                : 
+[                    : 11
+]                    : 11
+error                : 
+{                    : 18 38
+}                    : 18 38
+
+Nonterminals, with rules where they appear
+
+TYPE                 : 32
+assignment           : 27
+block                : 2
+call                 : 14 26
+condition            : 28
+const                : 13
+cycle                : 29
+empty                : 5 9 17 34 0
+expression           : 11
+expressions          : 31
+function             : 15
+function_declaration : 2 16
+grouping             : 12
+id                   : 7 35
+ids                  : 6 8
+other_function_declarations : 15
+other_ids            : 7
+other_parameter      : 
+other_parameters     : 32
+other_variable_declarations : 3
+parameters           : 18 33
+program              : 
+return_type          : 18
+special              : 30
+statutes             : 18 38
+type                 : 6 19
+variable_declaration : 2 4 18
+variables            : 3
+

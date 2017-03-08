@@ -67,6 +67,13 @@ def p_level2(t):
                | level3 AND level3 '''
 
 
+def p_level3(t):
+    ''' level3 : level4
+               | level4 '<' level4
+               | level4 '>' level4
+               | level4  '''
+
+
 def p_function_declaration(t):
     ''' function_declaration : function other_function_declarations '''
     pass
