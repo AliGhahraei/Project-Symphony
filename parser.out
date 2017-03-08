@@ -1,1 +1,163 @@
 Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    IDS_AND_KEYWORDS
+
+Grammar
+
+Rule 0     S' -> empty
+Rule 1     empty -> <empty>
+Rule 2     program -> PROGRAM ID ; variable_declaration function_declaration block
+Rule 3     variable_declaration -> variables other_variable_declarations
+Rule 4     other_variable_declarations -> variable_declaration
+Rule 5     other_variable_declarations -> empty
+Rule 6     variables -> type ids ;
+Rule 7     ids -> id other_ids
+Rule 8     other_ids -> , ids
+Rule 9     other_ids -> empty
+Rule 10    id -> ID
+Rule 11    id -> ID [ expression ]
+Rule 12    expression -> grouping
+Rule 13    expression -> const
+Rule 14    expression -> call
+Rule 15    grouping -> level1
+Rule 16    grouping -> level1 EXPONENTIATION level1
+Rule 17    level1 -> level2
+Rule 18    level1 -> + level2
+Rule 19    level1 -> - level2
+Rule 20    level2 -> level3
+Rule 21    level2 -> level3 OR level3
+Rule 22    level2 -> level3 AND level3
+Rule 23    level3 -> level4
+Rule 24    level3 -> level4 < level4
+Rule 25    level3 -> level4 > level4
+Rule 26    level3 -> level4 LESS_EQUAL_THAN level4
+Rule 27    level3 -> level4 GREATER_EQUAL_THAN level4
+Rule 28    level3 -> level4 EQUALS level4
+Rule 29    level4 -> level5
+Rule 30    level4 -> level5 + level5
+Rule 31    level4 -> level5 - level5
+Rule 32    level5 -> level6
+Rule 33    level5 -> level6 * level6
+Rule 34    level5 -> level6 / level6
+Rule 35    level5 -> level6 MOD level6
+Rule 36    level5 -> <empty>
+Rule 37    level6 -> ( expression )
+Rule 38    level6 -> const
+Rule 39    level6 -> NOT const
+Rule 40    level6 -> INCREMENT const
+Rule 41    level6 -> DECREMENT const
+Rule 42    function_declaration -> function other_function_declarations
+Rule 43    other_function_declarations -> function_declaration
+Rule 44    other_function_declarations -> empty
+Rule 45    function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ;
+Rule 46    return_type -> type
+Rule 47    return_type -> VOID
+Rule 48    type -> INT
+Rule 49    type -> DEC
+Rule 50    type -> CHAR
+Rule 51    type -> STR
+Rule 52    type -> BOOL
+Rule 53    statutes -> call
+Rule 54    statutes -> assignment
+Rule 55    statutes -> condition
+Rule 56    statutes -> cycle
+Rule 57    statutes -> special
+Rule 58    call -> ID ( expressions )
+Rule 59    expressions -> expression
+Rule 60    expressions -> expression , expressions
+Rule 61    assignment -> ID = expression ;
+Rule 62    assignment -> ID [ expression ] = expression ;
+Rule 63    condition -> IF [ expression ] block elses ;
+Rule 64    cycle -> WHILE ( expression ) block ;
+Rule 65    elses -> empty
+Rule 66    elses -> ELSE block
+Rule 67    elses -> ELSEIF ( expression ) block elses
+Rule 68    parameters -> type ID other_parameters
+Rule 69    other_parameters -> , parameters
+Rule 70    other_parameters -> empty
+Rule 71    const -> id
+Rule 72    const -> INT
+Rule 73    const -> DEC
+Rule 74    block -> { statutes }
+
+Terminals, with rules where they appear
+
+(                    : 37 45 58 64 67
+)                    : 37 45 58 64 67
+*                    : 33
++                    : 18 30
+,                    : 8 60 69
+-                    : 19 31
+/                    : 34
+;                    : 2 6 45 61 62 63 64
+<                    : 24
+=                    : 61 62
+>                    : 25
+AND                  : 22
+BOOL                 : 52
+CHAR                 : 50
+DEC                  : 49 73
+DECREMENT            : 41
+ELSE                 : 66
+ELSEIF               : 67
+EQUALS               : 28
+EXPONENTIATION       : 16
+FUN                  : 45
+GREATER_EQUAL_THAN   : 27
+ID                   : 2 10 11 45 58 61 62 68
+IDS_AND_KEYWORDS     : 
+IF                   : 63
+INCREMENT            : 40
+INT                  : 48 72
+LESS_EQUAL_THAN      : 26
+MOD                  : 35
+NOT                  : 39
+OR                   : 21
+PROGRAM              : 2
+STR                  : 51
+VOID                 : 47
+WHILE                : 64
+[                    : 11 62 63
+]                    : 11 62 63
+error                : 
+{                    : 45 74
+}                    : 45 74
+
+Nonterminals, with rules where they appear
+
+assignment           : 54
+block                : 2 63 64 66 67
+call                 : 14 53
+condition            : 55
+const                : 13 38 39 40 41
+cycle                : 56
+elses                : 63 67
+empty                : 5 9 44 65 70 0
+expression           : 11 37 59 60 61 62 62 63 64 67
+expressions          : 58 60
+function             : 42
+function_declaration : 2 43
+grouping             : 12
+id                   : 7 71
+ids                  : 6 8
+level1               : 15 16 16
+level2               : 17 18 19
+level3               : 20 21 21 22 22
+level4               : 23 24 24 25 25 26 26 27 27 28 28
+level5               : 29 30 30 31 31
+level6               : 32 33 33 34 34 35 35
+other_function_declarations : 42
+other_ids            : 7
+other_parameters     : 68
+other_variable_declarations : 3
+parameters           : 45 69
+program              : 
+return_type          : 45
+special              : 57
+statutes             : 45 74
+type                 : 6 46 68
+variable_declaration : 2 4 45
+variables            : 3
+
