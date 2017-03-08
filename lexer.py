@@ -5,12 +5,12 @@ tokens = (
     'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'EXPONENTIATION', 'INCREMENT',
     'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
     'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'SINGLE_LINE_COMMENT', 'ID',
-    'IDS_AND_KEYWORDS', 'PROGRAM',
+    'IDS_AND_KEYWORDS', 'MOD', 'PROGRAM',
 )
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
-                           'if', 'else', 'elseif', 'program']
+                           'if', 'else', 'elseif', 'program', 'mod']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
 keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
@@ -98,7 +98,7 @@ def t_MULTI_LINE_COMMENT(t):
 """ 
 
 literals = ['>', '<', ',', ';', '(', ')', '{', '}', '[', ']', '=', '+', '-', 
-            '*', '/', '%']
+            '*', '/']
 t_GREATER_EQUAL_THAN = r'>='
 t_LESS_EQUAL_THAN = r'<='
 t_EXPONENTIATION = r'\*\*'
