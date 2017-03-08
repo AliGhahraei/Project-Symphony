@@ -4,7 +4,7 @@ from ply.lex import lex, LexError
 tokens = (
     'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'EXPONENTIATION', 'INCREMENT',
     'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
-    'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'SINGLE_LINE_COMMENT', 'ID',
+    'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID',
     'IDS_AND_KEYWORDS', 'MOD', 'PROGRAM',
 )
 
