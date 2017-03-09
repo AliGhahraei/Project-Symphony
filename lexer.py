@@ -4,8 +4,7 @@ from ply.lex import lex, LexError
 tokens = (
     'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'EXPONENTIATION', 'INCREMENT',
     'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
-    'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID',
-    'IDS_AND_KEYWORDS', 'MOD', 'PROGRAM',
+    'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD', 'PROGRAM',
 )
 
 
@@ -14,6 +13,10 @@ keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
 keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
+
+
+special_ids = {'sqrt', 'log', 'random', 'little_star', 'A', 'B', 'C', 'D', 'E',
+               'F', 'G', 'concat', 'length', 'copy', 'get'}
 
 
 states = (
@@ -49,7 +52,11 @@ def t_MULTILINECOMMENT_error(t):
 
 def t_IDS_AND_KEYWORDS(t):
     r'[a-zA-Z_][0-9a-zA-Z_]*'
-    t.type = keywords_to_types.get(t.value, 'ID')
+    try:
+        special_ids[t.value]
+        t.type = 'SPECIAL_ID'
+    except KeyError:
+        t.type = keywords_to_types.get(t.value, 'ID')
     return t
 
 
