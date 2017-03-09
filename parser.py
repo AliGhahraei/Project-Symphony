@@ -2,13 +2,13 @@ from ply.yacc import yacc
 from lexer import tokens
 
 
-def p_empty(t):
-    ''' empty : '''
+def p_program(t):
+    ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
     pass
 
 
-def p_program(t):
-    ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
+def p_empty(t):
+    ''' empty : '''
     pass
 
 
