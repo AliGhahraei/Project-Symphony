@@ -8,7 +8,7 @@ What follows is the recommended installation method.
 
 1. Create an environment inside the project directory:
 
-        $ virtualenv env
+        $ virtualenv venv
   
 1. Now activate it:
 
