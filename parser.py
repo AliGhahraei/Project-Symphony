@@ -148,7 +148,7 @@ def p_statutes(t):
 
 
 def p_call(t):
-    ''' call : ID '(' expressions ')' '''
+    ''' call : ID '(' expressions ')' ';' '''
     pass
 
 
@@ -165,7 +165,7 @@ def p_assignment(t):
 
 
 def p_condition(t):
-    ''' condition : IF '[' expression ']' block elses ';' '''
+    ''' condition : IF '(' expression ')' block elses ';' '''
     pass
 
 
@@ -175,7 +175,7 @@ def p_cycle(t):
 
 
 def p_special(t):
-    ''' special : SPECIAL_ID '(' expressions ')' '''
+    ''' special : SPECIAL_ID '(' expressions ')' ';' '''
     pass
 
 
