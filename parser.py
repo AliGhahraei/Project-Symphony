@@ -42,29 +42,34 @@ def p_other_ids(t):
 def p_id(t):
     ''' id : ID 
            | ID '[' expression ']' '''
+    pass
 
 
 def p_expression(t):
     ''' expression : grouping
                    | const
                    | call '''
+    pass
 
 
 def p_grouping(t):
     ''' grouping : level1 
                  | level1 EXPONENTIATION level1 '''
+    pass
 
 
 def p_level1(t):
     ''' level1 : level2 
                | '+' level2 
                | '-' level2 '''
+    pass
 
 
 def p_level2(t):
     ''' level2 : level3 
                | level3 OR level3 
                | level3 AND level3 '''
+    pass
 
 
 def p_level3(t):
@@ -74,12 +79,14 @@ def p_level3(t):
                | level4 LESS_EQUAL_THAN level4
                | level4 GREATER_EQUAL_THAN level4
                | level4 EQUALS level4 '''
+    pass
 
 
 def p_level4(t):
     ''' level4 : level5
                | level5 '+' level5
                | level5 '-' level5 '''
+    pass
 
 
 def p_level5(t):
@@ -88,6 +95,7 @@ def p_level5(t):
                | level6 '/' level6
                | level6 MOD level6
                |  '''
+    pass
 
 
 def p_level6(t):
@@ -96,6 +104,7 @@ def p_level6(t):
                | NOT const
                | INCREMENT const
                | DECREMENT const '''
+    pass
 
 
 def p_function_declaration(t):
@@ -117,6 +126,7 @@ def p_function(t):
 def p_return_type(t):
     ''' return_type : type 
                     | VOID '''
+    pass
 
 
 def p_type(t):
@@ -145,6 +155,7 @@ def p_call(t):
 def p_expressions(t):
     ''' expressions : expression
                     | expression ',' expressions '''
+    pass
 
 
 def p_assignment(t):
@@ -155,14 +166,17 @@ def p_assignment(t):
 
 def p_condition(t):
     ''' condition : IF '[' expression ']' block elses ';' '''
+    pass
 
 
 def p_cycle(t):
     ''' cycle : WHILE '(' expression ')' block ';' '''
+    pass
 
 
 def p_special(t):
     ''' special : SPECIAL_ID '(' expressions ')' '''
+    pass
 
 
 def p_elses(t):
