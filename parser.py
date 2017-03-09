@@ -1,5 +1,6 @@
 from ply.yacc import yacc
 from lexer import tokens
+from sys import exit
 
 
 def p_program(t):
@@ -13,13 +14,8 @@ def p_empty(t):
 
 
 def p_variable_declaration(t):
-    ''' variable_declaration : variables other_variable_declarations '''
-    pass
-
-
-def p_other_variable_declarations(t):
-    ''' other_variable_declarations : variable_declaration 
-                                    | empty '''
+    ''' variable_declaration : variables variable_declaration 
+                             | empty '''
     pass
 
 
@@ -46,22 +42,15 @@ def p_id(t):
 
 
 def p_expression(t):
-    ''' expression : grouping
-                   | const
-                   | call '''
-    pass
-
-
-def p_grouping(t):
-    ''' grouping : level1 
-                 | level1 EXPONENTIATION level1 '''
+    ''' expression : level1 
+                   | level1 EXPONENTIATION level1  '''
     pass
 
 
 def p_level1(t):
     ''' level1 : level2 
-               | '+' level2 
-               | '-' level2 '''
+               | '+' level2
+               | '-' level2'''
     pass
 
 
@@ -85,7 +74,7 @@ def p_level3(t):
 def p_level4(t):
     ''' level4 : level5
                | level5 '+' level5
-               | level5 '-' level5 '''
+               | level5 '-' level5'''
     pass
 
 
@@ -103,18 +92,17 @@ def p_level6(t):
                | const
                | NOT const
                | INCREMENT const
-               | DECREMENT const '''
+               | DECREMENT const 
+               | call
+               | NOT call
+               | INCREMENT call
+               | DECREMENT call'''
     pass
 
 
 def p_function_declaration(t):
-    ''' function_declaration : function other_function_declarations '''
-    pass
-
-
-def p_other_function_declarations(t):
-    ''' other_function_declarations : function_declaration 
-                                    | empty '''
+    ''' function_declaration : function function_declaration
+                             | empty'''
     pass
 
 
@@ -208,8 +196,16 @@ def p_block(t):
     pass
 
 
+def p_error(t):
+    print(t.value)
+
+
 parser = yacc()
 
 while True:
-    input_string = input('Project Symphony > ')
-    parser.parse(input_string)
+    try:
+        input_string = input('Project Symphony > ')
+        parser.parse(input_string)
+    except(EOFError, KeyboardInterrupt):
+        print('Bye!')
+        exit(0)
