@@ -196,8 +196,8 @@ def p_block(t):
     pass
 
 
-def p_error(t):
-    print(t.value)
+#def p_error(t):
+#    print(t)
 
 
 parser = yacc()
