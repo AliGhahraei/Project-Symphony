@@ -53,10 +53,9 @@ def t_MULTILINECOMMENT_error(t):
 
 def t_IDS_AND_KEYWORDS(t):
     r'[a-zA-Z_][0-9a-zA-Z_]*'
-    try:
-        special_ids[t.value]
+    if t.value in special_ids:
         t.type = 'SPECIAL_ID'
-    except KeyError:
+    else:
         t.type = keywords_to_types.get(t.value, 'ID')
     return t
 
