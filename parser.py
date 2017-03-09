@@ -162,7 +162,7 @@ def p_cycle(t):
 
 
 def p_special(t):
-    ''' special :  '''
+    ''' special : SPECIAL_ID '(' expressions ')' '''
 
 
 def p_elses(t):
