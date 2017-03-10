@@ -122,7 +122,12 @@ def p_type(t):
 
 
 def p_statutes(t):
-    ''' statutes : call
+    ''' statutes : statute statutes
+                 | empty'''
+
+
+def p_statute(t):
+    '''statute   : call
                  | assignment
                  | condition
                  | cycle 
