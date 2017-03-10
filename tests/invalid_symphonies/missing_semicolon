@@ -1,0 +1,4 @@
+program missing_semicolon;
+{
+	print(1)
+}

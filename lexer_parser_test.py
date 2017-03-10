@@ -1,5 +1,11 @@
 from lexer import lexer
+from os import listdir
+from parser import parser, ParserException
 from unittest import TestCase, main
+
+
+VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
+INVALID_PROGRAMS_PATH = 'tests/invalid_symphonies/'
 
 
 class LexerTest(TestCase):
@@ -37,6 +43,24 @@ class LexerTest(TestCase):
             fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID sqrt 
             SPECIAL_ID my string STR program PROGRAM
             ''')
+
+
+class ParserTest(TestCase):
+    def setUp(self):
+        pass
+
+
+    def test_valid_programs(self):
+        for valid_program in listdir(VALID_PROGRAMS_PATH):
+            with open(VALID_PROGRAMS_PATH + valid_program) as file:
+                parser.parse(file.read())
+
+
+    def test_invalid_programs(self):
+        for invalid_program in listdir(INVALID_PROGRAMS_PATH):
+            with self.assertRaises(ParserException):
+                with open(INVALID_PROGRAMS_PATH + invalid_program) as file:
+                    parser.parse(file.read())
 
 
 if __name__ == '__main__':
