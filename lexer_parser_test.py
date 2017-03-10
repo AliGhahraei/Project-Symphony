@@ -27,21 +27,22 @@ class LexerTest(TestCase):
             Multiline comments are ignored...
             ... All of them
             */
-            12 4.75 .9 'a' "hello" true false void , ; ( ) { } [ ] = + - * / ** 
-            ++ -- mod equals > < >= <= and or not fun while if else elseif hello
-            sqrt
+            int dec char str bool 12 4.75 .9 'a' "hello" true false void , ; ( )
+            { } [ ] = + - * / ** ++ -- mod equals > < >= <= and or not fun while
+            if else elseif hello sqrt
             // This is a comment, so it should be ignored
             "my string"
             program
             ''',
             
             '''
-            12 INT 4.75 DEC 0.9 DEC a CHAR hello STR true BOOL false BOOL 
+            int INT dec DEC char CHAR str STR bool BOOL 12 INT_VAL 4.75 DEC_VAL
+            0.9 DEC_VAL a CHAR_VAL hello STR_VAL true BOOL_VAL false BOOL_VAL
             void VOID , , ; ; ( ( ) ) { { } } [ [ ] ] = = + + - - * * / /
             ** EXPONENTIATION ++ INCREMENT -- DECREMENT mod MOD equals EQUALS > > 
             < < >= GREATER_EQUAL_THAN <= LESS_EQUAL_THAN and AND or OR not NOT
             fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID sqrt 
-            SPECIAL_ID my string STR program PROGRAM
+            SPECIAL_ID my string STR_VAL program PROGRAM
             ''')
 
 

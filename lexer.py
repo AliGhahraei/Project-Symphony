@@ -2,7 +2,8 @@ from ply.lex import lex, LexError
 
 
 tokens = (
-    'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'EXPONENTIATION', 'INCREMENT',
+    'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'INT_VAL', 'DEC_VAL',
+    'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'EXPONENTIATION', 'INCREMENT',
     'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
     'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD',
     'PROGRAM',
@@ -10,10 +11,11 @@ tokens = (
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
-                           'if', 'else', 'elseif', 'program', 'mod']
+                           'if', 'else', 'elseif', 'program', 'mod', 'int',
+                           'dec', 'char', 'str', 'bool']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
-keywords_to_types.update({keyword: 'BOOL' for keyword in ['true', 'false']})
+keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in ['true', 'false']})
 
 
 special_ids = {'sqrt', 'log', 'random', 'little_star', 'A', 'B', 'C', 'D', 'E',
@@ -60,25 +62,25 @@ def t_IDS_AND_KEYWORDS(t):
     return t
 
 
-def t_DEC(t):
+def t_DEC_VAL(t):
     r'[+-]?[0-9]*\.[0-9]+'
     t.value = float(t.value)
     return t
 
 
-def t_INT(t):
+def t_INT_VAL(t):
     r'[-+]?[0-9]+'
     t.value = int(t.value)
     return t
 
 
-def t_CHAR(t):
+def t_CHAR_VAL(t):
     r"\'[^']\'"
     t.value = t.value[1:-1]
     return t
 
 
-def t_STR(t):
+def t_STR_VAL(t):
     r'\"[^"]*\"'
     t.value = t.value[1:-1]
     return t
