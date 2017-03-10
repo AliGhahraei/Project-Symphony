@@ -1,0 +1,6 @@
+program missing_statute_semicolon;
+int x, y;
+{
+	print(x)
+	print(y);
+}
