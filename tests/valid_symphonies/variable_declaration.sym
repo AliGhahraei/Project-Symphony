@@ -1,0 +1,7 @@
+program variable_declaration;
+int x, y;
+str hola, adios;
+{
+	print(x);
+	print(adios);
+}

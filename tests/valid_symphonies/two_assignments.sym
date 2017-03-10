@@ -1,0 +1,6 @@
+program two_assignments;
+int x, y;
+{
+	x = 10;
+	y = 20;
+}
