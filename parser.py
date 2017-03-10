@@ -14,13 +14,8 @@ def p_empty(t):
 
 
 def p_variable_declaration(t):
-    ''' variable_declaration : variables variable_declaration 
+    ''' variable_declaration : type ids ';' variable_declaration
                              | empty '''
-    pass
-
-
-def p_variables(t):
-    ''' variables : type ids ';' '''
     pass
 
 
@@ -196,12 +191,18 @@ def p_block(t):
     pass
 
 
-#def p_error(t):
-#    print(t)
+def p_error(t):
+    raise ParserException
 
 
 parser = yacc()
 
+
+class ParserException(Exception):
+    pass
+
+
+'''
 while True:
     try:
         input_string = input('Project Symphony > ')
@@ -209,3 +210,4 @@ while True:
     except(EOFError, KeyboardInterrupt):
         print('Bye!')
         exit(0)
+'''
