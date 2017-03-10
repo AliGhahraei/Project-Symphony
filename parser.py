@@ -181,8 +181,11 @@ def p_other_parameters(t):
 
 def p_const(t):
     ''' const : id 
-              | INT 
-              | DEC '''
+              | INT_VAL
+              | DEC_VAL
+              | CHAR_VAL
+              | STR_VAL
+              | BOOL_VAL '''
     pass
 
 
