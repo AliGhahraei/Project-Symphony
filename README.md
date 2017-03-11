@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/AliGhahraei/Project-Simphony.png?label=ready&title=Ready)](https://waffle.io/AliGhahraei/Project-Simphony)
 # Project-Simphony
 A language for music lovers
 
