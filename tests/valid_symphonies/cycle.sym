@@ -1,8 +1,0 @@
-program cycle;
-int a;
-{
-	while(a) {
-		println("Hi");
-		println(++a);
-	};
-}
