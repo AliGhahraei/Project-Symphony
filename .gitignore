@@ -1,3 +1,7 @@
+# PLY generated files
+parsetab.py
+parser.out
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
