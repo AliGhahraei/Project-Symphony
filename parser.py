@@ -69,7 +69,7 @@ def p_level3(t):
 def p_level4(t):
     ''' level4 : level5
                | level5 '+' level5
-               | level5 '-' level5'''
+               | level5 '-' level5 '''
     pass
 
 
@@ -77,8 +77,7 @@ def p_level5(t):
     ''' level5 : level6
                | level6 '*' level6
                | level6 '/' level6
-               | level6 MOD level6
-               |  '''
+               | level6 MOD level6 '''
     pass
 
 
@@ -86,9 +85,17 @@ def p_level6(t):
     ''' level6 : '(' expression ')'
                | const
                | NOT const
-               | INCREMENT const
-               | DECREMENT const '''
+               | increment
+               | decrement '''
     pass
+
+
+def p_increment(t):
+    ''' increment : INCREMENT id '''
+
+
+def p_decrement(t):
+    ''' decrement : DECREMENT id '''
 
 
 def p_function_declaration(t):
@@ -127,7 +134,10 @@ def p_statute(t):
                  | assignment
                  | condition
                  | cycle 
-                 | special '''
+                 | special 
+                 | return
+                 | increment
+                 | decrement '''
     pass
 
 
@@ -161,6 +171,11 @@ def p_cycle(t):
 def p_special(t):
     ''' special : SPECIAL_ID '(' expressions ')' '''
     pass
+
+
+def p_return(t):
+    ''' return : RETURN expression
+               | RETURN '''
 
 
 def p_elses(t):
