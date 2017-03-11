@@ -26,6 +26,9 @@ class LexerTest(TestCase):
             /*
             Multiline comments are ignored...
             ... All of them
+            fun int fun1(int x, int y){
+              rasfsdgsg
+            }
             */
             int dec char str bool 12 4.75 .9 'a' "hello" true false void , ; ( )
             { } [ ] = + - * / ** ++ -- mod equals > < >= <= and or not fun while

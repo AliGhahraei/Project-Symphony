@@ -45,7 +45,7 @@ def t_MULTILINECOMMENT_close(t):
 
 
 def t_MULTILINECOMMENT_text(t):
-    r'[^(\*/)]'
+    r'[^\*/]'
     pass
 
 
