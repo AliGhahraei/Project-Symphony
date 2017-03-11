@@ -3,7 +3,7 @@ from ply.lex import lex, LexError
 
 tokens = (
     'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'INT_VAL', 'DEC_VAL',
-    'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'EXPONENTIATION', 'INCREMENT',
+    'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'RETURN', 'EXPONENTIATION', 'INCREMENT',
     'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
     'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD',
     'PROGRAM',
@@ -12,7 +12,7 @@ tokens = (
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
                            'if', 'else', 'elseif', 'program', 'mod', 'int',
-                           'dec', 'char', 'str', 'bool']
+                           'dec', 'char', 'str', 'bool', 'return']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
 keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in ['true', 'false']})
