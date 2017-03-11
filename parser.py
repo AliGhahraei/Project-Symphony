@@ -153,8 +153,7 @@ def p_expressions(t):
 
 
 def p_assignment(t):
-    ''' assignment : ID '=' expression
-                   | ID '[' expression ']' '=' expression '''
+    ''' assignment : id '=' expression '''
     pass
 
 
