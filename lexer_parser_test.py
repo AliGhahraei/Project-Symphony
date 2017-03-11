@@ -29,7 +29,7 @@ class LexerTest(TestCase):
             */
             int dec char str bool 12 4.75 .9 'a' "hello" true false void , ; ( )
             { } [ ] = + - * / ** ++ -- mod equals > < >= <= and or not fun while
-            if else elseif hello sqrt
+            if else elseif hello sqrt return
             // This is a comment, so it should be ignored
             "my string"
             program
@@ -42,7 +42,7 @@ class LexerTest(TestCase):
             ** EXPONENTIATION ++ INCREMENT -- DECREMENT mod MOD equals EQUALS > > 
             < < >= GREATER_EQUAL_THAN <= LESS_EQUAL_THAN and AND or OR not NOT
             fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID sqrt 
-            SPECIAL_ID my string STR_VAL program PROGRAM
+            SPECIAL_ID return RETURN my string STR_VAL program PROGRAM
             ''')
 
 
