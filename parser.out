@@ -39,112 +39,110 @@ Rule 33    level6 -> const
 Rule 34    level6 -> NOT const
 Rule 35    level6 -> INCREMENT const
 Rule 36    level6 -> DECREMENT const
-Rule 37    level6 -> call
-Rule 38    level6 -> NOT call
-Rule 39    level6 -> INCREMENT call
-Rule 40    level6 -> DECREMENT call
-Rule 41    function_declaration -> function function_declaration
-Rule 42    function_declaration -> empty
-Rule 43    function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ;
-Rule 44    return_type -> type
-Rule 45    return_type -> VOID
-Rule 46    type -> INT
-Rule 47    type -> DEC
-Rule 48    type -> CHAR
-Rule 49    type -> STR
-Rule 50    type -> BOOL
-Rule 51    statutes -> statute statutes
-Rule 52    statutes -> empty
-Rule 53    statute -> call
-Rule 54    statute -> assignment
-Rule 55    statute -> condition
-Rule 56    statute -> cycle
-Rule 57    statute -> special
-Rule 58    call -> ID ( expressions ) ;
-Rule 59    expressions -> expression
-Rule 60    expressions -> expression , expressions
-Rule 61    assignment -> ID = expression ;
-Rule 62    assignment -> ID [ expression ] = expression ;
-Rule 63    condition -> IF ( expression ) block elses ;
-Rule 64    cycle -> WHILE ( expression ) block ;
-Rule 65    special -> SPECIAL_ID ( expressions ) ;
-Rule 66    elses -> empty
-Rule 67    elses -> ELSE block
-Rule 68    elses -> ELSEIF ( expression ) block elses
-Rule 69    parameters -> type ID other_parameters
-Rule 70    other_parameters -> , parameters
-Rule 71    other_parameters -> empty
-Rule 72    const -> id
-Rule 73    const -> INT_VAL
-Rule 74    const -> DEC_VAL
-Rule 75    const -> CHAR_VAL
-Rule 76    const -> STR_VAL
-Rule 77    const -> BOOL_VAL
-Rule 78    block -> { statutes }
+Rule 37    function_declaration -> function function_declaration
+Rule 38    function_declaration -> empty
+Rule 39    function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ;
+Rule 40    return_type -> type
+Rule 41    return_type -> VOID
+Rule 42    type -> INT
+Rule 43    type -> DEC
+Rule 44    type -> CHAR
+Rule 45    type -> STR
+Rule 46    type -> BOOL
+Rule 47    statutes -> statute ; statutes
+Rule 48    statutes -> empty
+Rule 49    statute -> call
+Rule 50    statute -> assignment
+Rule 51    statute -> condition
+Rule 52    statute -> cycle
+Rule 53    statute -> special
+Rule 54    call -> ID ( expressions )
+Rule 55    expressions -> expression
+Rule 56    expressions -> expression , expressions
+Rule 57    assignment -> ID = expression
+Rule 58    assignment -> ID [ expression ] = expression
+Rule 59    condition -> IF ( expression ) block elses
+Rule 60    cycle -> WHILE ( expression ) block
+Rule 61    special -> SPECIAL_ID ( expressions )
+Rule 62    elses -> empty
+Rule 63    elses -> ELSE block
+Rule 64    elses -> ELSEIF ( expression ) block elses
+Rule 65    parameters -> type ID other_parameters
+Rule 66    other_parameters -> , parameters
+Rule 67    other_parameters -> empty
+Rule 68    const -> id
+Rule 69    const -> call
+Rule 70    const -> special
+Rule 71    const -> INT_VAL
+Rule 72    const -> DEC_VAL
+Rule 73    const -> CHAR_VAL
+Rule 74    const -> STR_VAL
+Rule 75    const -> BOOL_VAL
+Rule 76    block -> { statutes }
 
 Terminals, with rules where they appear
 
-(                    : 32 43 58 63 64 65 68
-)                    : 32 43 58 63 64 65 68
+(                    : 32 39 54 59 60 61 64
+)                    : 32 39 54 59 60 61 64
 *                    : 28
 +                    : 13 25
-,                    : 6 60 70
+,                    : 6 56 66
 -                    : 14 26
 /                    : 29
-;                    : 1 3 43 58 61 62 63 64 65
+;                    : 1 3 39 47
 <                    : 19
-=                    : 61 62
+=                    : 57 58
 >                    : 20
 AND                  : 17
-BOOL                 : 50
-BOOL_VAL             : 77
-CHAR                 : 48
-CHAR_VAL             : 75
-DEC                  : 47
-DECREMENT            : 36 40
-DEC_VAL              : 74
-ELSE                 : 67
-ELSEIF               : 68
+BOOL                 : 46
+BOOL_VAL             : 75
+CHAR                 : 44
+CHAR_VAL             : 73
+DEC                  : 43
+DECREMENT            : 36
+DEC_VAL              : 72
+ELSE                 : 63
+ELSEIF               : 64
 EQUALS               : 23
 EXPONENTIATION       : 11
-FUN                  : 43
+FUN                  : 39
 GREATER_EQUAL_THAN   : 22
-ID                   : 1 8 9 43 58 61 62 69
-IF                   : 63
-INCREMENT            : 35 39
-INT                  : 46
-INT_VAL              : 73
+ID                   : 1 8 9 39 54 57 58 65
+IF                   : 59
+INCREMENT            : 35
+INT                  : 42
+INT_VAL              : 71
 LESS_EQUAL_THAN      : 21
 MOD                  : 30
-NOT                  : 34 38
+NOT                  : 34
 OR                   : 16
 PROGRAM              : 1
-SPECIAL_ID           : 65
-STR                  : 49
-STR_VAL              : 76
-VOID                 : 45
-WHILE                : 64
-[                    : 9 62
-]                    : 9 62
+SPECIAL_ID           : 61
+STR                  : 45
+STR_VAL              : 74
+VOID                 : 41
+WHILE                : 60
+[                    : 9 58
+]                    : 9 58
 error                : 
-{                    : 43 78
-}                    : 43 78
+{                    : 39 76
+}                    : 39 76
 
 Nonterminals, with rules where they appear
 
-assignment           : 54
-block                : 1 63 64 67 68
-call                 : 37 38 39 40 53
-condition            : 55
+assignment           : 50
+block                : 1 59 60 63 64
+call                 : 49 69
+condition            : 51
 const                : 33 34 35 36
-cycle                : 56
-elses                : 63 68
-empty                : 4 7 42 52 66 71
-expression           : 9 32 59 60 61 62 62 63 64 68
-expressions          : 58 60 65
-function             : 41
-function_declaration : 1 41
-id                   : 5 72
+cycle                : 52
+elses                : 59 64
+empty                : 4 7 38 48 62 67
+expression           : 9 32 55 56 57 58 58 59 60 64
+expressions          : 54 56 61
+function             : 37
+function_declaration : 1 37
+id                   : 5 68
 ids                  : 3 6
 level1               : 10 11 11
 level2               : 12 13 14
@@ -153,15 +151,15 @@ level4               : 18 19 19 20 20 21 21 22 22 23 23
 level5               : 24 25 25 26 26
 level6               : 27 28 28 29 29 30 30
 other_ids            : 5
-other_parameters     : 69
-parameters           : 43 70
+other_parameters     : 65
+parameters           : 39 66
 program              : 0
-return_type          : 43
-special              : 57
-statute              : 51
-statutes             : 43 51 78
-type                 : 3 44 69
-variable_declaration : 1 3 43
+return_type          : 39
+special              : 53 70
+statute              : 47
+statutes             : 39 47 76
+type                 : 3 40 65
+variable_declaration : 1 3 39
 
 Parsing method: LALR
 
@@ -199,11 +197,11 @@ state 4
     (1) program -> PROGRAM ID ; . variable_declaration function_declaration block
     (3) variable_declaration -> . type ids ; variable_declaration
     (4) variable_declaration -> . empty
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
     (2) empty -> .
 
     INT             shift and go to state 8
@@ -221,9 +219,9 @@ state 4
 state 5
 
     (1) program -> PROGRAM ID ; variable_declaration . function_declaration block
-    (41) function_declaration -> . function function_declaration
-    (42) function_declaration -> . empty
-    (43) function -> . FUN return_type ID ( parameters ) { variable_declaration statutes } ;
+    (37) function_declaration -> . function function_declaration
+    (38) function_declaration -> . empty
+    (39) function -> . FUN return_type ID ( parameters ) { variable_declaration statutes } ;
     (2) empty -> .
 
     FUN             shift and go to state 16
@@ -260,43 +258,43 @@ state 7
 
 state 8
 
-    (46) type -> INT .
+    (42) type -> INT .
 
-    ID              reduce using rule 46 (type -> INT .)
+    ID              reduce using rule 42 (type -> INT .)
 
 
 state 9
 
-    (47) type -> DEC .
+    (43) type -> DEC .
 
-    ID              reduce using rule 47 (type -> DEC .)
+    ID              reduce using rule 43 (type -> DEC .)
 
 
 state 10
 
-    (48) type -> CHAR .
+    (44) type -> CHAR .
 
-    ID              reduce using rule 48 (type -> CHAR .)
+    ID              reduce using rule 44 (type -> CHAR .)
 
 
 state 11
 
-    (49) type -> STR .
+    (45) type -> STR .
 
-    ID              reduce using rule 49 (type -> STR .)
+    ID              reduce using rule 45 (type -> STR .)
 
 
 state 12
 
-    (50) type -> BOOL .
+    (46) type -> BOOL .
 
-    ID              reduce using rule 50 (type -> BOOL .)
+    ID              reduce using rule 46 (type -> BOOL .)
 
 
 state 13
 
     (1) program -> PROGRAM ID ; variable_declaration function_declaration . block
-    (78) block -> . { statutes }
+    (76) block -> . { statutes }
 
     {               shift and go to state 21
 
@@ -304,10 +302,10 @@ state 13
 
 state 14
 
-    (41) function_declaration -> function . function_declaration
-    (41) function_declaration -> . function function_declaration
-    (42) function_declaration -> . empty
-    (43) function -> . FUN return_type ID ( parameters ) { variable_declaration statutes } ;
+    (37) function_declaration -> function . function_declaration
+    (37) function_declaration -> . function function_declaration
+    (38) function_declaration -> . empty
+    (39) function -> . FUN return_type ID ( parameters ) { variable_declaration statutes } ;
     (2) empty -> .
 
     FUN             shift and go to state 16
@@ -319,21 +317,21 @@ state 14
 
 state 15
 
-    (42) function_declaration -> empty .
+    (38) function_declaration -> empty .
 
-    {               reduce using rule 42 (function_declaration -> empty .)
+    {               reduce using rule 38 (function_declaration -> empty .)
 
 
 state 16
 
-    (43) function -> FUN . return_type ID ( parameters ) { variable_declaration statutes } ;
-    (44) return_type -> . type
-    (45) return_type -> . VOID
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (39) function -> FUN . return_type ID ( parameters ) { variable_declaration statutes } ;
+    (40) return_type -> . type
+    (41) return_type -> . VOID
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
 
     VOID            shift and go to state 25
     INT             shift and go to state 8
@@ -384,21 +382,21 @@ state 20
 
 state 21
 
-    (78) block -> { . statutes }
-    (51) statutes -> . statute statutes
-    (52) statutes -> . empty
-    (53) statute -> . call
-    (54) statute -> . assignment
-    (55) statute -> . condition
-    (56) statute -> . cycle
-    (57) statute -> . special
+    (76) block -> { . statutes }
+    (47) statutes -> . statute ; statutes
+    (48) statutes -> . empty
+    (49) statute -> . call
+    (50) statute -> . assignment
+    (51) statute -> . condition
+    (52) statute -> . cycle
+    (53) statute -> . special
     (2) empty -> .
-    (58) call -> . ID ( expressions ) ;
-    (61) assignment -> . ID = expression ;
-    (62) assignment -> . ID [ expression ] = expression ;
-    (63) condition -> . IF ( expression ) block elses ;
-    (64) cycle -> . WHILE ( expression ) block ;
-    (65) special -> . SPECIAL_ID ( expressions ) ;
+    (54) call -> . ID ( expressions )
+    (57) assignment -> . ID = expression
+    (58) assignment -> . ID [ expression ] = expression
+    (59) condition -> . IF ( expression ) block elses
+    (60) cycle -> . WHILE ( expression ) block
+    (61) special -> . SPECIAL_ID ( expressions )
 
     }               reduce using rule 2 (empty -> .)
     ID              shift and go to state 39
@@ -417,30 +415,30 @@ state 21
 
 state 22
 
-    (41) function_declaration -> function function_declaration .
+    (37) function_declaration -> function function_declaration .
 
-    {               reduce using rule 41 (function_declaration -> function function_declaration .)
+    {               reduce using rule 37 (function_declaration -> function function_declaration .)
 
 
 state 23
 
-    (43) function -> FUN return_type . ID ( parameters ) { variable_declaration statutes } ;
+    (39) function -> FUN return_type . ID ( parameters ) { variable_declaration statutes } ;
 
     ID              shift and go to state 43
 
 
 state 24
 
-    (44) return_type -> type .
+    (40) return_type -> type .
 
-    ID              reduce using rule 44 (return_type -> type .)
+    ID              reduce using rule 40 (return_type -> type .)
 
 
 state 25
 
-    (45) return_type -> VOID .
+    (41) return_type -> VOID .
 
-    ID              reduce using rule 45 (return_type -> VOID .)
+    ID              reduce using rule 41 (return_type -> VOID .)
 
 
 state 26
@@ -448,11 +446,11 @@ state 26
     (3) variable_declaration -> type ids ; . variable_declaration
     (3) variable_declaration -> . type ids ; variable_declaration
     (4) variable_declaration -> . empty
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
     (2) empty -> .
 
     INT             shift and go to state 8
@@ -528,19 +526,18 @@ state 30
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -559,12 +556,13 @@ state 30
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
@@ -577,148 +575,103 @@ state 30
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 31
 
-    (78) block -> { statutes . }
+    (76) block -> { statutes . }
 
-    }               shift and go to state 68
+    }               shift and go to state 69
 
 
 state 32
 
-    (51) statutes -> statute . statutes
-    (51) statutes -> . statute statutes
-    (52) statutes -> . empty
-    (53) statute -> . call
-    (54) statute -> . assignment
-    (55) statute -> . condition
-    (56) statute -> . cycle
-    (57) statute -> . special
-    (2) empty -> .
-    (58) call -> . ID ( expressions ) ;
-    (61) assignment -> . ID = expression ;
-    (62) assignment -> . ID [ expression ] = expression ;
-    (63) condition -> . IF ( expression ) block elses ;
-    (64) cycle -> . WHILE ( expression ) block ;
-    (65) special -> . SPECIAL_ID ( expressions ) ;
+    (47) statutes -> statute . ; statutes
 
-    }               reduce using rule 2 (empty -> .)
-    ID              shift and go to state 39
-    IF              shift and go to state 40
-    WHILE           shift and go to state 41
-    SPECIAL_ID      shift and go to state 42
+    ;               shift and go to state 70
 
-    statute                        shift and go to state 32
-    statutes                       shift and go to state 69
-    empty                          shift and go to state 33
-    call                           shift and go to state 34
-    assignment                     shift and go to state 35
-    condition                      shift and go to state 36
-    cycle                          shift and go to state 37
-    special                        shift and go to state 38
 
 state 33
 
-    (52) statutes -> empty .
+    (48) statutes -> empty .
 
-    }               reduce using rule 52 (statutes -> empty .)
+    }               reduce using rule 48 (statutes -> empty .)
 
 
 state 34
 
-    (53) statute -> call .
+    (49) statute -> call .
 
-    ID              reduce using rule 53 (statute -> call .)
-    IF              reduce using rule 53 (statute -> call .)
-    WHILE           reduce using rule 53 (statute -> call .)
-    SPECIAL_ID      reduce using rule 53 (statute -> call .)
-    }               reduce using rule 53 (statute -> call .)
+    ;               reduce using rule 49 (statute -> call .)
 
 
 state 35
 
-    (54) statute -> assignment .
+    (50) statute -> assignment .
 
-    ID              reduce using rule 54 (statute -> assignment .)
-    IF              reduce using rule 54 (statute -> assignment .)
-    WHILE           reduce using rule 54 (statute -> assignment .)
-    SPECIAL_ID      reduce using rule 54 (statute -> assignment .)
-    }               reduce using rule 54 (statute -> assignment .)
+    ;               reduce using rule 50 (statute -> assignment .)
 
 
 state 36
 
-    (55) statute -> condition .
+    (51) statute -> condition .
 
-    ID              reduce using rule 55 (statute -> condition .)
-    IF              reduce using rule 55 (statute -> condition .)
-    WHILE           reduce using rule 55 (statute -> condition .)
-    SPECIAL_ID      reduce using rule 55 (statute -> condition .)
-    }               reduce using rule 55 (statute -> condition .)
+    ;               reduce using rule 51 (statute -> condition .)
 
 
 state 37
 
-    (56) statute -> cycle .
+    (52) statute -> cycle .
 
-    ID              reduce using rule 56 (statute -> cycle .)
-    IF              reduce using rule 56 (statute -> cycle .)
-    WHILE           reduce using rule 56 (statute -> cycle .)
-    SPECIAL_ID      reduce using rule 56 (statute -> cycle .)
-    }               reduce using rule 56 (statute -> cycle .)
+    ;               reduce using rule 52 (statute -> cycle .)
 
 
 state 38
 
-    (57) statute -> special .
+    (53) statute -> special .
 
-    ID              reduce using rule 57 (statute -> special .)
-    IF              reduce using rule 57 (statute -> special .)
-    WHILE           reduce using rule 57 (statute -> special .)
-    SPECIAL_ID      reduce using rule 57 (statute -> special .)
-    }               reduce using rule 57 (statute -> special .)
+    ;               reduce using rule 53 (statute -> special .)
 
 
 state 39
 
-    (58) call -> ID . ( expressions ) ;
-    (61) assignment -> ID . = expression ;
-    (62) assignment -> ID . [ expression ] = expression ;
+    (54) call -> ID . ( expressions )
+    (57) assignment -> ID . = expression
+    (58) assignment -> ID . [ expression ] = expression
 
-    (               shift and go to state 70
-    =               shift and go to state 71
-    [               shift and go to state 72
+    (               shift and go to state 71
+    =               shift and go to state 72
+    [               shift and go to state 73
 
 
 state 40
 
-    (63) condition -> IF . ( expression ) block elses ;
-
-    (               shift and go to state 73
-
-
-state 41
-
-    (64) cycle -> WHILE . ( expression ) block ;
+    (59) condition -> IF . ( expression ) block elses
 
     (               shift and go to state 74
 
 
-state 42
+state 41
 
-    (65) special -> SPECIAL_ID . ( expressions ) ;
+    (60) cycle -> WHILE . ( expression ) block
 
     (               shift and go to state 75
 
 
-state 43
+state 42
 
-    (43) function -> FUN return_type ID . ( parameters ) { variable_declaration statutes } ;
+    (61) special -> SPECIAL_ID . ( expressions )
 
     (               shift and go to state 76
+
+
+state 43
+
+    (39) function -> FUN return_type ID . ( parameters ) { variable_declaration statutes } ;
+
+    (               shift and go to state 77
 
 
 state 44
@@ -743,11 +696,10 @@ state 45
 
 state 46
 
-    (58) call -> ID . ( expressions ) ;
     (8) id -> ID .
     (9) id -> ID . [ expression ]
+    (54) call -> ID . ( expressions )
 
-    (               shift and go to state 70
     *               reduce using rule 8 (id -> ID .)
     /               reduce using rule 8 (id -> ID .)
     MOD             reduce using rule 8 (id -> ID .)
@@ -766,13 +718,14 @@ state 46
     ,               reduce using rule 8 (id -> ID .)
     ;               reduce using rule 8 (id -> ID .)
     [               shift and go to state 30
+    (               shift and go to state 71
 
 
 state 47
 
     (9) id -> ID [ expression . ]
 
-    ]               shift and go to state 77
+    ]               shift and go to state 78
 
 
 state 48
@@ -784,7 +737,7 @@ state 48
     )               reduce using rule 10 (expression -> level1 .)
     ,               reduce using rule 10 (expression -> level1 .)
     ;               reduce using rule 10 (expression -> level1 .)
-    EXPONENTIATION  shift and go to state 78
+    EXPONENTIATION  shift and go to state 79
 
 
 state 49
@@ -823,19 +776,18 @@ state 50
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -855,21 +807,23 @@ state 50
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level2                         shift and go to state 79
+    level2                         shift and go to state 80
     level3                         shift and go to state 52
     level4                         shift and go to state 53
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 51
 
@@ -896,19 +850,18 @@ state 51
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -928,21 +881,23 @@ state 51
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level2                         shift and go to state 80
+    level2                         shift and go to state 81
     level3                         shift and go to state 52
     level4                         shift and go to state 53
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 52
 
@@ -955,8 +910,8 @@ state 52
     )               reduce using rule 15 (level2 -> level3 .)
     ,               reduce using rule 15 (level2 -> level3 .)
     ;               reduce using rule 15 (level2 -> level3 .)
-    OR              shift and go to state 81
-    AND             shift and go to state 82
+    OR              shift and go to state 82
+    AND             shift and go to state 83
 
 
 state 53
@@ -975,11 +930,11 @@ state 53
     )               reduce using rule 18 (level3 -> level4 .)
     ,               reduce using rule 18 (level3 -> level4 .)
     ;               reduce using rule 18 (level3 -> level4 .)
-    <               shift and go to state 83
-    >               shift and go to state 84
-    LESS_EQUAL_THAN shift and go to state 85
-    GREATER_EQUAL_THAN shift and go to state 86
-    EQUALS          shift and go to state 87
+    <               shift and go to state 84
+    >               shift and go to state 85
+    LESS_EQUAL_THAN shift and go to state 86
+    GREATER_EQUAL_THAN shift and go to state 87
+    EQUALS          shift and go to state 88
 
 
 state 54
@@ -1000,8 +955,8 @@ state 54
     )               reduce using rule 24 (level4 -> level5 .)
     ,               reduce using rule 24 (level4 -> level5 .)
     ;               reduce using rule 24 (level4 -> level5 .)
-    +               shift and go to state 88
-    -               shift and go to state 89
+    +               shift and go to state 89
+    -               shift and go to state 90
 
 
 state 55
@@ -1025,9 +980,9 @@ state 55
     )               reduce using rule 27 (level5 -> level6 .)
     ,               reduce using rule 27 (level5 -> level6 .)
     ;               reduce using rule 27 (level5 -> level6 .)
-    *               shift and go to state 90
-    /               shift and go to state 91
-    MOD             shift and go to state 92
+    *               shift and go to state 91
+    /               shift and go to state 92
+    MOD             shift and go to state 93
 
 
 state 56
@@ -1060,19 +1015,18 @@ state 56
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1091,17 +1045,18 @@ state 56
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expression                     shift and go to state 93
+    expression                     shift and go to state 94
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -1109,8 +1064,9 @@ state 56
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 57
 
@@ -1138,261 +1094,322 @@ state 57
 state 58
 
     (34) level6 -> NOT . const
-    (38) level6 -> NOT . call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    const                          shift and go to state 94
-    call                           shift and go to state 95
-    id                             shift and go to state 62
+    const                          shift and go to state 95
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 59
 
     (35) level6 -> INCREMENT . const
-    (39) level6 -> INCREMENT . call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
     const                          shift and go to state 96
-    call                           shift and go to state 97
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 60
 
     (36) level6 -> DECREMENT . const
-    (40) level6 -> DECREMENT . call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    const                          shift and go to state 98
-    call                           shift and go to state 99
-    id                             shift and go to state 62
+    const                          shift and go to state 97
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
 state 61
 
-    (37) level6 -> call .
+    (68) const -> id .
 
-    *               reduce using rule 37 (level6 -> call .)
-    /               reduce using rule 37 (level6 -> call .)
-    MOD             reduce using rule 37 (level6 -> call .)
-    +               reduce using rule 37 (level6 -> call .)
-    -               reduce using rule 37 (level6 -> call .)
-    <               reduce using rule 37 (level6 -> call .)
-    >               reduce using rule 37 (level6 -> call .)
-    LESS_EQUAL_THAN reduce using rule 37 (level6 -> call .)
-    GREATER_EQUAL_THAN reduce using rule 37 (level6 -> call .)
-    EQUALS          reduce using rule 37 (level6 -> call .)
-    OR              reduce using rule 37 (level6 -> call .)
-    AND             reduce using rule 37 (level6 -> call .)
-    EXPONENTIATION  reduce using rule 37 (level6 -> call .)
-    ]               reduce using rule 37 (level6 -> call .)
-    )               reduce using rule 37 (level6 -> call .)
-    ,               reduce using rule 37 (level6 -> call .)
-    ;               reduce using rule 37 (level6 -> call .)
+    *               reduce using rule 68 (const -> id .)
+    /               reduce using rule 68 (const -> id .)
+    MOD             reduce using rule 68 (const -> id .)
+    +               reduce using rule 68 (const -> id .)
+    -               reduce using rule 68 (const -> id .)
+    <               reduce using rule 68 (const -> id .)
+    >               reduce using rule 68 (const -> id .)
+    LESS_EQUAL_THAN reduce using rule 68 (const -> id .)
+    GREATER_EQUAL_THAN reduce using rule 68 (const -> id .)
+    EQUALS          reduce using rule 68 (const -> id .)
+    OR              reduce using rule 68 (const -> id .)
+    AND             reduce using rule 68 (const -> id .)
+    EXPONENTIATION  reduce using rule 68 (const -> id .)
+    ]               reduce using rule 68 (const -> id .)
+    )               reduce using rule 68 (const -> id .)
+    ,               reduce using rule 68 (const -> id .)
+    ;               reduce using rule 68 (const -> id .)
 
 
 state 62
 
-    (72) const -> id .
+    (69) const -> call .
 
-    *               reduce using rule 72 (const -> id .)
-    /               reduce using rule 72 (const -> id .)
-    MOD             reduce using rule 72 (const -> id .)
-    +               reduce using rule 72 (const -> id .)
-    -               reduce using rule 72 (const -> id .)
-    <               reduce using rule 72 (const -> id .)
-    >               reduce using rule 72 (const -> id .)
-    LESS_EQUAL_THAN reduce using rule 72 (const -> id .)
-    GREATER_EQUAL_THAN reduce using rule 72 (const -> id .)
-    EQUALS          reduce using rule 72 (const -> id .)
-    OR              reduce using rule 72 (const -> id .)
-    AND             reduce using rule 72 (const -> id .)
-    EXPONENTIATION  reduce using rule 72 (const -> id .)
-    ]               reduce using rule 72 (const -> id .)
-    )               reduce using rule 72 (const -> id .)
-    ,               reduce using rule 72 (const -> id .)
-    ;               reduce using rule 72 (const -> id .)
+    *               reduce using rule 69 (const -> call .)
+    /               reduce using rule 69 (const -> call .)
+    MOD             reduce using rule 69 (const -> call .)
+    +               reduce using rule 69 (const -> call .)
+    -               reduce using rule 69 (const -> call .)
+    <               reduce using rule 69 (const -> call .)
+    >               reduce using rule 69 (const -> call .)
+    LESS_EQUAL_THAN reduce using rule 69 (const -> call .)
+    GREATER_EQUAL_THAN reduce using rule 69 (const -> call .)
+    EQUALS          reduce using rule 69 (const -> call .)
+    OR              reduce using rule 69 (const -> call .)
+    AND             reduce using rule 69 (const -> call .)
+    EXPONENTIATION  reduce using rule 69 (const -> call .)
+    ]               reduce using rule 69 (const -> call .)
+    )               reduce using rule 69 (const -> call .)
+    ,               reduce using rule 69 (const -> call .)
+    ;               reduce using rule 69 (const -> call .)
 
 
 state 63
 
-    (73) const -> INT_VAL .
+    (70) const -> special .
 
-    *               reduce using rule 73 (const -> INT_VAL .)
-    /               reduce using rule 73 (const -> INT_VAL .)
-    MOD             reduce using rule 73 (const -> INT_VAL .)
-    +               reduce using rule 73 (const -> INT_VAL .)
-    -               reduce using rule 73 (const -> INT_VAL .)
-    <               reduce using rule 73 (const -> INT_VAL .)
-    >               reduce using rule 73 (const -> INT_VAL .)
-    LESS_EQUAL_THAN reduce using rule 73 (const -> INT_VAL .)
-    GREATER_EQUAL_THAN reduce using rule 73 (const -> INT_VAL .)
-    EQUALS          reduce using rule 73 (const -> INT_VAL .)
-    OR              reduce using rule 73 (const -> INT_VAL .)
-    AND             reduce using rule 73 (const -> INT_VAL .)
-    EXPONENTIATION  reduce using rule 73 (const -> INT_VAL .)
-    ]               reduce using rule 73 (const -> INT_VAL .)
-    )               reduce using rule 73 (const -> INT_VAL .)
-    ,               reduce using rule 73 (const -> INT_VAL .)
-    ;               reduce using rule 73 (const -> INT_VAL .)
+    *               reduce using rule 70 (const -> special .)
+    /               reduce using rule 70 (const -> special .)
+    MOD             reduce using rule 70 (const -> special .)
+    +               reduce using rule 70 (const -> special .)
+    -               reduce using rule 70 (const -> special .)
+    <               reduce using rule 70 (const -> special .)
+    >               reduce using rule 70 (const -> special .)
+    LESS_EQUAL_THAN reduce using rule 70 (const -> special .)
+    GREATER_EQUAL_THAN reduce using rule 70 (const -> special .)
+    EQUALS          reduce using rule 70 (const -> special .)
+    OR              reduce using rule 70 (const -> special .)
+    AND             reduce using rule 70 (const -> special .)
+    EXPONENTIATION  reduce using rule 70 (const -> special .)
+    ]               reduce using rule 70 (const -> special .)
+    )               reduce using rule 70 (const -> special .)
+    ,               reduce using rule 70 (const -> special .)
+    ;               reduce using rule 70 (const -> special .)
 
 
 state 64
 
-    (74) const -> DEC_VAL .
+    (71) const -> INT_VAL .
 
-    *               reduce using rule 74 (const -> DEC_VAL .)
-    /               reduce using rule 74 (const -> DEC_VAL .)
-    MOD             reduce using rule 74 (const -> DEC_VAL .)
-    +               reduce using rule 74 (const -> DEC_VAL .)
-    -               reduce using rule 74 (const -> DEC_VAL .)
-    <               reduce using rule 74 (const -> DEC_VAL .)
-    >               reduce using rule 74 (const -> DEC_VAL .)
-    LESS_EQUAL_THAN reduce using rule 74 (const -> DEC_VAL .)
-    GREATER_EQUAL_THAN reduce using rule 74 (const -> DEC_VAL .)
-    EQUALS          reduce using rule 74 (const -> DEC_VAL .)
-    OR              reduce using rule 74 (const -> DEC_VAL .)
-    AND             reduce using rule 74 (const -> DEC_VAL .)
-    EXPONENTIATION  reduce using rule 74 (const -> DEC_VAL .)
-    ]               reduce using rule 74 (const -> DEC_VAL .)
-    )               reduce using rule 74 (const -> DEC_VAL .)
-    ,               reduce using rule 74 (const -> DEC_VAL .)
-    ;               reduce using rule 74 (const -> DEC_VAL .)
+    *               reduce using rule 71 (const -> INT_VAL .)
+    /               reduce using rule 71 (const -> INT_VAL .)
+    MOD             reduce using rule 71 (const -> INT_VAL .)
+    +               reduce using rule 71 (const -> INT_VAL .)
+    -               reduce using rule 71 (const -> INT_VAL .)
+    <               reduce using rule 71 (const -> INT_VAL .)
+    >               reduce using rule 71 (const -> INT_VAL .)
+    LESS_EQUAL_THAN reduce using rule 71 (const -> INT_VAL .)
+    GREATER_EQUAL_THAN reduce using rule 71 (const -> INT_VAL .)
+    EQUALS          reduce using rule 71 (const -> INT_VAL .)
+    OR              reduce using rule 71 (const -> INT_VAL .)
+    AND             reduce using rule 71 (const -> INT_VAL .)
+    EXPONENTIATION  reduce using rule 71 (const -> INT_VAL .)
+    ]               reduce using rule 71 (const -> INT_VAL .)
+    )               reduce using rule 71 (const -> INT_VAL .)
+    ,               reduce using rule 71 (const -> INT_VAL .)
+    ;               reduce using rule 71 (const -> INT_VAL .)
 
 
 state 65
 
-    (75) const -> CHAR_VAL .
+    (72) const -> DEC_VAL .
 
-    *               reduce using rule 75 (const -> CHAR_VAL .)
-    /               reduce using rule 75 (const -> CHAR_VAL .)
-    MOD             reduce using rule 75 (const -> CHAR_VAL .)
-    +               reduce using rule 75 (const -> CHAR_VAL .)
-    -               reduce using rule 75 (const -> CHAR_VAL .)
-    <               reduce using rule 75 (const -> CHAR_VAL .)
-    >               reduce using rule 75 (const -> CHAR_VAL .)
-    LESS_EQUAL_THAN reduce using rule 75 (const -> CHAR_VAL .)
-    GREATER_EQUAL_THAN reduce using rule 75 (const -> CHAR_VAL .)
-    EQUALS          reduce using rule 75 (const -> CHAR_VAL .)
-    OR              reduce using rule 75 (const -> CHAR_VAL .)
-    AND             reduce using rule 75 (const -> CHAR_VAL .)
-    EXPONENTIATION  reduce using rule 75 (const -> CHAR_VAL .)
-    ]               reduce using rule 75 (const -> CHAR_VAL .)
-    )               reduce using rule 75 (const -> CHAR_VAL .)
-    ,               reduce using rule 75 (const -> CHAR_VAL .)
-    ;               reduce using rule 75 (const -> CHAR_VAL .)
+    *               reduce using rule 72 (const -> DEC_VAL .)
+    /               reduce using rule 72 (const -> DEC_VAL .)
+    MOD             reduce using rule 72 (const -> DEC_VAL .)
+    +               reduce using rule 72 (const -> DEC_VAL .)
+    -               reduce using rule 72 (const -> DEC_VAL .)
+    <               reduce using rule 72 (const -> DEC_VAL .)
+    >               reduce using rule 72 (const -> DEC_VAL .)
+    LESS_EQUAL_THAN reduce using rule 72 (const -> DEC_VAL .)
+    GREATER_EQUAL_THAN reduce using rule 72 (const -> DEC_VAL .)
+    EQUALS          reduce using rule 72 (const -> DEC_VAL .)
+    OR              reduce using rule 72 (const -> DEC_VAL .)
+    AND             reduce using rule 72 (const -> DEC_VAL .)
+    EXPONENTIATION  reduce using rule 72 (const -> DEC_VAL .)
+    ]               reduce using rule 72 (const -> DEC_VAL .)
+    )               reduce using rule 72 (const -> DEC_VAL .)
+    ,               reduce using rule 72 (const -> DEC_VAL .)
+    ;               reduce using rule 72 (const -> DEC_VAL .)
 
 
 state 66
 
-    (76) const -> STR_VAL .
+    (73) const -> CHAR_VAL .
 
-    *               reduce using rule 76 (const -> STR_VAL .)
-    /               reduce using rule 76 (const -> STR_VAL .)
-    MOD             reduce using rule 76 (const -> STR_VAL .)
-    +               reduce using rule 76 (const -> STR_VAL .)
-    -               reduce using rule 76 (const -> STR_VAL .)
-    <               reduce using rule 76 (const -> STR_VAL .)
-    >               reduce using rule 76 (const -> STR_VAL .)
-    LESS_EQUAL_THAN reduce using rule 76 (const -> STR_VAL .)
-    GREATER_EQUAL_THAN reduce using rule 76 (const -> STR_VAL .)
-    EQUALS          reduce using rule 76 (const -> STR_VAL .)
-    OR              reduce using rule 76 (const -> STR_VAL .)
-    AND             reduce using rule 76 (const -> STR_VAL .)
-    EXPONENTIATION  reduce using rule 76 (const -> STR_VAL .)
-    ]               reduce using rule 76 (const -> STR_VAL .)
-    )               reduce using rule 76 (const -> STR_VAL .)
-    ,               reduce using rule 76 (const -> STR_VAL .)
-    ;               reduce using rule 76 (const -> STR_VAL .)
+    *               reduce using rule 73 (const -> CHAR_VAL .)
+    /               reduce using rule 73 (const -> CHAR_VAL .)
+    MOD             reduce using rule 73 (const -> CHAR_VAL .)
+    +               reduce using rule 73 (const -> CHAR_VAL .)
+    -               reduce using rule 73 (const -> CHAR_VAL .)
+    <               reduce using rule 73 (const -> CHAR_VAL .)
+    >               reduce using rule 73 (const -> CHAR_VAL .)
+    LESS_EQUAL_THAN reduce using rule 73 (const -> CHAR_VAL .)
+    GREATER_EQUAL_THAN reduce using rule 73 (const -> CHAR_VAL .)
+    EQUALS          reduce using rule 73 (const -> CHAR_VAL .)
+    OR              reduce using rule 73 (const -> CHAR_VAL .)
+    AND             reduce using rule 73 (const -> CHAR_VAL .)
+    EXPONENTIATION  reduce using rule 73 (const -> CHAR_VAL .)
+    ]               reduce using rule 73 (const -> CHAR_VAL .)
+    )               reduce using rule 73 (const -> CHAR_VAL .)
+    ,               reduce using rule 73 (const -> CHAR_VAL .)
+    ;               reduce using rule 73 (const -> CHAR_VAL .)
 
 
 state 67
 
-    (77) const -> BOOL_VAL .
+    (74) const -> STR_VAL .
 
-    *               reduce using rule 77 (const -> BOOL_VAL .)
-    /               reduce using rule 77 (const -> BOOL_VAL .)
-    MOD             reduce using rule 77 (const -> BOOL_VAL .)
-    +               reduce using rule 77 (const -> BOOL_VAL .)
-    -               reduce using rule 77 (const -> BOOL_VAL .)
-    <               reduce using rule 77 (const -> BOOL_VAL .)
-    >               reduce using rule 77 (const -> BOOL_VAL .)
-    LESS_EQUAL_THAN reduce using rule 77 (const -> BOOL_VAL .)
-    GREATER_EQUAL_THAN reduce using rule 77 (const -> BOOL_VAL .)
-    EQUALS          reduce using rule 77 (const -> BOOL_VAL .)
-    OR              reduce using rule 77 (const -> BOOL_VAL .)
-    AND             reduce using rule 77 (const -> BOOL_VAL .)
-    EXPONENTIATION  reduce using rule 77 (const -> BOOL_VAL .)
-    ]               reduce using rule 77 (const -> BOOL_VAL .)
-    )               reduce using rule 77 (const -> BOOL_VAL .)
-    ,               reduce using rule 77 (const -> BOOL_VAL .)
-    ;               reduce using rule 77 (const -> BOOL_VAL .)
+    *               reduce using rule 74 (const -> STR_VAL .)
+    /               reduce using rule 74 (const -> STR_VAL .)
+    MOD             reduce using rule 74 (const -> STR_VAL .)
+    +               reduce using rule 74 (const -> STR_VAL .)
+    -               reduce using rule 74 (const -> STR_VAL .)
+    <               reduce using rule 74 (const -> STR_VAL .)
+    >               reduce using rule 74 (const -> STR_VAL .)
+    LESS_EQUAL_THAN reduce using rule 74 (const -> STR_VAL .)
+    GREATER_EQUAL_THAN reduce using rule 74 (const -> STR_VAL .)
+    EQUALS          reduce using rule 74 (const -> STR_VAL .)
+    OR              reduce using rule 74 (const -> STR_VAL .)
+    AND             reduce using rule 74 (const -> STR_VAL .)
+    EXPONENTIATION  reduce using rule 74 (const -> STR_VAL .)
+    ]               reduce using rule 74 (const -> STR_VAL .)
+    )               reduce using rule 74 (const -> STR_VAL .)
+    ,               reduce using rule 74 (const -> STR_VAL .)
+    ;               reduce using rule 74 (const -> STR_VAL .)
 
 
 state 68
 
-    (78) block -> { statutes } .
+    (75) const -> BOOL_VAL .
 
-    $end            reduce using rule 78 (block -> { statutes } .)
-    ELSE            reduce using rule 78 (block -> { statutes } .)
-    ELSEIF          reduce using rule 78 (block -> { statutes } .)
-    ;               reduce using rule 78 (block -> { statutes } .)
+    *               reduce using rule 75 (const -> BOOL_VAL .)
+    /               reduce using rule 75 (const -> BOOL_VAL .)
+    MOD             reduce using rule 75 (const -> BOOL_VAL .)
+    +               reduce using rule 75 (const -> BOOL_VAL .)
+    -               reduce using rule 75 (const -> BOOL_VAL .)
+    <               reduce using rule 75 (const -> BOOL_VAL .)
+    >               reduce using rule 75 (const -> BOOL_VAL .)
+    LESS_EQUAL_THAN reduce using rule 75 (const -> BOOL_VAL .)
+    GREATER_EQUAL_THAN reduce using rule 75 (const -> BOOL_VAL .)
+    EQUALS          reduce using rule 75 (const -> BOOL_VAL .)
+    OR              reduce using rule 75 (const -> BOOL_VAL .)
+    AND             reduce using rule 75 (const -> BOOL_VAL .)
+    EXPONENTIATION  reduce using rule 75 (const -> BOOL_VAL .)
+    ]               reduce using rule 75 (const -> BOOL_VAL .)
+    )               reduce using rule 75 (const -> BOOL_VAL .)
+    ,               reduce using rule 75 (const -> BOOL_VAL .)
+    ;               reduce using rule 75 (const -> BOOL_VAL .)
 
 
 state 69
 
-    (51) statutes -> statute statutes .
+    (76) block -> { statutes } .
 
-    }               reduce using rule 51 (statutes -> statute statutes .)
+    $end            reduce using rule 76 (block -> { statutes } .)
+    ELSE            reduce using rule 76 (block -> { statutes } .)
+    ELSEIF          reduce using rule 76 (block -> { statutes } .)
+    ;               reduce using rule 76 (block -> { statutes } .)
 
 
 state 70
 
-    (58) call -> ID ( . expressions ) ;
-    (59) expressions -> . expression
-    (60) expressions -> . expression , expressions
+    (47) statutes -> statute ; . statutes
+    (47) statutes -> . statute ; statutes
+    (48) statutes -> . empty
+    (49) statute -> . call
+    (50) statute -> . assignment
+    (51) statute -> . condition
+    (52) statute -> . cycle
+    (53) statute -> . special
+    (2) empty -> .
+    (54) call -> . ID ( expressions )
+    (57) assignment -> . ID = expression
+    (58) assignment -> . ID [ expression ] = expression
+    (59) condition -> . IF ( expression ) block elses
+    (60) cycle -> . WHILE ( expression ) block
+    (61) special -> . SPECIAL_ID ( expressions )
+
+    }               reduce using rule 2 (empty -> .)
+    ID              shift and go to state 39
+    IF              shift and go to state 40
+    WHILE           shift and go to state 41
+    SPECIAL_ID      shift and go to state 42
+
+    statute                        shift and go to state 32
+    statutes                       shift and go to state 98
+    empty                          shift and go to state 33
+    call                           shift and go to state 34
+    assignment                     shift and go to state 35
+    condition                      shift and go to state 36
+    cycle                          shift and go to state 37
+    special                        shift and go to state 38
+
+state 71
+
+    (54) call -> ID ( . expressions )
+    (55) expressions -> . expression
+    (56) expressions -> . expression , expressions
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -1420,19 +1437,18 @@ state 70
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1452,18 +1468,19 @@ state 70
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expressions                    shift and go to state 100
-    expression                     shift and go to state 101
+    expressions                    shift and go to state 99
+    expression                     shift and go to state 100
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -1471,12 +1488,13 @@ state 70
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 71
+state 72
 
-    (61) assignment -> ID = . expression ;
+    (57) assignment -> ID = . expression
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -1504,19 +1522,18 @@ state 71
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1535,17 +1552,18 @@ state 71
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expression                     shift and go to state 102
+    expression                     shift and go to state 101
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -1553,12 +1571,13 @@ state 71
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 72
+state 73
 
-    (62) assignment -> ID [ . expression ] = expression ;
+    (58) assignment -> ID [ . expression ] = expression
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -1586,19 +1605,18 @@ state 72
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1617,12 +1635,96 @@ state 72
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
+
+  ! +               [ reduce using rule 31 (level5 -> .) ]
+  ! -               [ reduce using rule 31 (level5 -> .) ]
+
+    expression                     shift and go to state 102
+    level1                         shift and go to state 48
+    level2                         shift and go to state 49
+    level3                         shift and go to state 52
+    level4                         shift and go to state 53
+    level5                         shift and go to state 54
+    level6                         shift and go to state 55
+    const                          shift and go to state 57
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
+
+state 74
+
+    (59) condition -> IF ( . expression ) block elses
+    (10) expression -> . level1
+    (11) expression -> . level1 EXPONENTIATION level1
+    (12) level1 -> . level2
+    (13) level1 -> . + level2
+    (14) level1 -> . - level2
+    (15) level2 -> . level3
+    (16) level2 -> . level3 OR level3
+    (17) level2 -> . level3 AND level3
+    (18) level3 -> . level4
+    (19) level3 -> . level4 < level4
+    (20) level3 -> . level4 > level4
+    (21) level3 -> . level4 LESS_EQUAL_THAN level4
+    (22) level3 -> . level4 GREATER_EQUAL_THAN level4
+    (23) level3 -> . level4 EQUALS level4
+    (24) level4 -> . level5
+    (25) level4 -> . level5 + level5
+    (26) level4 -> . level5 - level5
+    (27) level5 -> . level6
+    (28) level5 -> . level6 * level6
+    (29) level5 -> . level6 / level6
+    (30) level5 -> . level6 MOD level6
+    (31) level5 -> .
+    (32) level6 -> . ( expression )
+    (33) level6 -> . const
+    (34) level6 -> . NOT const
+    (35) level6 -> . INCREMENT const
+    (36) level6 -> . DECREMENT const
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
+    (8) id -> . ID
+    (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
+
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+    +               shift and go to state 50
+    -               shift and go to state 51
+    <               reduce using rule 31 (level5 -> .)
+    >               reduce using rule 31 (level5 -> .)
+    LESS_EQUAL_THAN reduce using rule 31 (level5 -> .)
+    GREATER_EQUAL_THAN reduce using rule 31 (level5 -> .)
+    EQUALS          reduce using rule 31 (level5 -> .)
+    OR              reduce using rule 31 (level5 -> .)
+    AND             reduce using rule 31 (level5 -> .)
+    EXPONENTIATION  reduce using rule 31 (level5 -> .)
+    )               reduce using rule 31 (level5 -> .)
+    (               shift and go to state 56
+    NOT             shift and go to state 58
+    INCREMENT       shift and go to state 59
+    DECREMENT       shift and go to state 60
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
+    ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
@@ -1635,12 +1737,13 @@ state 72
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 73
+state 75
 
-    (63) condition -> IF ( . expression ) block elses ;
+    (60) cycle -> WHILE ( . expression ) block
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -1668,19 +1771,18 @@ state 73
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1699,12 +1801,13 @@ state 73
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
@@ -1717,12 +1820,15 @@ state 73
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 74
+state 76
 
-    (64) cycle -> WHILE ( . expression ) block ;
+    (61) special -> SPECIAL_ID ( . expressions )
+    (55) expressions -> . expression
+    (56) expressions -> . expression , expressions
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -1750,103 +1856,18 @@ state 74
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
-
-  ! shift/reduce conflict for + resolved as shift
-  ! shift/reduce conflict for - resolved as shift
-    +               shift and go to state 50
-    -               shift and go to state 51
-    <               reduce using rule 31 (level5 -> .)
-    >               reduce using rule 31 (level5 -> .)
-    LESS_EQUAL_THAN reduce using rule 31 (level5 -> .)
-    GREATER_EQUAL_THAN reduce using rule 31 (level5 -> .)
-    EQUALS          reduce using rule 31 (level5 -> .)
-    OR              reduce using rule 31 (level5 -> .)
-    AND             reduce using rule 31 (level5 -> .)
-    EXPONENTIATION  reduce using rule 31 (level5 -> .)
-    )               reduce using rule 31 (level5 -> .)
-    (               shift and go to state 56
-    NOT             shift and go to state 58
-    INCREMENT       shift and go to state 59
-    DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
-    ID              shift and go to state 46
-
-  ! +               [ reduce using rule 31 (level5 -> .) ]
-  ! -               [ reduce using rule 31 (level5 -> .) ]
-
-    expression                     shift and go to state 105
-    level1                         shift and go to state 48
-    level2                         shift and go to state 49
-    level3                         shift and go to state 52
-    level4                         shift and go to state 53
-    level5                         shift and go to state 54
-    level6                         shift and go to state 55
-    const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
-
-state 75
-
-    (65) special -> SPECIAL_ID ( . expressions ) ;
-    (59) expressions -> . expression
-    (60) expressions -> . expression , expressions
-    (10) expression -> . level1
-    (11) expression -> . level1 EXPONENTIATION level1
-    (12) level1 -> . level2
-    (13) level1 -> . + level2
-    (14) level1 -> . - level2
-    (15) level2 -> . level3
-    (16) level2 -> . level3 OR level3
-    (17) level2 -> . level3 AND level3
-    (18) level3 -> . level4
-    (19) level3 -> . level4 < level4
-    (20) level3 -> . level4 > level4
-    (21) level3 -> . level4 LESS_EQUAL_THAN level4
-    (22) level3 -> . level4 GREATER_EQUAL_THAN level4
-    (23) level3 -> . level4 EQUALS level4
-    (24) level4 -> . level5
-    (25) level4 -> . level5 + level5
-    (26) level4 -> . level5 - level5
-    (27) level5 -> . level6
-    (28) level5 -> . level6 * level6
-    (29) level5 -> . level6 / level6
-    (30) level5 -> . level6 MOD level6
-    (31) level5 -> .
-    (32) level6 -> . ( expression )
-    (33) level6 -> . const
-    (34) level6 -> . NOT const
-    (35) level6 -> . INCREMENT const
-    (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
-    (8) id -> . ID
-    (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1866,18 +1887,19 @@ state 75
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expressions                    shift and go to state 106
-    expression                     shift and go to state 101
+    expressions                    shift and go to state 105
+    expression                     shift and go to state 100
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -1885,18 +1907,19 @@ state 75
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 76
+state 77
 
-    (43) function -> FUN return_type ID ( . parameters ) { variable_declaration statutes } ;
-    (69) parameters -> . type ID other_parameters
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (39) function -> FUN return_type ID ( . parameters ) { variable_declaration statutes } ;
+    (65) parameters -> . type ID other_parameters
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
 
     INT             shift and go to state 8
     DEC             shift and go to state 9
@@ -1904,10 +1927,10 @@ state 76
     STR             shift and go to state 11
     BOOL            shift and go to state 12
 
-    parameters                     shift and go to state 107
-    type                           shift and go to state 108
+    parameters                     shift and go to state 106
+    type                           shift and go to state 107
 
-state 77
+state 78
 
     (9) id -> ID [ expression ] .
 
@@ -1930,7 +1953,7 @@ state 77
     )               reduce using rule 9 (id -> ID [ expression ] .)
 
 
-state 78
+state 79
 
     (11) expression -> level1 EXPONENTIATION . level1
     (12) level1 -> . level2
@@ -1958,19 +1981,18 @@ state 78
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -1991,27 +2013,29 @@ state 78
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    level1                         shift and go to state 109
+    level1                         shift and go to state 108
     level2                         shift and go to state 49
     level3                         shift and go to state 52
     level4                         shift and go to state 53
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 79
+state 80
 
     (13) level1 -> + level2 .
 
@@ -2022,7 +2046,7 @@ state 79
     ;               reduce using rule 13 (level1 -> + level2 .)
 
 
-state 80
+state 81
 
     (14) level1 -> - level2 .
 
@@ -2033,7 +2057,7 @@ state 80
     ;               reduce using rule 14 (level1 -> - level2 .)
 
 
-state 81
+state 82
 
     (16) level2 -> level3 OR . level3
     (18) level3 -> . level4
@@ -2055,19 +2079,18 @@ state 81
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2085,22 +2108,24 @@ state 81
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level3                         shift and go to state 110
+    level3                         shift and go to state 109
     level4                         shift and go to state 53
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 82
+state 83
 
     (17) level2 -> level3 AND . level3
     (18) level3 -> . level4
@@ -2122,19 +2147,18 @@ state 82
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2152,22 +2176,24 @@ state 82
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level3                         shift and go to state 111
+    level3                         shift and go to state 110
     level4                         shift and go to state 53
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 83
+state 84
 
     (19) level3 -> level4 < . level4
     (24) level4 -> . level5
@@ -2183,19 +2209,18 @@ state 83
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2210,21 +2235,23 @@ state 83
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level4                         shift and go to state 112
+    level4                         shift and go to state 111
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 84
+state 85
 
     (20) level3 -> level4 > . level4
     (24) level4 -> . level5
@@ -2240,19 +2267,18 @@ state 84
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2267,21 +2293,23 @@ state 84
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level4                         shift and go to state 113
+    level4                         shift and go to state 112
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 85
+state 86
 
     (21) level3 -> level4 LESS_EQUAL_THAN . level4
     (24) level4 -> . level5
@@ -2297,19 +2325,18 @@ state 85
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2324,21 +2351,23 @@ state 85
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level4                         shift and go to state 114
+    level4                         shift and go to state 113
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 86
+state 87
 
     (22) level3 -> level4 GREATER_EQUAL_THAN . level4
     (24) level4 -> . level5
@@ -2354,19 +2383,18 @@ state 86
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2381,21 +2409,23 @@ state 86
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level4                         shift and go to state 115
+    level4                         shift and go to state 114
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 87
+state 88
 
     (23) level3 -> level4 EQUALS . level4
     (24) level4 -> . level5
@@ -2411,19 +2441,18 @@ state 87
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     +               reduce using rule 31 (level5 -> .)
     -               reduce using rule 31 (level5 -> .)
@@ -2438,21 +2467,23 @@ state 87
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level4                         shift and go to state 116
+    level4                         shift and go to state 115
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 88
+state 89
 
     (25) level4 -> level5 + . level5
     (27) level5 -> . level6
@@ -2465,19 +2496,18 @@ state 88
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     <               reduce using rule 31 (level5 -> .)
     >               reduce using rule 31 (level5 -> .)
@@ -2495,20 +2525,22 @@ state 88
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level5                         shift and go to state 117
+    level5                         shift and go to state 116
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 89
+state 90
 
     (26) level4 -> level5 - . level5
     (27) level5 -> . level6
@@ -2521,19 +2553,18 @@ state 89
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     <               reduce using rule 31 (level5 -> .)
     >               reduce using rule 31 (level5 -> .)
@@ -2551,20 +2582,22 @@ state 89
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level5                         shift and go to state 118
+    level5                         shift and go to state 117
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 90
+state 91
 
     (28) level5 -> level6 * . level6
     (32) level6 -> . ( expression )
@@ -2572,37 +2605,38 @@ state 90
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     (               shift and go to state 56
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level6                         shift and go to state 119
+    level6                         shift and go to state 118
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 91
+state 92
 
     (29) level5 -> level6 / . level6
     (32) level6 -> . ( expression )
@@ -2610,37 +2644,38 @@ state 91
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     (               shift and go to state 56
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level6                         shift and go to state 120
+    level6                         shift and go to state 119
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 92
+state 93
 
     (30) level5 -> level6 MOD . level6
     (32) level6 -> . ( expression )
@@ -2648,44 +2683,45 @@ state 92
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
     (               shift and go to state 56
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
-    level6                         shift and go to state 121
+    level6                         shift and go to state 120
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 93
+state 94
 
     (32) level6 -> ( expression . )
 
-    )               shift and go to state 122
+    )               shift and go to state 121
 
 
-state 94
+state 95
 
     (34) level6 -> NOT const .
 
@@ -2706,29 +2742,6 @@ state 94
     )               reduce using rule 34 (level6 -> NOT const .)
     ,               reduce using rule 34 (level6 -> NOT const .)
     ;               reduce using rule 34 (level6 -> NOT const .)
-
-
-state 95
-
-    (38) level6 -> NOT call .
-
-    *               reduce using rule 38 (level6 -> NOT call .)
-    /               reduce using rule 38 (level6 -> NOT call .)
-    MOD             reduce using rule 38 (level6 -> NOT call .)
-    +               reduce using rule 38 (level6 -> NOT call .)
-    -               reduce using rule 38 (level6 -> NOT call .)
-    <               reduce using rule 38 (level6 -> NOT call .)
-    >               reduce using rule 38 (level6 -> NOT call .)
-    LESS_EQUAL_THAN reduce using rule 38 (level6 -> NOT call .)
-    GREATER_EQUAL_THAN reduce using rule 38 (level6 -> NOT call .)
-    EQUALS          reduce using rule 38 (level6 -> NOT call .)
-    OR              reduce using rule 38 (level6 -> NOT call .)
-    AND             reduce using rule 38 (level6 -> NOT call .)
-    EXPONENTIATION  reduce using rule 38 (level6 -> NOT call .)
-    ]               reduce using rule 38 (level6 -> NOT call .)
-    )               reduce using rule 38 (level6 -> NOT call .)
-    ,               reduce using rule 38 (level6 -> NOT call .)
-    ;               reduce using rule 38 (level6 -> NOT call .)
 
 
 state 96
@@ -2756,29 +2769,6 @@ state 96
 
 state 97
 
-    (39) level6 -> INCREMENT call .
-
-    *               reduce using rule 39 (level6 -> INCREMENT call .)
-    /               reduce using rule 39 (level6 -> INCREMENT call .)
-    MOD             reduce using rule 39 (level6 -> INCREMENT call .)
-    +               reduce using rule 39 (level6 -> INCREMENT call .)
-    -               reduce using rule 39 (level6 -> INCREMENT call .)
-    <               reduce using rule 39 (level6 -> INCREMENT call .)
-    >               reduce using rule 39 (level6 -> INCREMENT call .)
-    LESS_EQUAL_THAN reduce using rule 39 (level6 -> INCREMENT call .)
-    GREATER_EQUAL_THAN reduce using rule 39 (level6 -> INCREMENT call .)
-    EQUALS          reduce using rule 39 (level6 -> INCREMENT call .)
-    OR              reduce using rule 39 (level6 -> INCREMENT call .)
-    AND             reduce using rule 39 (level6 -> INCREMENT call .)
-    EXPONENTIATION  reduce using rule 39 (level6 -> INCREMENT call .)
-    ]               reduce using rule 39 (level6 -> INCREMENT call .)
-    )               reduce using rule 39 (level6 -> INCREMENT call .)
-    ,               reduce using rule 39 (level6 -> INCREMENT call .)
-    ;               reduce using rule 39 (level6 -> INCREMENT call .)
-
-
-state 98
-
     (36) level6 -> DECREMENT const .
 
     *               reduce using rule 36 (level6 -> DECREMENT const .)
@@ -2800,95 +2790,79 @@ state 98
     ;               reduce using rule 36 (level6 -> DECREMENT const .)
 
 
+state 98
+
+    (47) statutes -> statute ; statutes .
+
+    }               reduce using rule 47 (statutes -> statute ; statutes .)
+
+
 state 99
 
-    (40) level6 -> DECREMENT call .
+    (54) call -> ID ( expressions . )
 
-    *               reduce using rule 40 (level6 -> DECREMENT call .)
-    /               reduce using rule 40 (level6 -> DECREMENT call .)
-    MOD             reduce using rule 40 (level6 -> DECREMENT call .)
-    +               reduce using rule 40 (level6 -> DECREMENT call .)
-    -               reduce using rule 40 (level6 -> DECREMENT call .)
-    <               reduce using rule 40 (level6 -> DECREMENT call .)
-    >               reduce using rule 40 (level6 -> DECREMENT call .)
-    LESS_EQUAL_THAN reduce using rule 40 (level6 -> DECREMENT call .)
-    GREATER_EQUAL_THAN reduce using rule 40 (level6 -> DECREMENT call .)
-    EQUALS          reduce using rule 40 (level6 -> DECREMENT call .)
-    OR              reduce using rule 40 (level6 -> DECREMENT call .)
-    AND             reduce using rule 40 (level6 -> DECREMENT call .)
-    EXPONENTIATION  reduce using rule 40 (level6 -> DECREMENT call .)
-    ]               reduce using rule 40 (level6 -> DECREMENT call .)
-    )               reduce using rule 40 (level6 -> DECREMENT call .)
-    ,               reduce using rule 40 (level6 -> DECREMENT call .)
-    ;               reduce using rule 40 (level6 -> DECREMENT call .)
+    )               shift and go to state 122
 
 
 state 100
 
-    (58) call -> ID ( expressions . ) ;
+    (55) expressions -> expression .
+    (56) expressions -> expression . , expressions
 
-    )               shift and go to state 123
+    )               reduce using rule 55 (expressions -> expression .)
+    ,               shift and go to state 123
 
 
 state 101
 
-    (59) expressions -> expression .
-    (60) expressions -> expression . , expressions
+    (57) assignment -> ID = expression .
 
-    )               reduce using rule 59 (expressions -> expression .)
-    ,               shift and go to state 124
+    ;               reduce using rule 57 (assignment -> ID = expression .)
 
 
 state 102
 
-    (61) assignment -> ID = expression . ;
+    (58) assignment -> ID [ expression . ] = expression
 
-    ;               shift and go to state 125
+    ]               shift and go to state 124
 
 
 state 103
 
-    (62) assignment -> ID [ expression . ] = expression ;
+    (59) condition -> IF ( expression . ) block elses
 
-    ]               shift and go to state 126
+    )               shift and go to state 125
 
 
 state 104
 
-    (63) condition -> IF ( expression . ) block elses ;
+    (60) cycle -> WHILE ( expression . ) block
 
-    )               shift and go to state 127
+    )               shift and go to state 126
 
 
 state 105
 
-    (64) cycle -> WHILE ( expression . ) block ;
+    (61) special -> SPECIAL_ID ( expressions . )
 
-    )               shift and go to state 128
+    )               shift and go to state 127
 
 
 state 106
 
-    (65) special -> SPECIAL_ID ( expressions . ) ;
+    (39) function -> FUN return_type ID ( parameters . ) { variable_declaration statutes } ;
 
-    )               shift and go to state 129
+    )               shift and go to state 128
 
 
 state 107
 
-    (43) function -> FUN return_type ID ( parameters . ) { variable_declaration statutes } ;
+    (65) parameters -> type . ID other_parameters
 
-    )               shift and go to state 130
+    ID              shift and go to state 129
 
 
 state 108
-
-    (69) parameters -> type . ID other_parameters
-
-    ID              shift and go to state 131
-
-
-state 109
 
     (11) expression -> level1 EXPONENTIATION level1 .
 
@@ -2898,7 +2872,7 @@ state 109
     ;               reduce using rule 11 (expression -> level1 EXPONENTIATION level1 .)
 
 
-state 110
+state 109
 
     (16) level2 -> level3 OR level3 .
 
@@ -2909,7 +2883,7 @@ state 110
     ;               reduce using rule 16 (level2 -> level3 OR level3 .)
 
 
-state 111
+state 110
 
     (17) level2 -> level3 AND level3 .
 
@@ -2920,7 +2894,7 @@ state 111
     ;               reduce using rule 17 (level2 -> level3 AND level3 .)
 
 
-state 112
+state 111
 
     (19) level3 -> level4 < level4 .
 
@@ -2933,7 +2907,7 @@ state 112
     ;               reduce using rule 19 (level3 -> level4 < level4 .)
 
 
-state 113
+state 112
 
     (20) level3 -> level4 > level4 .
 
@@ -2946,7 +2920,7 @@ state 113
     ;               reduce using rule 20 (level3 -> level4 > level4 .)
 
 
-state 114
+state 113
 
     (21) level3 -> level4 LESS_EQUAL_THAN level4 .
 
@@ -2959,7 +2933,7 @@ state 114
     ;               reduce using rule 21 (level3 -> level4 LESS_EQUAL_THAN level4 .)
 
 
-state 115
+state 114
 
     (22) level3 -> level4 GREATER_EQUAL_THAN level4 .
 
@@ -2972,7 +2946,7 @@ state 115
     ;               reduce using rule 22 (level3 -> level4 GREATER_EQUAL_THAN level4 .)
 
 
-state 116
+state 115
 
     (23) level3 -> level4 EQUALS level4 .
 
@@ -2985,7 +2959,7 @@ state 116
     ;               reduce using rule 23 (level3 -> level4 EQUALS level4 .)
 
 
-state 117
+state 116
 
     (25) level4 -> level5 + level5 .
 
@@ -3003,7 +2977,7 @@ state 117
     ;               reduce using rule 25 (level4 -> level5 + level5 .)
 
 
-state 118
+state 117
 
     (26) level4 -> level5 - level5 .
 
@@ -3021,7 +2995,7 @@ state 118
     ;               reduce using rule 26 (level4 -> level5 - level5 .)
 
 
-state 119
+state 118
 
     (28) level5 -> level6 * level6 .
 
@@ -3041,7 +3015,7 @@ state 119
     ;               reduce using rule 28 (level5 -> level6 * level6 .)
 
 
-state 120
+state 119
 
     (29) level5 -> level6 / level6 .
 
@@ -3061,7 +3035,7 @@ state 120
     ;               reduce using rule 29 (level5 -> level6 / level6 .)
 
 
-state 121
+state 120
 
     (30) level5 -> level6 MOD level6 .
 
@@ -3081,7 +3055,7 @@ state 121
     ;               reduce using rule 30 (level5 -> level6 MOD level6 .)
 
 
-state 122
+state 121
 
     (32) level6 -> ( expression ) .
 
@@ -3104,18 +3078,34 @@ state 122
     ;               reduce using rule 32 (level6 -> ( expression ) .)
 
 
+state 122
+
+    (54) call -> ID ( expressions ) .
+
+    ;               reduce using rule 54 (call -> ID ( expressions ) .)
+    *               reduce using rule 54 (call -> ID ( expressions ) .)
+    /               reduce using rule 54 (call -> ID ( expressions ) .)
+    MOD             reduce using rule 54 (call -> ID ( expressions ) .)
+    +               reduce using rule 54 (call -> ID ( expressions ) .)
+    -               reduce using rule 54 (call -> ID ( expressions ) .)
+    <               reduce using rule 54 (call -> ID ( expressions ) .)
+    >               reduce using rule 54 (call -> ID ( expressions ) .)
+    LESS_EQUAL_THAN reduce using rule 54 (call -> ID ( expressions ) .)
+    GREATER_EQUAL_THAN reduce using rule 54 (call -> ID ( expressions ) .)
+    EQUALS          reduce using rule 54 (call -> ID ( expressions ) .)
+    OR              reduce using rule 54 (call -> ID ( expressions ) .)
+    AND             reduce using rule 54 (call -> ID ( expressions ) .)
+    EXPONENTIATION  reduce using rule 54 (call -> ID ( expressions ) .)
+    ]               reduce using rule 54 (call -> ID ( expressions ) .)
+    )               reduce using rule 54 (call -> ID ( expressions ) .)
+    ,               reduce using rule 54 (call -> ID ( expressions ) .)
+
+
 state 123
 
-    (58) call -> ID ( expressions ) . ;
-
-    ;               shift and go to state 132
-
-
-state 124
-
-    (60) expressions -> expression , . expressions
-    (59) expressions -> . expression
-    (60) expressions -> . expression , expressions
+    (56) expressions -> expression , . expressions
+    (55) expressions -> . expression
+    (56) expressions -> . expression , expressions
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -3143,19 +3133,18 @@ state 124
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -3175,18 +3164,19 @@ state 124
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expression                     shift and go to state 101
-    expressions                    shift and go to state 133
+    expression                     shift and go to state 100
+    expressions                    shift and go to state 130
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -3194,110 +3184,88 @@ state 124
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
+
+state 124
+
+    (58) assignment -> ID [ expression ] . = expression
+
+    =               shift and go to state 131
+
 
 state 125
 
-    (61) assignment -> ID = expression ; .
+    (59) condition -> IF ( expression ) . block elses
+    (76) block -> . { statutes }
 
-    ID              reduce using rule 61 (assignment -> ID = expression ; .)
-    IF              reduce using rule 61 (assignment -> ID = expression ; .)
-    WHILE           reduce using rule 61 (assignment -> ID = expression ; .)
-    SPECIAL_ID      reduce using rule 61 (assignment -> ID = expression ; .)
-    }               reduce using rule 61 (assignment -> ID = expression ; .)
+    {               shift and go to state 21
 
+    block                          shift and go to state 132
 
 state 126
 
-    (62) assignment -> ID [ expression ] . = expression ;
+    (60) cycle -> WHILE ( expression ) . block
+    (76) block -> . { statutes }
 
-    =               shift and go to state 134
+    {               shift and go to state 21
 
+    block                          shift and go to state 133
 
 state 127
 
-    (63) condition -> IF ( expression ) . block elses ;
-    (78) block -> . { statutes }
+    (61) special -> SPECIAL_ID ( expressions ) .
 
-    {               shift and go to state 21
+    ;               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    *               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    /               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    MOD             reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    +               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    -               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    <               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    >               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    LESS_EQUAL_THAN reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    GREATER_EQUAL_THAN reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    EQUALS          reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    OR              reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    AND             reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    EXPONENTIATION  reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    ]               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    )               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
+    ,               reduce using rule 61 (special -> SPECIAL_ID ( expressions ) .)
 
-    block                          shift and go to state 135
 
 state 128
 
-    (64) cycle -> WHILE ( expression ) . block ;
-    (78) block -> . { statutes }
+    (39) function -> FUN return_type ID ( parameters ) . { variable_declaration statutes } ;
 
-    {               shift and go to state 21
+    {               shift and go to state 134
 
-    block                          shift and go to state 136
 
 state 129
 
-    (65) special -> SPECIAL_ID ( expressions ) . ;
+    (65) parameters -> type ID . other_parameters
+    (66) other_parameters -> . , parameters
+    (67) other_parameters -> . empty
+    (2) empty -> .
 
-    ;               shift and go to state 137
+    ,               shift and go to state 136
+    )               reduce using rule 2 (empty -> .)
 
+    other_parameters               shift and go to state 135
+    empty                          shift and go to state 137
 
 state 130
 
-    (43) function -> FUN return_type ID ( parameters ) . { variable_declaration statutes } ;
+    (56) expressions -> expression , expressions .
 
-    {               shift and go to state 138
+    )               reduce using rule 56 (expressions -> expression , expressions .)
 
 
 state 131
 
-    (69) parameters -> type ID . other_parameters
-    (70) other_parameters -> . , parameters
-    (71) other_parameters -> . empty
-    (2) empty -> .
-
-    ,               shift and go to state 140
-    )               reduce using rule 2 (empty -> .)
-
-    other_parameters               shift and go to state 139
-    empty                          shift and go to state 141
-
-state 132
-
-    (58) call -> ID ( expressions ) ; .
-
-    ID              reduce using rule 58 (call -> ID ( expressions ) ; .)
-    IF              reduce using rule 58 (call -> ID ( expressions ) ; .)
-    WHILE           reduce using rule 58 (call -> ID ( expressions ) ; .)
-    SPECIAL_ID      reduce using rule 58 (call -> ID ( expressions ) ; .)
-    }               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    *               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    /               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    MOD             reduce using rule 58 (call -> ID ( expressions ) ; .)
-    +               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    -               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    <               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    >               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    LESS_EQUAL_THAN reduce using rule 58 (call -> ID ( expressions ) ; .)
-    GREATER_EQUAL_THAN reduce using rule 58 (call -> ID ( expressions ) ; .)
-    EQUALS          reduce using rule 58 (call -> ID ( expressions ) ; .)
-    OR              reduce using rule 58 (call -> ID ( expressions ) ; .)
-    AND             reduce using rule 58 (call -> ID ( expressions ) ; .)
-    EXPONENTIATION  reduce using rule 58 (call -> ID ( expressions ) ; .)
-    ]               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    )               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    ,               reduce using rule 58 (call -> ID ( expressions ) ; .)
-    ;               reduce using rule 58 (call -> ID ( expressions ) ; .)
-
-
-state 133
-
-    (60) expressions -> expression , expressions .
-
-    )               reduce using rule 60 (expressions -> expression , expressions .)
-
-
-state 134
-
-    (62) assignment -> ID [ expression ] = . expression ;
+    (58) assignment -> ID [ expression ] = . expression
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -3325,19 +3293,18 @@ state 134
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -3356,17 +3323,18 @@ state 134
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expression                     shift and go to state 142
+    expression                     shift and go to state 138
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -3374,52 +3342,42 @@ state 134
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 135
+state 132
 
-    (63) condition -> IF ( expression ) block . elses ;
-    (66) elses -> . empty
-    (67) elses -> . ELSE block
-    (68) elses -> . ELSEIF ( expression ) block elses
+    (59) condition -> IF ( expression ) block . elses
+    (62) elses -> . empty
+    (63) elses -> . ELSE block
+    (64) elses -> . ELSEIF ( expression ) block elses
     (2) empty -> .
 
-    ELSE            shift and go to state 145
-    ELSEIF          shift and go to state 146
+    ELSE            shift and go to state 141
+    ELSEIF          shift and go to state 142
     ;               reduce using rule 2 (empty -> .)
 
-    elses                          shift and go to state 143
-    empty                          shift and go to state 144
+    elses                          shift and go to state 139
+    empty                          shift and go to state 140
 
-state 136
+state 133
 
-    (64) cycle -> WHILE ( expression ) block . ;
+    (60) cycle -> WHILE ( expression ) block .
 
-    ;               shift and go to state 147
-
-
-state 137
-
-    (65) special -> SPECIAL_ID ( expressions ) ; .
-
-    ID              reduce using rule 65 (special -> SPECIAL_ID ( expressions ) ; .)
-    IF              reduce using rule 65 (special -> SPECIAL_ID ( expressions ) ; .)
-    WHILE           reduce using rule 65 (special -> SPECIAL_ID ( expressions ) ; .)
-    SPECIAL_ID      reduce using rule 65 (special -> SPECIAL_ID ( expressions ) ; .)
-    }               reduce using rule 65 (special -> SPECIAL_ID ( expressions ) ; .)
+    ;               reduce using rule 60 (cycle -> WHILE ( expression ) block .)
 
 
-state 138
+state 134
 
-    (43) function -> FUN return_type ID ( parameters ) { . variable_declaration statutes } ;
+    (39) function -> FUN return_type ID ( parameters ) { . variable_declaration statutes } ;
     (3) variable_declaration -> . type ids ; variable_declaration
     (4) variable_declaration -> . empty
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
     (2) empty -> .
 
     INT             shift and go to state 8
@@ -3433,26 +3391,26 @@ state 138
     SPECIAL_ID      reduce using rule 2 (empty -> .)
     }               reduce using rule 2 (empty -> .)
 
-    variable_declaration           shift and go to state 148
+    variable_declaration           shift and go to state 143
     type                           shift and go to state 6
     empty                          shift and go to state 7
 
-state 139
+state 135
 
-    (69) parameters -> type ID other_parameters .
+    (65) parameters -> type ID other_parameters .
 
-    )               reduce using rule 69 (parameters -> type ID other_parameters .)
+    )               reduce using rule 65 (parameters -> type ID other_parameters .)
 
 
-state 140
+state 136
 
-    (70) other_parameters -> , . parameters
-    (69) parameters -> . type ID other_parameters
-    (46) type -> . INT
-    (47) type -> . DEC
-    (48) type -> . CHAR
-    (49) type -> . STR
-    (50) type -> . BOOL
+    (66) other_parameters -> , . parameters
+    (65) parameters -> . type ID other_parameters
+    (42) type -> . INT
+    (43) type -> . DEC
+    (44) type -> . CHAR
+    (45) type -> . STR
+    (46) type -> . BOOL
 
     INT             shift and go to state 8
     DEC             shift and go to state 9
@@ -3460,81 +3418,70 @@ state 140
     STR             shift and go to state 11
     BOOL            shift and go to state 12
 
-    parameters                     shift and go to state 149
-    type                           shift and go to state 108
+    parameters                     shift and go to state 144
+    type                           shift and go to state 107
+
+state 137
+
+    (67) other_parameters -> empty .
+
+    )               reduce using rule 67 (other_parameters -> empty .)
+
+
+state 138
+
+    (58) assignment -> ID [ expression ] = expression .
+
+    ;               reduce using rule 58 (assignment -> ID [ expression ] = expression .)
+
+
+state 139
+
+    (59) condition -> IF ( expression ) block elses .
+
+    ;               reduce using rule 59 (condition -> IF ( expression ) block elses .)
+
+
+state 140
+
+    (62) elses -> empty .
+
+    ;               reduce using rule 62 (elses -> empty .)
+
 
 state 141
 
-    (71) other_parameters -> empty .
+    (63) elses -> ELSE . block
+    (76) block -> . { statutes }
 
-    )               reduce using rule 71 (other_parameters -> empty .)
+    {               shift and go to state 21
 
+    block                          shift and go to state 145
 
 state 142
 
-    (62) assignment -> ID [ expression ] = expression . ;
+    (64) elses -> ELSEIF . ( expression ) block elses
 
-    ;               shift and go to state 150
+    (               shift and go to state 146
 
 
 state 143
 
-    (63) condition -> IF ( expression ) block elses . ;
-
-    ;               shift and go to state 151
-
-
-state 144
-
-    (66) elses -> empty .
-
-    ;               reduce using rule 66 (elses -> empty .)
-
-
-state 145
-
-    (67) elses -> ELSE . block
-    (78) block -> . { statutes }
-
-    {               shift and go to state 21
-
-    block                          shift and go to state 152
-
-state 146
-
-    (68) elses -> ELSEIF . ( expression ) block elses
-
-    (               shift and go to state 153
-
-
-state 147
-
-    (64) cycle -> WHILE ( expression ) block ; .
-
-    ID              reduce using rule 64 (cycle -> WHILE ( expression ) block ; .)
-    IF              reduce using rule 64 (cycle -> WHILE ( expression ) block ; .)
-    WHILE           reduce using rule 64 (cycle -> WHILE ( expression ) block ; .)
-    SPECIAL_ID      reduce using rule 64 (cycle -> WHILE ( expression ) block ; .)
-    }               reduce using rule 64 (cycle -> WHILE ( expression ) block ; .)
-
-
-state 148
-
-    (43) function -> FUN return_type ID ( parameters ) { variable_declaration . statutes } ;
-    (51) statutes -> . statute statutes
-    (52) statutes -> . empty
-    (53) statute -> . call
-    (54) statute -> . assignment
-    (55) statute -> . condition
-    (56) statute -> . cycle
-    (57) statute -> . special
+    (39) function -> FUN return_type ID ( parameters ) { variable_declaration . statutes } ;
+    (47) statutes -> . statute ; statutes
+    (48) statutes -> . empty
+    (49) statute -> . call
+    (50) statute -> . assignment
+    (51) statute -> . condition
+    (52) statute -> . cycle
+    (53) statute -> . special
     (2) empty -> .
-    (58) call -> . ID ( expressions ) ;
-    (61) assignment -> . ID = expression ;
-    (62) assignment -> . ID [ expression ] = expression ;
-    (63) condition -> . IF ( expression ) block elses ;
-    (64) cycle -> . WHILE ( expression ) block ;
-    (65) special -> . SPECIAL_ID ( expressions ) ;
+    (54) call -> . ID ( expressions )
+    (57) assignment -> . ID = expression
+    (58) assignment -> . ID [ expression ] = expression
+    (59) condition -> . IF ( expression ) block elses
+    (60) cycle -> . WHILE ( expression ) block
+    (61) special -> . SPECIAL_ID ( expressions )
 
     }               reduce using rule 2 (empty -> .)
     ID              shift and go to state 39
@@ -3542,7 +3489,7 @@ state 148
     WHILE           shift and go to state 41
     SPECIAL_ID      shift and go to state 42
 
-    statutes                       shift and go to state 154
+    statutes                       shift and go to state 147
     statute                        shift and go to state 32
     empty                          shift and go to state 33
     call                           shift and go to state 34
@@ -3551,45 +3498,23 @@ state 148
     cycle                          shift and go to state 37
     special                        shift and go to state 38
 
-state 149
+state 144
 
-    (70) other_parameters -> , parameters .
+    (66) other_parameters -> , parameters .
 
-    )               reduce using rule 70 (other_parameters -> , parameters .)
-
-
-state 150
-
-    (62) assignment -> ID [ expression ] = expression ; .
-
-    ID              reduce using rule 62 (assignment -> ID [ expression ] = expression ; .)
-    IF              reduce using rule 62 (assignment -> ID [ expression ] = expression ; .)
-    WHILE           reduce using rule 62 (assignment -> ID [ expression ] = expression ; .)
-    SPECIAL_ID      reduce using rule 62 (assignment -> ID [ expression ] = expression ; .)
-    }               reduce using rule 62 (assignment -> ID [ expression ] = expression ; .)
+    )               reduce using rule 66 (other_parameters -> , parameters .)
 
 
-state 151
+state 145
 
-    (63) condition -> IF ( expression ) block elses ; .
+    (63) elses -> ELSE block .
 
-    ID              reduce using rule 63 (condition -> IF ( expression ) block elses ; .)
-    IF              reduce using rule 63 (condition -> IF ( expression ) block elses ; .)
-    WHILE           reduce using rule 63 (condition -> IF ( expression ) block elses ; .)
-    SPECIAL_ID      reduce using rule 63 (condition -> IF ( expression ) block elses ; .)
-    }               reduce using rule 63 (condition -> IF ( expression ) block elses ; .)
+    ;               reduce using rule 63 (elses -> ELSE block .)
 
 
-state 152
+state 146
 
-    (67) elses -> ELSE block .
-
-    ;               reduce using rule 67 (elses -> ELSE block .)
-
-
-state 153
-
-    (68) elses -> ELSEIF ( . expression ) block elses
+    (64) elses -> ELSEIF ( . expression ) block elses
     (10) expression -> . level1
     (11) expression -> . level1 EXPONENTIATION level1
     (12) level1 -> . level2
@@ -3617,19 +3542,18 @@ state 153
     (34) level6 -> . NOT const
     (35) level6 -> . INCREMENT const
     (36) level6 -> . DECREMENT const
-    (37) level6 -> . call
-    (38) level6 -> . NOT call
-    (39) level6 -> . INCREMENT call
-    (40) level6 -> . DECREMENT call
-    (72) const -> . id
-    (73) const -> . INT_VAL
-    (74) const -> . DEC_VAL
-    (75) const -> . CHAR_VAL
-    (76) const -> . STR_VAL
-    (77) const -> . BOOL_VAL
-    (58) call -> . ID ( expressions ) ;
+    (68) const -> . id
+    (69) const -> . call
+    (70) const -> . special
+    (71) const -> . INT_VAL
+    (72) const -> . DEC_VAL
+    (73) const -> . CHAR_VAL
+    (74) const -> . STR_VAL
+    (75) const -> . BOOL_VAL
     (8) id -> . ID
     (9) id -> . ID [ expression ]
+    (54) call -> . ID ( expressions )
+    (61) special -> . SPECIAL_ID ( expressions )
 
   ! shift/reduce conflict for + resolved as shift
   ! shift/reduce conflict for - resolved as shift
@@ -3648,17 +3572,18 @@ state 153
     NOT             shift and go to state 58
     INCREMENT       shift and go to state 59
     DECREMENT       shift and go to state 60
-    INT_VAL         shift and go to state 63
-    DEC_VAL         shift and go to state 64
-    CHAR_VAL        shift and go to state 65
-    STR_VAL         shift and go to state 66
-    BOOL_VAL        shift and go to state 67
+    INT_VAL         shift and go to state 64
+    DEC_VAL         shift and go to state 65
+    CHAR_VAL        shift and go to state 66
+    STR_VAL         shift and go to state 67
+    BOOL_VAL        shift and go to state 68
     ID              shift and go to state 46
+    SPECIAL_ID      shift and go to state 42
 
   ! +               [ reduce using rule 31 (level5 -> .) ]
   ! -               [ reduce using rule 31 (level5 -> .) ]
 
-    expression                     shift and go to state 155
+    expression                     shift and go to state 148
     level1                         shift and go to state 48
     level2                         shift and go to state 49
     level3                         shift and go to state 52
@@ -3666,67 +3591,68 @@ state 153
     level5                         shift and go to state 54
     level6                         shift and go to state 55
     const                          shift and go to state 57
-    call                           shift and go to state 61
-    id                             shift and go to state 62
+    id                             shift and go to state 61
+    call                           shift and go to state 62
+    special                        shift and go to state 63
 
-state 154
+state 147
 
-    (43) function -> FUN return_type ID ( parameters ) { variable_declaration statutes . } ;
+    (39) function -> FUN return_type ID ( parameters ) { variable_declaration statutes . } ;
 
-    }               shift and go to state 156
-
-
-state 155
-
-    (68) elses -> ELSEIF ( expression . ) block elses
-
-    )               shift and go to state 157
+    }               shift and go to state 149
 
 
-state 156
+state 148
 
-    (43) function -> FUN return_type ID ( parameters ) { variable_declaration statutes } . ;
+    (64) elses -> ELSEIF ( expression . ) block elses
 
-    ;               shift and go to state 158
+    )               shift and go to state 150
 
 
-state 157
+state 149
 
-    (68) elses -> ELSEIF ( expression ) . block elses
-    (78) block -> . { statutes }
+    (39) function -> FUN return_type ID ( parameters ) { variable_declaration statutes } . ;
+
+    ;               shift and go to state 151
+
+
+state 150
+
+    (64) elses -> ELSEIF ( expression ) . block elses
+    (76) block -> . { statutes }
 
     {               shift and go to state 21
 
-    block                          shift and go to state 159
+    block                          shift and go to state 152
 
-state 158
+state 151
 
-    (43) function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .
+    (39) function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .
 
-    FUN             reduce using rule 43 (function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .)
-    {               reduce using rule 43 (function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .)
+    FUN             reduce using rule 39 (function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .)
+    {               reduce using rule 39 (function -> FUN return_type ID ( parameters ) { variable_declaration statutes } ; .)
 
 
-state 159
+state 152
 
-    (68) elses -> ELSEIF ( expression ) block . elses
-    (66) elses -> . empty
-    (67) elses -> . ELSE block
-    (68) elses -> . ELSEIF ( expression ) block elses
+    (64) elses -> ELSEIF ( expression ) block . elses
+    (62) elses -> . empty
+    (63) elses -> . ELSE block
+    (64) elses -> . ELSEIF ( expression ) block elses
     (2) empty -> .
 
-    ELSE            shift and go to state 145
-    ELSEIF          shift and go to state 146
+    ELSE            shift and go to state 141
+    ELSEIF          shift and go to state 142
     ;               reduce using rule 2 (empty -> .)
 
-    elses                          shift and go to state 160
-    empty                          shift and go to state 144
+    elses                          shift and go to state 153
+    empty                          shift and go to state 140
 
-state 160
+state 153
 
-    (68) elses -> ELSEIF ( expression ) block elses .
+    (64) elses -> ELSEIF ( expression ) block elses .
 
-    ;               reduce using rule 68 (elses -> ELSEIF ( expression ) block elses .)
+    ;               reduce using rule 64 (elses -> ELSEIF ( expression ) block elses .)
 
 WARNING: 
 WARNING: Conflicts:
@@ -3735,8 +3661,6 @@ WARNING: shift/reduce conflict for + in state 30 resolved as shift
 WARNING: shift/reduce conflict for - in state 30 resolved as shift
 WARNING: shift/reduce conflict for + in state 56 resolved as shift
 WARNING: shift/reduce conflict for - in state 56 resolved as shift
-WARNING: shift/reduce conflict for + in state 70 resolved as shift
-WARNING: shift/reduce conflict for - in state 70 resolved as shift
 WARNING: shift/reduce conflict for + in state 71 resolved as shift
 WARNING: shift/reduce conflict for - in state 71 resolved as shift
 WARNING: shift/reduce conflict for + in state 72 resolved as shift
@@ -3747,11 +3671,13 @@ WARNING: shift/reduce conflict for + in state 74 resolved as shift
 WARNING: shift/reduce conflict for - in state 74 resolved as shift
 WARNING: shift/reduce conflict for + in state 75 resolved as shift
 WARNING: shift/reduce conflict for - in state 75 resolved as shift
-WARNING: shift/reduce conflict for + in state 78 resolved as shift
-WARNING: shift/reduce conflict for - in state 78 resolved as shift
-WARNING: shift/reduce conflict for + in state 124 resolved as shift
-WARNING: shift/reduce conflict for - in state 124 resolved as shift
-WARNING: shift/reduce conflict for + in state 134 resolved as shift
-WARNING: shift/reduce conflict for - in state 134 resolved as shift
-WARNING: shift/reduce conflict for + in state 153 resolved as shift
-WARNING: shift/reduce conflict for - in state 153 resolved as shift
+WARNING: shift/reduce conflict for + in state 76 resolved as shift
+WARNING: shift/reduce conflict for - in state 76 resolved as shift
+WARNING: shift/reduce conflict for + in state 79 resolved as shift
+WARNING: shift/reduce conflict for - in state 79 resolved as shift
+WARNING: shift/reduce conflict for + in state 123 resolved as shift
+WARNING: shift/reduce conflict for - in state 123 resolved as shift
+WARNING: shift/reduce conflict for + in state 131 resolved as shift
+WARNING: shift/reduce conflict for - in state 131 resolved as shift
+WARNING: shift/reduce conflict for + in state 146 resolved as shift
+WARNING: shift/reduce conflict for - in state 146 resolved as shift
