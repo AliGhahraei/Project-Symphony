@@ -183,6 +183,7 @@ def p_other_parameters(t):
 def p_const(t):
     ''' const : id 
               | call
+              | special
               | INT_VAL
               | DEC_VAL
               | CHAR_VAL
