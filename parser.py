@@ -87,11 +87,7 @@ def p_level6(t):
                | const
                | NOT const
                | INCREMENT const
-               | DECREMENT const 
-               | call
-               | NOT call
-               | INCREMENT call
-               | DECREMENT call'''
+               | DECREMENT const '''
     pass
 
 
@@ -186,6 +182,7 @@ def p_other_parameters(t):
 
 def p_const(t):
     ''' const : id 
+              | call
               | INT_VAL
               | DEC_VAL
               | CHAR_VAL
