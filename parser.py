@@ -185,14 +185,16 @@ def p_elses(t):
 
 
 def p_parameters(t):
-    ''' parameters : type ID other_parameters'''
+    ''' parameters : type ID other_parameters
+                   | empty '''
     pass
 
 
 def p_other_parameters(t):
-    ''' other_parameters : ',' parameters 
+    ''' other_parameters : ',' type ID other_parameters
                          | empty '''
     pass
+
 
 def p_const(t):
     ''' const : id 
