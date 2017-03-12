@@ -1,13 +1,16 @@
+from enum import Enum
 from ply.lex import lex, LexError
 
 
+Types = Enum('Types', 'INT DEC CHAR STR BOOL')
+
+
 tokens = (
-    'INT', 'DEC', 'CHAR', 'STR', 'BOOL', 'VOID', 'INT_VAL', 'DEC_VAL',
-    'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'RETURN', 'EXPONENTIATION', 'INCREMENT',
-    'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN', 'LESS_EQUAL_THAN', 'AND', 'OR',
-    'NOT', 'FUN', 'WHILE', 'IF', 'ELSE', 'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD',
-    'PROGRAM',
-)
+    'VOID', 'INT_VAL', 'DEC_VAL', 'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'RETURN',
+    'EXPONENTIATION', 'INCREMENT', 'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN',
+    'LESS_EQUAL_THAN', 'AND', 'OR', 'NOT', 'FUN', 'WHILE', 'IF', 'ELSE',
+    'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD', 'PROGRAM',
+) + tuple(datatype.name for datatype in Types)
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
