@@ -1,6 +1,6 @@
 from lexer import lexer
 from os import listdir
-from parser import parser, ParserException
+from symphony_parser import parser, ParserException
 from unittest import TestCase, main
 
 
