@@ -57,7 +57,11 @@ class ParserTest(TestCase):
     def test_valid_programs(self):
         for valid_program in listdir(VALID_PROGRAMS_PATH):
             with open(VALID_PROGRAMS_PATH + valid_program) as file:
-                parser.parse(file.read())
+                try:
+                    parser.parse(file.read())
+                except ParserException:
+                    print('Error on file:', valid_program)
+                    raise
 
 
     def test_invalid_programs(self):
