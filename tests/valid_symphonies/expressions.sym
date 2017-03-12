@@ -1,0 +1,7 @@
+program expressions;
+int a, b;
+{
+	a = 4;
+	b = 6;
+	print((++a / --b) * (2 - 1) + 3 );
+}
