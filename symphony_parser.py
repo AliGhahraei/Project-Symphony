@@ -75,6 +75,7 @@ def p_level4(t):
 
 def p_level5(t):
     ''' level5 : level6
+               | NOT level6
                | level6 '*' level6
                | level6 '/' level6
                | level6 MOD level6 '''
@@ -84,7 +85,6 @@ def p_level5(t):
 def p_level6(t):
     ''' level6 : '(' expression ')'
                | const
-               | NOT const
                | increment
                | decrement '''
     pass
