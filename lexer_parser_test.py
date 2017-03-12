@@ -26,6 +26,7 @@ class LexerTest(TestCase):
             /*
             Multiline comments are ignored...
             ... All of them
+            // Even nested comments
             fun int fun1(int x, int y){
               rasfsdgsg
             }
@@ -60,7 +61,7 @@ class ParserTest(TestCase):
                 try:
                     parser.parse(file.read())
                 except ParserException:
-                    print('Error on file:', valid_program)
+                    print('Error on file: ', valid_program)
                     raise
 
 
