@@ -22,35 +22,9 @@ special_ids = {'sqrt', 'log', 'random', 'little_star', 'A', 'B', 'C', 'D', 'E',
                'F', 'G', 'concat', 'length', 'copy', 'get'}
 
 
-states = (
-    ('MULTILINECOMMENT', 'exclusive'),
-)
-
-t_MULTILINECOMMENT_ignore = ' \t'
-
-
-def t_MULTILINECOMMENT(t):
-    r'/\*'
-    t.lexer.begin('MULTILINECOMMENT')
-
-
-def t_MULTILINECOMMENT_newline(t):
-    r'\n'
-    t.lexer.lineno += 1
-
-
-def t_MULTILINECOMMENT_close(t):
-    r'\*/'
-    t.lexer.begin('INITIAL')
-
-
-def t_MULTILINECOMMENT_text(t):
-    r'[^\*/]'
-    pass
-
-
-def t_MULTILINECOMMENT_error(t):
-    t_error(t)
+def t__MULTI_LINE_COMMENT(t):
+    r'/\*(.|\n)*?\*/'
+    t.lineno += t.value.count('\n')
 
 
 def t_IDS_AND_KEYWORDS(t):
