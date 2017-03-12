@@ -76,7 +76,7 @@ def t_INT_VAL(t):
 
 def t_CHAR_VAL(t):
     r"\'[^']\'"
-    t.value = t.value[1:-1]
+    t.value = t.value[1]
     return t
 
 
