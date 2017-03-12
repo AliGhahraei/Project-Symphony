@@ -1,9 +1,9 @@
 program call_times_array_element;
 int array[10];
-fun dec func(int x) {
+fun dec func(dec x) {
 	return x * 2;
 };
 {
 	array[1] = 2;
-	print(array[1] * func(4));
+	print(array[1 * func(1/2)] * func(4));
 }
