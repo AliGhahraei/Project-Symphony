@@ -3,7 +3,7 @@ from ply.yacc import yacc
 from sys import exit
 
 
-functions_directory = {}
+function_directory = {}
 global_scope = None
 
 
@@ -103,10 +103,12 @@ def p_level6(p):
 
 def p_increment(p):
     ''' increment : INCREMENT id '''
+    pass
 
 
 def p_decrement(p):
     ''' decrement : DECREMENT id '''
+    pass
 
 
 def p_function_declaration(p):
@@ -117,13 +119,16 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    pass
-
+    if p[3] in function_directory:
+        raise SemanticException('Error: you are declaring your ' + p[3] + ' function more than once')
+    
+    function_directory[p[3]] = FunctionScope(p[3], p[2])
+    
 
 def p_return_type(p):
     ''' return_type : type 
                     | VOID '''
-    pass
+    p[0] = p[1]
 
 
 def p_type(p):
@@ -132,12 +137,13 @@ def p_type(p):
              | CHAR 
              | STR 
              | BOOL '''
-    pass
+    p[0] = p[1]
 
 
 def p_statutes(p):
     ''' statutes : statute ';' statutes
                  | empty'''
+    pass
 
 
 def p_statute(p):
@@ -186,6 +192,7 @@ def p_special(p):
 def p_return(p):
     ''' return : RETURN expression
                | RETURN '''
+    pass
 
 
 def p_elses(p):
@@ -232,4 +239,8 @@ parser = yacc()
 
 
 class ParserException(Exception):
+    pass
+
+
+class SemanticError(Exception):
     pass
