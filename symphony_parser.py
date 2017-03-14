@@ -4,22 +4,51 @@ from sys import exit
 
 
 class FunctionScope():    
-    def __init__(self, name, return_type):
+    def __init__(self, return_type, name):
         self.name = name
         self.return_type = return_type
         self.variables = {}
+        self.parameter_types = []
 
 
 class Directory():
     GLOBAL_SCOPE = None
     functions = {}
-    functions[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+    functions[GLOBAL_SCOPE] = FunctionScope('VOID', None)
     scope = GLOBAL_SCOPE
 
     def clear():
         Directory.functions.clear()
-        Directory.functions[Directory.GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+        Directory.functions[Directory.GLOBAL_SCOPE] = FunctionScope('VOID', None)
         Directory.scope = Directory.GLOBAL_SCOPE
+
+
+    def declare(variable_type, variable):
+        current_function_vars = Directory.functions[Directory.scope].variables
+
+        if variable in current_function_vars:
+            raise SemanticError('Error: you are declaring your ' + variable
+                                + ' variable more than once ')
+
+        current_function_vars[variable] = (
+            variable,
+            variable_type,
+            # TODO: add code for storing array size
+            None,
+        )
+
+
+    def define(return_type, function, parameters):
+        if function in Directory.functions:
+            raise SemanticError('Error: you are declaring your "' + function
+                                + '" function more than once')
+
+        Directory.scope = function
+        Directory.functions[function] = FunctionScope(return_type, function)
+
+        for parameter in parameters:
+            Directory.functions[function].parameter_types.append(parameter[0])
+            Directory.declare(parameter[0], parameter[1])
 
 
 def p_program(p):
@@ -40,20 +69,8 @@ def p_variable_declaration(p):
 
 def p_variable_group(p):
     ''' variable_group : type declaration_ids ';' '''
-    current_function = Directory.functions[Directory.scope]
-    variable_type = p[1]
-
     for variable in p[2]:
-        if variable in current_function.variables:
-            raise SemanticError('Error: you are declaring your ' + variable
-                                + ' variable more than once ')
-
-        current_function.variables[variable] = (
-            variable,
-            variable_type,
-            # TODO: add code for storing array size when expressions are finished
-            None, 
-        )
+        Directory.declare(p[1], variable)
 
 
 def p_declaration_ids(p):
@@ -153,12 +170,7 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    if p[3] in Directory.functions:
-        raise SemanticError('Error: you are declaring your "' + p[3] + '" function more than once')
-
-    Directory.scope = p[3]
-    
-    Directory.functions[p[3]] = FunctionScope(p[3], p[2])
+    Directory.define(p[2], p[3], p[5])
     
 
 def p_return_type(p):
@@ -239,15 +251,44 @@ def p_elses(p):
 
 
 def p_parameters(p):
-    ''' parameters : type ID other_parameters
+    ''' parameters : all_parameters
                    | empty '''
-    pass
+    if p[1] is not None:
+        p[0] = p[1]
+    else:
+        p[0] = []
+
+
+def p_all_parameters(p):
+    ''' all_parameters : parameter other_parameters '''
+    if p[2]:
+        p[2].append(p[1])
+        p[0] = p[2]
+    else:
+        p[0] = [p[1]]
 
 
 def p_other_parameters(p):
-    ''' other_parameters : ',' type ID other_parameters
+    ''' other_parameters : comma_separated_parameters
                          | empty '''
-    pass
+    if p[1] is not None:
+        p[0] = p[1]
+    else:
+        p[0] = []
+
+
+def p_comma_separated_parameters(p):
+    ''' comma_separated_parameters : ',' parameter other_parameters '''
+    if p[3]:
+        p[3].append(p[2])
+        p[0] = p[3]
+    else:
+        p[0] = [p[2]]
+
+
+def p_parameter(p):
+    'parameter : type ID'
+    p[0] = (p[1], p[2])
 
 
 def p_const(p):
