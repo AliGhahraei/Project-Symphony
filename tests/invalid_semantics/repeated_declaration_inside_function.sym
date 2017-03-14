@@ -1,0 +1,6 @@
+program repeated_declaration_inside_function;
+fun int doubleDecl(){
+ int alpha, alpha;
+};
+{
+}
