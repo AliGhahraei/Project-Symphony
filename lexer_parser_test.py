@@ -64,7 +64,7 @@ class ParserTest(TestCase):
                         print('Testing', invalid_program + '...', end=' ')
                         parser.parse(file.read())
             except:
-                print(' Error!')
+                print('\033[91m Error!\033[0m')
                 raise
             print()
 
@@ -76,7 +76,7 @@ class ParserTest(TestCase):
                     print('Testing', valid_program + '...', end=' ')
                     parser.parse(file.read())
             except:
-                print(' Error!')
+                print('\033[91m Error!\033[0m')
                 raise
             print()
 
