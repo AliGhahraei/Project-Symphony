@@ -153,10 +153,10 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    Directory.scope = p[3]
-    
     if p[3] in Directory.functions:
         raise SemanticError('Error: you are declaring your "' + p[3] + '" function more than once')
+
+    Directory.scope = p[3]
     
     Directory.functions[p[3]] = FunctionScope(p[3], p[2])
     
