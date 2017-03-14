@@ -3,48 +3,79 @@ from ply.yacc import yacc
 from sys import exit
 
 
-function_directory = {}
-global_scope = None
+GLOBAL_SCOPE = None
 
 
 class FunctionScope():
+    current_scope = GLOBAL_SCOPE
+    
     def __init__(self, name, return_type):
         self.name = name
         self.return_type = return_type
         self.variables = {}
 
 
+function_directory = {}
+function_directory[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+
+
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
-    global_scope = FunctionScope(p[2], 'VOID')
+    function_directory[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
 
 
 def p_empty(p):
     ''' empty : '''
-    pass
+    p[0] = None
 
 
 def p_variable_declaration(p):
-    ''' variable_declaration : type ids ';' variable_declaration
+    ''' variable_declaration : variable_group variable_declaration
                              | empty '''
     pass
 
 
-def p_ids(p):
-    ''' ids : id other_ids '''
-    pass
+def p_variable_group(p):
+    ''' variable_group : type declaration_ids ';' '''
+    current_function = function_directory[FunctionScope.current_scope]
+    variable_type = p[1]
+
+    for variable in p[2]:
+        if variable in current_function.variables:
+            raise SemanticError('Error: you are declaring your ' + variable
+                                + ' variable more than once ')
+
+        current_function.variables[variable] = (
+            variable,
+            variable_type,
+            # TODO: add code for storing array size when expressions are finished
+            None, 
+        )
+
+
+def p_declaration_ids(p):
+    ''' declaration_ids : id other_declaration_ids '''
+    if not p[2]:
+        p[0] = [p[1]]
+    else:
+        p[2].append(p[1])
+        p[0] = p[2]
     
 
-def p_other_ids(p):
-    ''' other_ids : ',' ids 
-                  | empty '''
-    pass
+def p_other_declaration_ids(p):
+    ''' other_declaration_ids : ',' declaration_ids 
+                              | empty '''
+    if p[1] is None:
+        p[0] = []
+    else:
+        p[0] = p[2]
 
 
 def p_id(p):
     ''' id : ID 
            | ID '[' expression ']' '''
-    pass
+    p[0] = p[1]
+    # TODO: add code for array size
 
 
 def p_expression(p):
@@ -119,8 +150,10 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
+    FunctionScope.current_scope = p[3]
+    
     if p[3] in function_directory:
-        raise SemanticException('Error: you are declaring your ' + p[3] + ' function more than once')
+        raise SemanticError('Error: you are declaring your "' + p[3] + '" function more than once')
     
     function_directory[p[3]] = FunctionScope(p[3], p[2])
     
@@ -232,13 +265,13 @@ def p_block(p):
 
 
 def p_error(p):
-    raise ParserException
+    raise ParserError(p)
 
 
 parser = yacc()
 
 
-class ParserException(Exception):
+class ParserError(Exception):
     pass
 
 
