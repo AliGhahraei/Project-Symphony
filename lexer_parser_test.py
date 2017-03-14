@@ -1,6 +1,6 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import parser, ParserException
+from symphony_parser import parser, ParserError
 from unittest import TestCase, main
 
 
@@ -57,19 +57,27 @@ class ParserTest(TestCase):
 
     def test_valid_programs(self):
         for valid_program in listdir(VALID_PROGRAMS_PATH):
-            with open(VALID_PROGRAMS_PATH + valid_program) as file:
-                try:
+            try:
+                with open(VALID_PROGRAMS_PATH + valid_program) as file:
+                    print('Testing', valid_program + '...', end=' ')
                     parser.parse(file.read())
-                except ParserException:
-                    print('Error on file: ', valid_program)
-                    raise
+            except:
+                print(' Error!')
+                raise
+            print()
 
 
     def test_invalid_programs(self):
         for invalid_program in listdir(INVALID_PROGRAMS_PATH):
-            with self.assertRaises(ParserException):
+            try:
                 with open(INVALID_PROGRAMS_PATH + invalid_program) as file:
-                    parser.parse(file.read())
+                    with self.assertRaises(ParserError):
+                        print('Testing', invalid_program + '...', end=' ')
+                        parser.parse(file.read())
+            except:
+                print(' Error!')
+                raise
+            print()
 
 
 if __name__ == '__main__':
