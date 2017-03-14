@@ -1,12 +1,13 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import parser, ParserError
+from symphony_parser import parser, ParserError, SemanticError
 from unittest import TestCase, main
 
 
 VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
-INVALID_PROGRAMS_PATH = 'tests/invalid_symphonies/'
-
+GRAMMAR_TEST = 'tests/invalid_grammar/'
+SEMANTICS_TEST = 'tests/invalid_semantics/'
+    
 
 class LexerTest(TestCase):
     def setUp(self):
@@ -55,6 +56,19 @@ class ParserTest(TestCase):
         pass
 
 
+    def assert_programs_raise(self, path, RaisedError):
+        for invalid_program in listdir(path):
+            try:
+                with open(path + invalid_program) as file:
+                    with self.assertRaises(RaisedError):
+                        print('Testing', invalid_program + '...', end=' ')
+                        parser.parse(file.read())
+            except:
+                print(' Error!')
+                raise
+            print()
+
+
     def test_valid_programs(self):
         for valid_program in listdir(VALID_PROGRAMS_PATH):
             try:
@@ -67,17 +81,12 @@ class ParserTest(TestCase):
             print()
 
 
-    def test_invalid_programs(self):
-        for invalid_program in listdir(INVALID_PROGRAMS_PATH):
-            try:
-                with open(INVALID_PROGRAMS_PATH + invalid_program) as file:
-                    with self.assertRaises(ParserError):
-                        print('Testing', invalid_program + '...', end=' ')
-                        parser.parse(file.read())
-            except:
-                print(' Error!')
-                raise
-            print()
+    def test_grammatically_invalid_programs(self):
+        self.assert_programs_raise(GRAMMAR_TEST, ParserError)
+
+
+    def test_semantically_invalid_programs(self):
+        self.assert_programs_raise(SEMANTICS_TEST, SemanticError)
 
 
 if __name__ == '__main__':
