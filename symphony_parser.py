@@ -3,25 +3,28 @@ from ply.yacc import yacc
 from sys import exit
 
 
-GLOBAL_SCOPE = None
-
-
-class FunctionScope():
-    current_scope = GLOBAL_SCOPE
-    
+class FunctionScope():    
     def __init__(self, name, return_type):
         self.name = name
         self.return_type = return_type
         self.variables = {}
 
 
-function_directory = {}
-function_directory[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+class Directory():
+    GLOBAL_SCOPE = None
+    functions = {}
+    functions[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+    scope = GLOBAL_SCOPE
+
+    def clear():
+        Directory.functions.clear()
+        Directory.functions[Directory.GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+        Directory.scope = Directory.GLOBAL_SCOPE
 
 
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
-    function_directory[GLOBAL_SCOPE] = FunctionScope(None, 'VOID')
+    Directory.clear()
 
 
 def p_empty(p):
@@ -37,7 +40,7 @@ def p_variable_declaration(p):
 
 def p_variable_group(p):
     ''' variable_group : type declaration_ids ';' '''
-    current_function = function_directory[FunctionScope.current_scope]
+    current_function = Directory.functions[Directory.scope]
     variable_type = p[1]
 
     for variable in p[2]:
@@ -150,12 +153,12 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    FunctionScope.current_scope = p[3]
+    Directory.scope = p[3]
     
-    if p[3] in function_directory:
+    if p[3] in Directory.functions:
         raise SemanticError('Error: you are declaring your "' + p[3] + '" function more than once')
     
-    function_directory[p[3]] = FunctionScope(p[3], p[2])
+    Directory.functions[p[3]] = FunctionScope(p[3], p[2])
     
 
 def p_return_type(p):

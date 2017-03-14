@@ -1,0 +1,11 @@
+program repeated_function_definition;
+int patito;
+fun int func(){
+
+};
+fun dec func(){
+
+};
+{
+
+}
