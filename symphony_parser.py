@@ -49,8 +49,8 @@ class Directory():
         current_function_vars = Directory.functions[Directory.scope].variables
 
         if variable in current_function_vars:
-            raise SemanticError('Error: you are declaring your ' + variable
-                                + ' variable more than once ')
+            raise SemanticError('Error: you are declaring your "' + variable
+                                + '" variable more than once')
 
         current_function_vars[variable] = (
             variable,
@@ -62,7 +62,7 @@ class Directory():
 
     def define(return_type, function, parameters, variable_declarations):
         if function in Directory.functions:
-            raise SemanticError('Error: you are declaring your "' + function
+            raise SemanticError('Error: you are defining your "' + function
                                 + '" function more than once')
 
         Directory.scope = function
