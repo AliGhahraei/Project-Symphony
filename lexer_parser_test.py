@@ -69,7 +69,7 @@ class ParserTest(TestCase):
             print()
 
 
-    def test_valid(self):
+    def test_right(self):
         for valid_program in listdir(VALID_PROGRAMS_PATH):
             try:
                 with open(VALID_PROGRAMS_PATH + valid_program) as file:
