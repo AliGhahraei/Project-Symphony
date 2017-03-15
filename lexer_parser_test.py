@@ -69,7 +69,7 @@ class ParserTest(TestCase):
             print()
 
 
-    def test_valid_programs(self):
+    def test_valid(self):
         for valid_program in listdir(VALID_PROGRAMS_PATH):
             try:
                 with open(VALID_PROGRAMS_PATH + valid_program) as file:
@@ -81,11 +81,11 @@ class ParserTest(TestCase):
             print()
 
 
-    def test_grammatically_invalid_programs(self):
+    def test_grammar(self):
         self.assert_programs_raise(GRAMMAR_TEST, GrammaticalError)
 
 
-    def test_semantically_invalid_programs(self):
+    def test_semantics(self):
         self.assert_programs_raise(SEMANTICS_TEST, SemanticError)
 
 
