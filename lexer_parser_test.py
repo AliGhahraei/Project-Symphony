@@ -14,7 +14,7 @@ class LexerTest(TestCase):
         pass
 
 
-    def assertLexerIO(self, lexer_input, expected_output):
+    def assert_lexer_IO(self, lexer_input, expected_output):
         lexer.input(lexer_input)
         actual_output = ''.join([''.join(str(token.value).split()) + token.type
                                  for token in lexer])
@@ -22,7 +22,7 @@ class LexerTest(TestCase):
 
 
     def test_types_right(self):
-        self.assertLexerIO(
+        self.assert_lexer_IO(
             '''
             /*
             Multiline comments are ignored...
