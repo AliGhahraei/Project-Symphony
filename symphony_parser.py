@@ -77,6 +77,20 @@ class Directory():
             Directory.declare(variable[0], variable[1])
 
 
+class ParserError(Exception):
+    def __init__(self, *args, **kwargs):
+        Directory.clear()
+        super().__init__(self, *args, **kwargs)
+
+
+class GrammaticalError(ParserError):
+    pass
+
+
+class SemanticError(ParserError):
+    pass
+
+
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
     Directory.define('VOID', None, [], p[4])
@@ -345,17 +359,3 @@ def p_error(p):
 
 
 parser = yacc()
-
-
-class ParserError(Exception):
-    def __init__(self, *args, **kwargs):
-        Directory.clear()
-        super().__init__(self, *args, **kwargs)
-
-
-class GrammaticalError(ParserError):
-    pass
-
-
-class SemanticError(ParserError):
-    pass
