@@ -2,7 +2,12 @@ from enum import Enum
 from ply.lex import lex, LexError
 
 
-Types = Enum('Types', 'INT DEC CHAR STR BOOL')
+class Types(Enum):
+    INT = 0
+    DEC = 1
+    CHAR = 2
+    STR = 3
+    BOOL = 4
 
 
 tokens = (

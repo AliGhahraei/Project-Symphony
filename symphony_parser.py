@@ -3,6 +3,28 @@ from ply.yacc import yacc
 from sys import exit
 
 
+CUBE = [
+    [
+        [ [Types.INT.value] * 3 + [Types.DEC.value] + [Types.INT.value] * 2 + [Types.BOOL.value] * 5 ],
+        [] * 3,
+        [ [Types.DEC.value] * 6 + [Types.BOOL.value] * 5 ],
+    ],
+    [
+        [ [Types.STR.value] + [] * 5 + [Types.BOOL.value] * 5 ],
+        [ Types.STR.value ],
+    ],
+    [
+        [ [] * 6 + [Types.BOOL.value] * 5 ],
+    ],
+    [
+        [ [] * 6 + [Types.BOOL.value] * 8 ],
+    ],
+    [
+        [ [Types.DEC.value] + [Types.BOOL.value] * 5],
+    ],
+]
+
+
 class FunctionScope():    
     def __init__(self, return_type, name):
         self.name = name
