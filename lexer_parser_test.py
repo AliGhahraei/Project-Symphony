@@ -1,6 +1,6 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import parser, ParserError, SemanticError
+from symphony_parser import parser, GrammaticalError, SemanticError
 from unittest import TestCase, main
 
 
@@ -82,7 +82,7 @@ class ParserTest(TestCase):
 
 
     def test_grammatically_invalid_programs(self):
-        self.assert_programs_raise(GRAMMAR_TEST, ParserError)
+        self.assert_programs_raise(GRAMMAR_TEST, GrammaticalError)
 
 
     def test_semantically_invalid_programs(self):

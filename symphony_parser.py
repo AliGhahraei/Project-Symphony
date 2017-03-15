@@ -36,13 +36,13 @@ class FunctionScope():
 class Directory():
     GLOBAL_SCOPE = None
     functions = {}
-    functions[GLOBAL_SCOPE] = FunctionScope('VOID', None)
-    scope = GLOBAL_SCOPE
 
     def clear():
         Directory.functions.clear()
-        Directory.functions[Directory.GLOBAL_SCOPE] = FunctionScope('VOID', None)
-        Directory.scope = Directory.GLOBAL_SCOPE
+
+
+    def clear_scope():
+        Directory.functions[Directory.scope] = None
 
 
     def declare(variable_type, variable):
@@ -60,7 +60,7 @@ class Directory():
         )
 
 
-    def define(return_type, function, parameters):
+    def define(return_type, function, parameters, variable_declarations):
         if function in Directory.functions:
             raise SemanticError('Error: you are declaring your "' + function
                                 + '" function more than once')
@@ -73,8 +73,13 @@ class Directory():
             Directory.declare(parameter[0], parameter[1])
 
 
+        for variable in variable_declarations:
+            Directory.declare(variable[0], variable[1])
+
+
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
+    Directory.define('VOID', None, [], p[4])
     Directory.clear()
 
 
@@ -86,22 +91,26 @@ def p_empty(p):
 def p_variable_declaration(p):
     ''' variable_declaration : variable_group variable_declaration
                              | empty '''
-    pass
+    if p[1] is not None:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = []
 
 
 def p_variable_group(p):
     ''' variable_group : type declaration_ids ';' '''
-    for variable in p[2]:
-        Directory.declare(p[1], variable)
+    p[0] = []
+    for variable_id in p[2]:
+        p[0].append((p[1], variable_id))
 
 
 def p_declaration_ids(p):
     ''' declaration_ids : id other_declaration_ids '''
-    if not p[2]:
-        p[0] = [p[1]]
-    else:
+    if p[2]:
         p[2].append(p[1])
         p[0] = p[2]
+    else:
+        p[0] = [p[1]]
     
 
 def p_other_declaration_ids(p):
@@ -192,7 +201,8 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    Directory.define(p[2], p[3], p[5])
+    Directory.define(p[2], p[3], p[5], p[8])
+    Directory.clear_scope()
     
 
 def p_return_type(p):
@@ -331,15 +341,21 @@ def p_block(p):
 
 
 def p_error(p):
-    raise ParserError(p)
+    raise GrammaticalError(p)
 
 
 parser = yacc()
 
 
 class ParserError(Exception):
+    def __init__(self, *args, **kwargs):
+        Directory.clear()
+        super().__init__(self, *args, **kwargs)
+
+
+class GrammaticalError(ParserError):
     pass
 
 
-class SemanticError(Exception):
+class SemanticError(ParserError):
     pass
