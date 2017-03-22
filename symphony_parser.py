@@ -35,18 +35,40 @@ class FunctionScope():
 
 class Directory():
     GLOBAL_SCOPE = None
+    current_scope = None
     functions = {}
+
 
     def clear():
         Directory.functions.clear()
 
 
     def clear_scope():
-        Directory.functions[Directory.scope] = None
+        Directory.functions[Directory.current_scope] = None
 
 
-    def declare(variable_type, variable):
-        current_function_vars = Directory.functions[Directory.scope].variables
+    def declare_variables(parameters, variables):
+        for parameter in parameters:
+            Directory.functions[Directory.current_scope].parameter_types.append(
+                parameter[0])
+            Directory._declare_variable(parameter[0], parameter[1])
+
+        for variable in variables:
+            Directory._declare_variable(variable[0], variable[1])
+
+
+    def define_function(return_type, function):
+        if function in Directory.functions:
+            raise DeclarationError('Error: you are defining your "' + function
+                                   + '" function more than once')
+
+        Directory.current_scope = function
+        Directory.functions[function] = FunctionScope(return_type, function)
+
+
+    def _declare_variable(variable_type, variable):
+        current_scope = Directory.current_scope
+        current_function_vars = Directory.functions[current_scope].variables
 
         if variable in current_function_vars:
             raise DeclarationError('Error: you are declaring your "' + variable
@@ -58,23 +80,6 @@ class Directory():
             # TODO: add code for storing array size
             None,
         )
-
-
-    def define(return_type, function, parameters, variable_declarations):
-        if function in Directory.functions:
-            raise DeclarationError('Error: you are defining your "' + function
-                                   + '" function more than once')
-
-        Directory.scope = function
-        Directory.functions[function] = FunctionScope(return_type, function)
-
-        for parameter in parameters:
-            Directory.functions[function].parameter_types.append(parameter[0])
-            Directory.declare(parameter[0], parameter[1])
-
-
-        for variable in variable_declarations:
-            Directory.declare(variable[0], variable[1])
 
 
 class QuadrupleGenerator():
@@ -116,9 +121,14 @@ class OperandTypeError(ParserError):
 
 
 def p_program(p):
-    ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
-    Directory.define('VOID', None, [], p[4])
+    ''' program : PROGRAM ID ';' create_global_scope function_declaration block '''
     Directory.clear()
+
+
+def p_create_global_scope(p):
+    ''' create_global_scope : variable_declaration '''
+    Directory.define_function('VOID', Directory.GLOBAL_SCOPE)
+    Directory.declare_variables([], p[1])
 
 
 def p_empty(p):
@@ -295,10 +305,19 @@ def p_function_declaration(p):
 
 
 def p_function(p):
-    '''function : FUN return_type ID '(' parameters ')' '{' variable_declaration statutes '}' ';' '''
-    Directory.define(p[2], p[3], p[5], p[8])
+    '''function : create_scope parameters_and_variables statutes '}' ';' '''
     Directory.clear_scope()
-    
+
+
+def p_create_scope(p):
+    ''' create_scope : FUN return_type ID '''
+    Directory.define_function(p[2], p[3])
+
+
+def p_parameters_and_variables(p):
+    ''' parameters_and_variables : '(' parameters ')' '{' variable_declaration '''
+    Directory.declare_variables(p[2], p[5])
+
 
 def p_return_type(p):
     ''' return_type : type 
