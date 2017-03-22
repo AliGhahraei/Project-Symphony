@@ -118,7 +118,6 @@ class OperandTypeError(ParserError):
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
     Directory.define('VOID', None, [], p[4])
-    print(Directory.functions[None].variables)
     Directory.clear()
 
 
