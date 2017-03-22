@@ -20,7 +20,7 @@ CUBE = [
         [ [] * 6 + [Types.BOOL.value] * 8 ],
     ],
     [
-        [ [Types.DEC.value] + [Types.BOOL.value] * 5],
+        [ [Types.DEC.value] + [Types.BOOL.value] * 5 ],
     ],
 ]
 
@@ -49,8 +49,8 @@ class Directory():
         current_function_vars = Directory.functions[Directory.scope].variables
 
         if variable in current_function_vars:
-            raise SemanticError('Error: you are declaring your "' + variable
-                                + '" variable more than once')
+            raise DeclarationError('Error: you are declaring your "' + variable
+                                   + '" variable more than once')
 
         current_function_vars[variable] = (
             variable,
@@ -62,8 +62,8 @@ class Directory():
 
     def define(return_type, function, parameters, variable_declarations):
         if function in Directory.functions:
-            raise SemanticError('Error: you are defining your "' + function
-                                + '" function more than once')
+            raise DeclarationError('Error: you are defining your "' + function
+                                   + '" function more than once')
 
         Directory.scope = function
         Directory.functions[function] = FunctionScope(return_type, function)
@@ -77,6 +77,26 @@ class Directory():
             Directory.declare(variable[0], variable[1])
 
 
+class QuadrupleGenerator():
+    operators = ['$']
+    operands = []
+    
+    def operate():
+        return
+        right_operand = QuadrupleGenerator.operands.pop()
+        left_operand = QuadrupleGenerator.operands.pop()
+        operator = QuadrupleGenerator.operators.pop()
+        
+        try:
+            CUBE[left_operand[0]][right_operand[0]][operator]
+        except IndexError:
+            raise OperandTypeError(f'Error: The {operator} operation cannot be \
+            used for {left_operand[1]} (with type {left_operand[0]} and \
+            {right_operand[1]} with type {right_operand[0]}')
+        
+        QuadrupleGenerator.generate_quad(operator, left_operand, right_operand)
+
+
 class ParserError(Exception):
     def __init__(self, *args, **kwargs):
         Directory.clear()
@@ -87,13 +107,18 @@ class GrammaticalError(ParserError):
     pass
 
 
-class SemanticError(ParserError):
+class DeclarationError(ParserError):
+    pass
+
+
+class OperandTypeError(ParserError):
     pass
 
 
 def p_program(p):
     ''' program : PROGRAM ID ';' variable_declaration function_declaration block '''
     Directory.define('VOID', None, [], p[4])
+    print(Directory.functions[None].variables)
     Directory.clear()
 
 
@@ -144,49 +169,106 @@ def p_id(p):
 
 
 def p_expression(p):
-    ''' expression : level1 
-                   | level1 EXPONENTIATION level1  '''
+    ''' expression : level1 pop_exp
+                   | level1 pop_exp push_exp '''
     pass
 
 
+def p_pop_exp(p):
+    ''' pop_exp : empty '''
+    if QuadrupleGenerator.operators[-1] == '**':
+        QuadrupleGenerator.operate()
+
+
+def p_push_exp(p):
+    ''' push_exp : EXPONENTIATION level1 '''
+    QuadrupleGenerator.operators.append(p[1])
+
+
 def p_level1(p):
-    ''' level1 : level2 
+    ''' level1 : level2
                | '+' level2
                | '-' level2'''
     pass
 
 
 def p_level2(p):
-    ''' level2 : level3 
-               | level3 OR level3 
-               | level3 AND level3 '''
+    ''' level2 : level3 pop_binary
+               | level3 pop_binary push_binary '''
     pass
+
+
+def p_pop_binary(p):
+    ''' pop_binary : empty '''
+    if QuadrupleGenerator.operators[-1] == 'and' \
+      or QuadrupleGenerator.operators[-1] == 'or':
+        QuadrupleGenerator.operate()
+
+
+def p_push_binary(p):
+    ''' push_binary : OR level3
+                    | AND level3 '''
+    QuadrupleGenerator.operators.append(p[1])
 
 
 def p_level3(p):
-    ''' level3 : level4
-               | level4 '<' level4
-               | level4 '>' level4
-               | level4 LESS_EQUAL_THAN level4
-               | level4 GREATER_EQUAL_THAN level4
-               | level4 EQUALS level4 '''
+    ''' level3 : level4 pop_rel
+               | level4 pop_rel push_rel '''
     pass
+
+
+def p_pop_rel(p):
+    ''' pop_rel : empty '''
+    if QuadrupleGenerator.operators[-1] == '<' or QuadrupleGenerator.operators[-1] == '>' or QuadrupleGenerator.operators[-1] == '<=' \
+    or QuadrupleGenerator.operators[-1] == '>=' or QuadrupleGenerator.operators[-1] == '==':
+        QuadrupleGenerator.operate()
+
+
+def p_push_rel(p):
+    ''' push_rel : '<' level4
+                 | '>' level4 
+                 | LESS_EQUAL_THAN level4
+                 | GREATER_EQUAL_THAN level4
+                 | EQUALS level4 '''
+    QuadrupleGenerator.operators.append(p[1])
 
 
 def p_level4(p):
-    ''' level4 : level5
-               | level5 '+' level5
-               | level5 '-' level5 '''
+    ''' level4 : level5 pop_plus_minus
+               | level5 pop_plus_minus push_plus_minus '''
     pass
+
+
+def p_pop_plus_minus(p):
+    ''' pop_plus_minus : empty '''
+    if QuadrupleGenerator.operators[-1] == '+' or QuadrupleGenerator.operators[-1] == '-':
+        QuadrupleGenerator.operate()
+
+
+def p_push_plus_minus(p):
+    ''' push_plus_minus : '+' level5
+                        | '-' level5 '''
+    QuadrupleGenerator.operators.append(p[1])
 
 
 def p_level5(p):
-    ''' level5 : level6
+    ''' level5 : level6 pop_times_div_mod
                | NOT level6
-               | level6 '*' level6
-               | level6 '/' level6
-               | level6 MOD level6 '''
+               | level6 pop_times_div_mod push_times_div_mod '''
     pass
+
+
+def p_pop_times_div_mod(p):
+    ''' pop_times_div_mod : empty '''
+    if QuadrupleGenerator.operators[-1] == '*' or QuadrupleGenerator.operators[-1] == '/' or QuadrupleGenerator.operators[-1] == 'mod':
+        QuadrupleGenerator.operate()
+
+
+def p_push_times_div_mod(p):
+    ''' push_times_div_mod : '*' level6
+                           | '/' level6 
+                           | MOD level6 '''
+    QuadrupleGenerator.operators.append(p[1])
 
 
 def p_level6(p):
