@@ -59,7 +59,7 @@ class Directory():
 
     def define_function(return_type, function):
         if function in Directory.functions:
-            raise DeclarationError('Error: you are defining your "' + function
+            raise RedeclarationError('Error: you are defining your "' + function
                                    + '" function more than once')
 
         Directory.current_scope = function
@@ -71,7 +71,7 @@ class Directory():
         current_function_vars = Directory.functions[current_scope].variables
 
         if variable in current_function_vars:
-            raise DeclarationError('Error: you are declaring your "' + variable
+            raise RedeclarationError('Error: you are declaring your "' + variable
                                    + '" variable more than once')
 
         current_function_vars[variable] = (
@@ -112,7 +112,7 @@ class GrammaticalError(ParserError):
     pass
 
 
-class DeclarationError(ParserError):
+class RedeclarationError(ParserError):
     pass
 
 
