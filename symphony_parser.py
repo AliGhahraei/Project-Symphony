@@ -180,7 +180,6 @@ def p_id(p):
 def p_expression(p):
     ''' expression : level1 pop_exp
                    | level1 pop_exp push_exp '''
-    pass
 
 
 def p_pop_exp(p):
@@ -198,13 +197,11 @@ def p_level1(p):
     ''' level1 : level2
                | '+' level2
                | '-' level2'''
-    pass
 
 
 def p_level2(p):
     ''' level2 : level3 pop_binary
                | level3 pop_binary push_binary '''
-    pass
 
 
 def p_pop_binary(p):
@@ -223,7 +220,6 @@ def p_push_binary(p):
 def p_level3(p):
     ''' level3 : level4 pop_rel
                | level4 pop_rel push_rel '''
-    pass
 
 
 def p_pop_rel(p):
@@ -245,7 +241,6 @@ def p_push_rel(p):
 def p_level4(p):
     ''' level4 : level5 pop_plus_minus
                | level5 pop_plus_minus push_plus_minus '''
-    pass
 
 
 def p_pop_plus_minus(p):
@@ -264,7 +259,6 @@ def p_level5(p):
     ''' level5 : level6 pop_times_div_mod
                | NOT level6
                | level6 pop_times_div_mod push_times_div_mod '''
-    pass
 
 
 def p_pop_times_div_mod(p):
@@ -285,23 +279,19 @@ def p_level6(p):
                | const
                | increment
                | decrement '''
-    pass
 
 
 def p_increment(p):
     ''' increment : INCREMENT id '''
-    pass
 
 
 def p_decrement(p):
     ''' decrement : DECREMENT id '''
-    pass
 
 
 def p_function_declaration(p):
     ''' function_declaration : function function_declaration
                              | empty'''
-    pass
 
 
 def p_function(p):
@@ -337,7 +327,6 @@ def p_type(p):
 def p_statutes(p):
     ''' statutes : statute ';' statutes
                  | empty'''
-    pass
 
 
 def p_statute(p):
@@ -349,51 +338,42 @@ def p_statute(p):
                  | return
                  | increment
                  | decrement '''
-    pass
 
 
 def p_call(p):
     ''' call : ID '(' expressions ')' '''
-    pass
 
 
 def p_expressions(p):
     ''' expressions : expression
                     | expression ',' expressions '''
-    pass
 
 
 def p_assignment(p):
     ''' assignment : id '=' expression '''
-    pass
 
 
 def p_condition(p):
     ''' condition : IF '(' expression ')' block elses '''
-    pass
 
 
 def p_cycle(p):
     ''' cycle : WHILE '(' expression ')' block '''
-    pass
 
 
 def p_special(p):
     ''' special : SPECIAL_ID '(' expressions ')' '''
-    pass
 
 
 def p_return(p):
     ''' return : RETURN expression
                | RETURN '''
-    pass
 
 
 def p_elses(p):
     ''' elses : empty
               | ELSE block
               | ELSEIF '(' expression ')' block elses '''
-    pass
 
 
 def p_parameters(p):
@@ -446,12 +426,10 @@ def p_const(p):
               | CHAR_VAL
               | STR_VAL
               | BOOL_VAL '''
-    pass
 
 
 def p_block(p):
     ''' block : '{' statutes '}' '''
-    pass
 
 
 def p_error(p):
