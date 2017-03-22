@@ -96,8 +96,8 @@ class QuadrupleGenerator():
             CUBE[left_operand[0]][right_operand[0]][operator]
         except IndexError:
             raise OperandTypeError(f'Error: The {operator} operation cannot be \
-            used for {left_operand[1]} (with type {left_operand[0]} and \
-            {right_operand[1]} with type {right_operand[0]}')
+            used for {left_operand[1]} (with type {left_operand[0]}) and \
+            {right_operand[1]} (with type {right_operand[0]})')
         
         QuadrupleGenerator.generate_quad(operator, left_operand, right_operand)
 
