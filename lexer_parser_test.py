@@ -1,13 +1,13 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import parser, GrammaticalError, SemanticError
+from symphony_parser import parser, GrammaticalError, DeclarationError
 from unittest import TestCase, main
 
 
 VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
 GRAMMAR_TEST = 'tests/invalid_grammar/'
-SEMANTICS_TEST = 'tests/invalid_semantics/'
-    
+DECLARATION_TEST = 'tests/invalid_declaration/'
+
 
 class LexerTest(TestCase):
     def setUp(self):
@@ -85,8 +85,8 @@ class ParserTest(TestCase):
         self.assert_programs_raise(GRAMMAR_TEST, GrammaticalError)
 
 
-    def test_semantics(self):
-        self.assert_programs_raise(SEMANTICS_TEST, SemanticError)
+    def test_declaration(self):
+        self.assert_programs_raise(DECLARATION_TEST, DeclarationError)
 
 
 if __name__ == '__main__':
