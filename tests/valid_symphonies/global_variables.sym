@@ -1,0 +1,9 @@
+program global_variables;
+int alpha, beta;
+fun int frob(){
+    dec b;
+	b = alpha / 3;
+};
+{
+	println(alpha + beta);
+}

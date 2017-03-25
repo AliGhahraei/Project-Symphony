@@ -69,6 +69,7 @@ class Directory():
 
     def clear_scope():
         Directory.functions[Directory.current_scope] = None
+        Directory.current_scope = Directory.GLOBAL_SCOPE
 
 
     def declare_variables(parameters, variables, is_global=False):
@@ -156,6 +157,10 @@ class RedeclarationError(ParserError):
 
 
 class OperandTypeError(ParserError):
+    pass
+
+
+class UndeclaredError(ParserError):
     pass
 
 
@@ -457,14 +462,36 @@ def p_parameter(p):
 
 
 def p_const(p):
-    ''' const : id 
-              | call
-              | special
-              | INT_VAL
-              | DEC_VAL
-              | CHAR_VAL
-              | STR_VAL
-              | BOOL_VAL '''
+    ''' const : variable_id
+              | function_result
+              | literal '''
+
+
+def p_variable_id(p):
+    ''' variable_id : id '''
+    try:
+        Directory.functions[Directory.current_scope].variables[p[1]]
+    except KeyError:
+        try:
+            Directory.functions[Directory.GLOBAL_SCOPE].variables[p[1]]
+        except KeyError:
+            raise UndeclaredError(f'You tried to use the variable {p[1]}, but it\
+            was not declared beforehand. Check if you wrote the name correctly \
+            or if you are trying to use a variable defined inside another \
+            function')
+
+
+def p_function_result(p):
+    ''' function_result : call
+                        | special '''
+
+
+def p_literal(p):
+    ''' literal : INT_VAL
+                | DEC_VAL
+                | CHAR_VAL
+                | STR_VAL
+                | BOOL_VAL '''
 
 
 def p_block(p):

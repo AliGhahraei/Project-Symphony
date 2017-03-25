@@ -1,12 +1,14 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import parser, GrammaticalError, RedeclarationError
+from symphony_parser import (parser, GrammaticalError, RedeclarationError,
+                             UndeclaredError)
 from unittest import TestCase, main
 
 
 VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
-GRAMMAR_TEST = 'tests/invalid_grammar/'
-REDECLARATION_TEST = 'tests/redeclaration/'
+GRAMMAR_PATH = 'tests/invalid_grammar/'
+REDECLARATION_PATH = 'tests/redeclaration/'
+UNDECLARED_PATH = 'tests/undeclared_variables/'
 
 
 class LexerTest(TestCase):
@@ -82,11 +84,15 @@ class ParserTest(TestCase):
 
 
     def test_grammar(self):
-        self.assert_programs_raise(GRAMMAR_TEST, GrammaticalError)
+        self.assert_programs_raise(GRAMMAR_PATH, GrammaticalError)
 
 
     def test_redeclaration(self):
-        self.assert_programs_raise(REDECLARATION_TEST, RedeclarationError)
+        self.assert_programs_raise(REDECLARATION_PATH, RedeclarationError)
+
+
+    def test_undeclared_variables(self):
+        self.assert_programs_raise(UNDECLARED_PATH, UndeclaredError)
 
 
 if __name__ == '__main__':
