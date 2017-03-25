@@ -2,6 +2,8 @@ from lexer import tokens, Types
 from ply.yacc import yacc
 from sys import exit
 
+from orchestra import MEMORY_SECTORS, ADDRESS_TUPLE
+
 
 CUBE = [
     [
@@ -37,24 +39,46 @@ class Directory():
     GLOBAL_SCOPE = None
     current_scope = None
     functions = {}
+    ADDRESSES = None
+
+
+    def initialize():
+        sector_iterator = iter(MEMORY_SECTORS)
+        current_address = sector_iterator.__next__()[1]
+        Directory.ADDRESSES = []
+        for sector in sector_iterator:
+            next_address = sector[1]
+            sector_size = next_address - current_address
+
+            type_addresses = [starting_address for starting_address in
+                              range(current_address, next_address,
+                                    int((sector_size) / len(Types)))]
+            type_addresses = dict(zip(Types, type_addresses))
+
+            Directory.ADDRESSES.append(type_addresses)
+            current_address = next_address
+
+        Directory.ADDRESSES = ADDRESS_TUPLE._make(Directory.ADDRESSES)
+        Directory.define_function('VOID', Directory.GLOBAL_SCOPE)
 
 
     def clear():
         Directory.functions.clear()
+        Directory.ADDRESSES = None
 
 
     def clear_scope():
         Directory.functions[Directory.current_scope] = None
 
 
-    def declare_variables(parameters, variables):
+    def declare_variables(parameters, variables, is_global=False):
         for parameter in parameters:
             Directory.functions[Directory.current_scope].parameter_types.append(
                 parameter[0])
-            Directory._declare_variable(parameter[0], parameter[1])
+            Directory._declare_variable(parameter[0], parameter[1], is_global)
 
         for variable in variables:
-            Directory._declare_variable(variable[0], variable[1])
+            Directory._declare_variable(variable[0], variable[1], is_global)
 
 
     def define_function(return_type, function):
@@ -66,7 +90,20 @@ class Directory():
         Directory.functions[function] = FunctionScope(return_type, function)
 
 
-    def _declare_variable(variable_type, variable):
+    def generate_variable_address(variable_type, is_global):
+        new_address = None
+        
+        if is_global:
+            new_address = Directory.ADDRESSES.global_[variable_type]
+            Directory.ADDRESSES.global_[variable_type] = new_address + 1
+        else:
+            new_address = Directory.ADDRESSES.local[variable_type] 
+            Directory.ADDRESSES.local[variable_type] = new_address + 1
+
+        return new_address
+
+
+    def _declare_variable(variable_type, variable, is_global):
         current_scope = Directory.current_scope
         current_function_vars = Directory.functions[current_scope].variables
 
@@ -77,6 +114,7 @@ class Directory():
         current_function_vars[variable] = (
             variable,
             variable_type,
+            Directory.generate_variable_address(variable_type, is_global),
             # TODO: add code for storing array size
             None,
         )
@@ -85,7 +123,8 @@ class Directory():
 class QuadrupleGenerator():
     operators = ['$']
     operands = []
-    
+
+
     def operate():
         return
         right_operand = QuadrupleGenerator.operands.pop()
@@ -127,8 +166,8 @@ def p_program(p):
 
 def p_create_global_scope(p):
     ''' create_global_scope : variable_declaration '''
-    Directory.define_function('VOID', Directory.GLOBAL_SCOPE)
-    Directory.declare_variables([], p[1])
+    Directory.initialize()
+    Directory.declare_variables([], p[1], is_global=True)
 
 
 def p_empty(p):
@@ -321,7 +360,7 @@ def p_type(p):
              | CHAR 
              | STR 
              | BOOL '''
-    p[0] = p[1]
+    p[0] = Types[p[1].upper()]
 
 
 def p_statutes(p):
