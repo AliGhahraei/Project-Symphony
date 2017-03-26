@@ -9,7 +9,7 @@ int a, b;
 		print("Hey");
 	};
 
-	if(not a equals 10) {
+	if(not (a equals 10)) {
 	    // Doesn't execute
 		print("Hey");
 	};
@@ -17,12 +17,12 @@ int a, b;
 	if(a equals 10) {
 	    // Executes
 		print("Hey");
-	} elseif(not a equals 10) {
+	} elseif(not (a equals 10)) {
 	    // Doesn't execute
 	    print("Hey");
 	};
 
-	if(not a equals 10) {
+	if(not (a equals 10)) {
 	    // Executes
 		print("Hey");
 	} elseif(a equals 10) {
@@ -33,17 +33,17 @@ int a, b;
 	if(a equals 10) {
 	    // Executes
 		print("Hey");
-	} elseif(not a equals 10) {
+	} elseif(not (a equals 10)) {
 	    // Doesn't execute
 	    print("Hey");
 	} else {
 	  	print("Hey");
 	};
 
-	if(not a equals 10) {
+	if(not (a equals 10)) {
 	    // Executes
 		print("Hey");
-	} elseif(not a equals 10) {
+	} elseif(not (a equals 10)) {
 	    // Doesn't execute
 	    print("Hey");
 	} else {
@@ -51,7 +51,7 @@ int a, b;
 	};
 	
 	/*
-	if(not a equals b) {
+	if(not (a equals b)) {
 		 print("pass");
 	} elseif();
 	elseif(false) {
