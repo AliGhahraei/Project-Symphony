@@ -1,4 +1,4 @@
-from lexer import tokens, Types
+from lexer import tokens, Types, OPERATORS
 from ply.yacc import yacc
 from sys import exit
 
@@ -39,32 +39,14 @@ class Directory():
     GLOBAL_SCOPE = None
     current_scope = None
     functions = {}
-    ADDRESSES = None
-
+    
 
     def initialize():
-        sector_iterator = iter(MEMORY_SECTORS)
-        current_address = sector_iterator.__next__()[1]
-        Directory.ADDRESSES = []
-        for sector in sector_iterator:
-            next_address = sector[1]
-            sector_size = next_address - current_address
-
-            type_addresses = [starting_address for starting_address in
-                              range(current_address, next_address,
-                                    int((sector_size) / len(Types)))]
-            type_addresses = dict(zip(Types, type_addresses))
-
-            Directory.ADDRESSES.append(type_addresses)
-            current_address = next_address
-
-        Directory.ADDRESSES = ADDRESS_TUPLE._make(Directory.ADDRESSES)
         Directory.define_function('VOID', Directory.GLOBAL_SCOPE)
 
 
     def clear():
         Directory.functions.clear()
-        Directory.ADDRESSES = None
 
 
     def clear_scope():
@@ -91,19 +73,6 @@ class Directory():
         Directory.functions[function] = FunctionScope(return_type, function)
 
 
-    def generate_variable_address(variable_type, is_global):
-        new_address = None
-        
-        if is_global:
-            new_address = Directory.ADDRESSES.global_[variable_type]
-            Directory.ADDRESSES.global_[variable_type] = new_address + 1
-        else:
-            new_address = Directory.ADDRESSES.local[variable_type] 
-            Directory.ADDRESSES.local[variable_type] = new_address + 1
-
-        return new_address
-
-
     def _declare_variable(variable_type, variable, is_global):
         current_scope = Directory.current_scope
         current_function_vars = Directory.functions[current_scope].variables
@@ -113,9 +82,10 @@ class Directory():
                                    + '" variable more than once')
 
         current_function_vars[variable] = (
-            variable,
             variable_type,
-            Directory.generate_variable_address(variable_type, is_global),
+            QuadrupleGenerator.generate_variable_address(variable_type,
+                                                         is_global),
+            variable,
             # TODO: add code for storing array size
             None,
         )
@@ -124,27 +94,81 @@ class Directory():
 class QuadrupleGenerator():
     operators = ['$']
     operands = []
+    ADDRESSES = None
+    CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
+
+
+    def initialize():
+        sector_iterator = iter(MEMORY_SECTORS)
+        current_address = sector_iterator.__next__()[1]
+        QuadrupleGenerator.ADDRESSES = []
+        for sector in sector_iterator:
+            next_address = sector[1]
+            sector_size = next_address - current_address
+
+            type_addresses = [starting_address for starting_address in
+                              range(current_address, next_address,
+                                    int((sector_size) / len(Types)))]
+            type_addresses = dict(zip(Types, type_addresses))
+
+            QuadrupleGenerator.ADDRESSES.append(type_addresses)
+            current_address = next_address
+
+        QuadrupleGenerator.ADDRESSES = ADDRESS_TUPLE._make(
+            QuadrupleGenerator.ADDRESSES)
+
+
+    def clear():
+        QuadrupleGenerator.operators = ['$']
+        QuadrupleGenerator.operands.clear()
+        ADDRESSES = None
+        CONSTANT_ADDRESS_DICT = {type_: None for type_ in Types}
 
 
     def operate():
-        return
-        right_operand = QuadrupleGenerator.operands.pop()
-        left_operand = QuadrupleGenerator.operands.pop()
-        operator = QuadrupleGenerator.operators.pop()
-        
+        print(QuadrupleGenerator.operands)
+        right_type, right_address, right_val = QuadrupleGenerator.operands.pop()
+        left_type, left_address, left_val = QuadrupleGenerator.operands.pop()
+        operator_key = QuadrupleGenerator.operators.pop()
+
         try:
-            CUBE[left_operand[0]][right_operand[0]][operator]
+            result_type = CUBE[left_type][right_type][OPERATORS[operator_key]]
         except IndexError:
-            raise OperandTypeError(f'Error: The {operator} operation cannot be \
-            used for {left_operand[1]} (with type {left_operand[0]}) and \
-            {right_operand[1]} (with type {right_operand[0]})')
+            raise OperandTypeError(
+                f'Error: The {operator_key} operation cannot be used on '
+                f'{left_val} and {right_val}')
         
-        QuadrupleGenerator.generate_quad(operator, left_operand, right_operand)
+        QuadrupleGenerator.generate_quad(operator, left_address, right_address)
+
+    
+    def generate_variable_address(variable_type, is_global):
+        new_address = None
+        
+        if is_global:
+            new_address = QuadrupleGenerator.ADDRESSES.global_[variable_type]
+            QuadrupleGenerator.ADDRESSES.global_[variable_type] = new_address + 1
+        else:
+            new_address = QuadrupleGenerator.ADDRESSES.local[variable_type] 
+            QuadrupleGenerator.ADDRESSES.local[variable_type] = new_address + 1
+
+        return new_address
+
+
+    def push_constant(type_, value):
+        try:
+            address = QuadrupleGenerator.CONSTANT_ADDRESS_DICT[type_][value]
+        except KeyError:
+            address = QuadrupleGenerator.ADDRESSES.constant[type_]
+            QuadrupleGenerator.ADDRESSES.constant[type_] = address + 1
+
+            QuadrupleGenerator.CONSTANT_ADDRESS_DICT[type_][value] = address
+
+        QuadrupleGenerator.operands.append((type_, address, value))
 
 
 class ParserError(Exception):
     def __init__(self, *args, **kwargs):
-        Directory.clear()
+        clear()
         super().__init__(self, *args, **kwargs)
 
 
@@ -164,13 +188,19 @@ class UndeclaredError(ParserError):
     pass
 
 
+def clear():
+    Directory.clear()
+    QuadrupleGenerator.clear()
+
+
 def p_program(p):
     ''' program : PROGRAM ID ';' create_global_scope function_declaration block '''
-    Directory.clear()
+    clear()
 
 
 def p_create_global_scope(p):
     ''' create_global_scope : variable_declaration '''
+    QuadrupleGenerator.initialize()
     Directory.initialize()
     Directory.declare_variables([], p[1], is_global=True)
 
@@ -464,34 +494,59 @@ def p_parameter(p):
 def p_const(p):
     ''' const : variable_id
               | function_result
-              | literal '''
+              | int_val
+              | dec_val
+              | char_val
+              | str_val
+              | bool_val '''
+
+
+def p_int_val(p):
+    ''' int_val : INT_VAL '''
+    QuadrupleGenerator.push_constant(Types.INT, p[1])
+
+
+def p_dec_val(p):
+    ''' dec_val : DEC_VAL '''
+    QuadrupleGenerator.push_constant(Types.DEC, p[1])
+
+
+def p_char_val(p):
+    ''' char_val : CHAR_VAL '''
+    QuadrupleGenerator.push_constant(Types.CHAR, p[1])
+
+
+def p_str_val(p):
+    ''' str_val : STR_VAL '''
+    QuadrupleGenerator.push_constant(Types.STR, p[1])
+
+
+def p_bool_val(p):
+    ''' bool_val : BOOL_VAL '''
+    QuadrupleGenerator.push_constant(Types.BOOL, p[1])
 
 
 def p_variable_id(p):
     ''' variable_id : id '''
+    variable = None
     try:
-        Directory.functions[Directory.current_scope].variables[p[1]]
+        variable = Directory.functions[Directory.current_scope].variables[p[1]]
     except KeyError:
         try:
-            Directory.functions[Directory.GLOBAL_SCOPE].variables[p[1]]
+            variable = Directory.functions[Directory.GLOBAL_SCOPE].variables[
+                p[1]]
         except KeyError:
             raise UndeclaredError(f'You tried to use the variable {p[1]}, but it\
             was not declared beforehand. Check if you wrote the name correctly \
             or if you are trying to use a variable defined inside another \
             function')
 
+    QuadrupleGenerator.operands.append((variable[0], variable[1], variable[2]))
+
 
 def p_function_result(p):
     ''' function_result : call
                         | special '''
-
-
-def p_literal(p):
-    ''' literal : INT_VAL
-                | DEC_VAL
-                | CHAR_VAL
-                | STR_VAL
-                | BOOL_VAL '''
 
 
 def p_block(p):
@@ -502,4 +557,5 @@ def p_error(p):
     raise GrammaticalError(p)
 
 
-parser = yacc()
+def create_parser():
+    return yacc()

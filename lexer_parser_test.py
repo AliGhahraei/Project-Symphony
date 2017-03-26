@@ -1,7 +1,7 @@
 from lexer import lexer
 from os import listdir
-from symphony_parser import (parser, GrammaticalError, RedeclarationError,
-                             UndeclaredError)
+from symphony_parser import (create_parser, GrammaticalError,
+                             RedeclarationError, UndeclaredError)
 from unittest import TestCase, main
 
 
@@ -60,23 +60,28 @@ class ParserTest(TestCase):
 
     def assert_programs_raise(self, path, RaisedError):
         for invalid_program in listdir(path):
+            self.parser = create_parser()
+            
             try:
                 with open(path + invalid_program) as file:
+                    
                     with self.assertRaises(RaisedError):
                         print('Testing', invalid_program + '...', end=' ')
-                        parser.parse(file.read())
+                        self.parser.parse(file.read())
             except:
                 print('\033[91m Error!\033[0m')
                 raise
             print()
 
 
-    def test_right(self):
+    def test_right(self):      
         for valid_program in listdir(VALID_PROGRAMS_PATH):
-            try:
+            self.parser = create_parser()
+            
+            try:               
                 with open(VALID_PROGRAMS_PATH + valid_program) as file:
                     print('Testing', valid_program + '...', end=' ')
-                    parser.parse(file.read())
+                    self.parser.parse(file.read())
             except:
                 print('\033[91m Error!\033[0m')
                 raise

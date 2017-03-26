@@ -1,8 +1,8 @@
-from enum import Enum
+from enum import IntEnum
 from ply.lex import lex, LexError
 
 
-class Types(Enum):
+class Types(IntEnum):
     INT = 0
     DEC = 1
     CHAR = 2
@@ -16,6 +16,20 @@ tokens = (
     'LESS_EQUAL_THAN', 'AND', 'OR', 'NOT', 'FUN', 'WHILE', 'IF', 'ELSE',
     'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD', 'PROGRAM',
 ) + tuple(datatype.name for datatype in Types)
+
+
+literals = [',', ';', '(', ')', '{', '}', '[', ']', '=', '+', '-', '*', '/', '>', '<', ]
+t_GREATER_EQUAL_THAN = r'>='
+t_LESS_EQUAL_THAN = r'<='
+t_EXPONENTIATION = r'\*\*'
+t_INCREMENT = r'\+\+'
+t_DECREMENT = r'--'
+
+
+OPERATOR_LIST = ['+', '-', '*', '/', '**', 'mod', 'equals', '>', '<', '>=',
+                 '<=', 'and', 'or', 'not']
+OPERATORS = dict(zip(OPERATOR_LIST, [counter for counter in
+                                     range(len(OPERATOR_LIST))]))
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
@@ -87,14 +101,6 @@ def t_SINGLE_LINE_COMMENT(t):
 
 def t_MULTI_LINE_COMMENT(t):
 """ 
-
-literals = ['>', '<', ',', ';', '(', ')', '{', '}', '[', ']', '=', '+', '-', 
-            '*', '/']
-t_GREATER_EQUAL_THAN = r'>='
-t_LESS_EQUAL_THAN = r'<='
-t_EXPONENTIATION = r'\*\*'
-t_INCREMENT = r'\+\+'
-t_DECREMENT = r'--'
 
 t_ignore_SINGLE_LINE_COMMENT = r'//.*'
 t_ignore = " \t"
