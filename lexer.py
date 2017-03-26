@@ -27,9 +27,13 @@ t_DECREMENT = r'--'
 
 
 OPERATOR_LIST = ['+', '-', '*', '/', '**', 'mod', 'equals', '>', '<', '>=',
-                 '<=', 'and', 'or', 'not']
+                 '<=', 'and', 'or',]
 OPERATORS = dict(zip(OPERATOR_LIST, [counter for counter in
                                      range(len(OPERATOR_LIST))]))
+
+UNARY_OPERATOR_LIST = ['++', '--', '+', '-', 'not']
+UNARY_OPERATORS = dict(zip(UNARY_OPERATOR_LIST, [counter for counter in
+                                     range(len(UNARY_OPERATOR_LIST))]))
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
