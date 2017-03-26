@@ -1,4 +1,5 @@
 from lexer import tokens, Types, OPERATORS
+#!/usr/bin/python
 from ply.yacc import yacc
 from sys import exit
 
@@ -559,3 +560,14 @@ def p_error(p):
 
 def create_parser():
     return yacc()
+
+
+if __name__ == "__main__":
+    parser = create_parser()
+
+    for path in argv[1:]:
+        try:
+            with open(path) as file:
+                parser.parse(file.read())
+        except FileNotFoundError:
+            print("The file", path, "was not found")
