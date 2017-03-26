@@ -1,13 +1,13 @@
 from enum import IntEnum
-from ply.lex import lex, LexError
+from ply.lex import lex
 
 
 class Types(IntEnum):
     INT = 0
-    DEC = 1
-    CHAR = 2
-    STR = 3
-    BOOL = 4
+    CHAR = 1
+    STR = 2
+    BOOL = 3
+    DEC = 4
 
 
 tokens = (
