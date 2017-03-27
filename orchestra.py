@@ -11,3 +11,17 @@ MEMORY_SECTORS = [
 sector_iterator = iter(MEMORY_SECTORS[:-1])
 ADDRESS_TUPLE = namedtuple('ADDRESSES', [address[0] for address
                                          in sector_iterator])
+
+
+def assign():
+    pass
+
+
+def assign_literal():
+    pass
+
+
+OPERATIONS = {
+    '=' : assign,
+    'ASSIGN_LITERAL' : assign_literal,
+}
