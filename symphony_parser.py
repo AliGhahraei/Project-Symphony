@@ -9,22 +9,40 @@ from orchestra import MEMORY_SECTORS, ADDRESS_TUPLE
 
 CUBE = [
     [
-        [ [Types.INT.value] * 3 + [Types.DEC.value] + [Types.INT.value] * 2 + [Types.BOOL.value] * 5 ],
-        [] * 3,
-        [ [Types.DEC.value] * 6 + [Types.BOOL.value] * 5 ],
+        [Types.INT] * 3 + [Types.DEC] + [Types.INT] * 2
+        + [Types.BOOL] * 5,
+        [],
+        [],
+        [],
+        [Types.DEC] * 6 + [Types.BOOL] * 5,
     ],
     [
-        [ [Types.STR.value] + [] * 5 + [Types.BOOL.value] * 5 ],
-        [ Types.STR.value ],
+        [],
+        [Types.STR] + [None] * 5 + [Types.BOOL] * 5,
+        [Types.STR],
+        [],
+        [],
     ],
     [
-        [ [] * 6 + [Types.BOOL.value] * 5 ],
+        [],
+        [],
+        [None] * 6 + [Types.BOOL] * 5,
+        [],
+        [],
     ],
     [
-        [ [] * 6 + [Types.BOOL.value] * 8 ],
+        [],
+        [],
+        [],
+        [None] * 6 + [Types.BOOL] * 8,
+        [],
     ],
     [
-        [ [Types.DEC.value] + [Types.BOOL.value] * 5 ],
+        [],
+        [],
+        [],
+        [],
+        [Types.DEC] + [Types.BOOL] * 5,
     ],
 ]
 
