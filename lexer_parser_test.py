@@ -1,5 +1,5 @@
 from lexer import lexer
-from os import listdir
+from glob import glob
 from symphony_parser import (create_parser, GrammaticalError,
                              RedeclarationError, UndeclaredError)
 from unittest import TestCase, main
@@ -59,11 +59,11 @@ class ParserTest(TestCase):
 
 
     def assert_programs_raise(self, path, RaisedError):
-        for invalid_program in listdir(path):
+        for invalid_program in glob(path + '*.sym'):
             self.parser = create_parser()
             
             try:
-                with open(path + invalid_program) as file:
+                with open(invalid_program) as file:
                     
                     with self.assertRaises(RaisedError):
                         print('Testing', invalid_program + '...', end=' ')
@@ -75,11 +75,11 @@ class ParserTest(TestCase):
 
 
     def test_right(self):      
-        for valid_program in listdir(VALID_PROGRAMS_PATH):
+        for valid_program in glob(VALID_PROGRAMS_PATH + '*.sym'):
             self.parser = create_parser()
             
             try:               
-                with open(VALID_PROGRAMS_PATH + valid_program) as file:
+                with open(valid_program) as file:
                     print('Testing', valid_program + '...', end=' ')
                     self.parser.parse(file.read())
             except:
