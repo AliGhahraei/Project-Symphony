@@ -9,8 +9,7 @@ from orchestra import MEMORY_SECTORS, ADDRESS_TUPLE
 
 CUBE = [
     [
-        [Types.INT] * 3 + [Types.DEC] + [Types.INT] * 2
-        + [Types.BOOL] * 5,
+        [Types.INT] * 3 + [Types.DEC] + [Types.INT] * 2 + [Types.BOOL] * 5,
         [],
         [],
         [],
@@ -25,7 +24,7 @@ CUBE = [
     ],
     [
         [],
-        [],
+        [Types.STR],
         [None] * 6 + [Types.BOOL] * 5,
         [],
         [],
@@ -38,11 +37,11 @@ CUBE = [
         [],
     ],
     [
+        [Types.DEC] * 6 + [Types.BOOL] * 5,
         [],
         [],
         [],
-        [],
-        [Types.DEC] + [Types.BOOL] * 5,
+        [Types.DEC] * 6 + [Types.BOOL] * 5,
     ],
 ]
 
