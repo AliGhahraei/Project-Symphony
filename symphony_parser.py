@@ -1,7 +1,8 @@
-from lexer import tokens, Types, OPERATORS
 #!/usr/bin/python
+
+from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS
 from ply.yacc import yacc
-from sys import exit
+from sys import exit, argv
 
 from orchestra import MEMORY_SECTORS, ADDRESS_TUPLE
 
