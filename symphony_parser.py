@@ -428,11 +428,13 @@ def p_level6(p):
 
 
 def p_increment(p):
-    ''' increment : INCREMENT id '''
+    ''' increment : INCREMENT variable_id '''
+    QuadrupleGenerator.operate_unary(p[1], p.lexer.lineno)
 
 
 def p_decrement(p):
-    ''' decrement : DECREMENT id '''
+    ''' decrement : DECREMENT variable_id '''
+    QuadrupleGenerator.operate_unary(p[1], p.lexer.lineno)
 
 
 def p_function_declaration(p):
