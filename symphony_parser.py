@@ -171,9 +171,10 @@ class QuadrupleGenerator():
 
     def clear():
         QuadrupleGenerator.operands.clear()
-        ADDRESSES = None
-        CONSTANT_ADDRESS_DICT = {type_: None for type_ in Types}
+        QuadrupleGenerator.ADDRESSES = []
+        QuadrupleGenerator.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
         QuadrupleGenerator.quadruples = ''
+        QuadrupleGenerator.filepath = None
 
 
     def operate(operator_symbol, line_number):
@@ -302,14 +303,18 @@ def clear():
 
 
 def p_program(p):
-    ''' program : PROGRAM ID ';' create_global_scope function_declaration block '''
+    ''' program : PROGRAM ID ';' create_global_scope global_declarations function_declaration block '''
     finalize()
 
 
 def p_create_global_scope(p):
-    ''' create_global_scope : variable_declaration '''
+    ''' create_global_scope : empty '''
     QuadrupleGenerator.initialize()
     Directory.initialize()
+
+
+def p_global_declarations(p):
+    ''' global_declarations : variable_declaration '''
     Directory.declare_variables([], p[1], p.lexer.lineno, is_global=True)
 
 
