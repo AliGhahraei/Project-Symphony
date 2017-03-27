@@ -46,6 +46,14 @@ CUBE = [
     ],
 ]
 
+UNARY_TABLE = [
+    [Types.INT.value] * 4,
+    [],
+    [],
+    [None] *4 + [Types.BOOL.value],
+    [Types.DEC.value] *4,
+]
+
 
 class FunctionScope():    
     def __init__(self, return_type, name):
