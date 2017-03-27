@@ -145,6 +145,8 @@ class QuadrupleGenerator():
     operands = []
     ADDRESSES = None
     CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
+    quadruples = ''
+    filepath = None
 
 
     def initialize():
@@ -171,6 +173,7 @@ class QuadrupleGenerator():
         QuadrupleGenerator.operands.clear()
         ADDRESSES = None
         CONSTANT_ADDRESS_DICT = {type_: None for type_ in Types}
+        QuadrupleGenerator.quadruples = ''
 
 
     def operate(operator_symbol, line_number):
@@ -221,8 +224,8 @@ class QuadrupleGenerator():
             QuadrupleGenerator.generate_quad('=', result_address, variable[1])
 
 
-    def generate_quad(operation, operand1, operand2, operand3=None):
-        pass
+    def generate_quad(*args):
+        QuadrupleGenerator.quadruples += ' '.join(str(arg) for arg in args) + '\n'
 
 
     def call(function):
@@ -260,6 +263,11 @@ class QuadrupleGenerator():
         return new_address
 
 
+    def write_quads():
+        with open(QuadrupleGenerator.filepath[:-4] + '.note', 'w') as file:
+            file.write(QuadrupleGenerator.quadruples)
+
+
 class ParserError(Exception):
     def __init__(self, *args, **kwargs):
         clear()
@@ -282,6 +290,11 @@ class UndeclaredError(ParserError):
     pass
 
 
+def finalize():
+    QuadrupleGenerator.write_quads()
+    clear()
+
+
 def clear():
     Directory.clear()
     QuadrupleGenerator.clear()
@@ -289,7 +302,7 @@ def clear():
 
 def p_program(p):
     ''' program : PROGRAM ID ';' create_global_scope function_declaration block '''
-    clear()
+    finalize()
 
 
 def p_create_global_scope(p):
@@ -622,14 +635,15 @@ def p_error(p):
     raise GrammaticalError(p)
 
 
-def create_parser():
+def create_parser(filepath):
+    QuadrupleGenerator.filepath = filepath
     return yacc()
 
 
 if __name__ == "__main__":
-    parser = create_parser()
-
     for path in argv[1:]:
+        parser = create_parser(path)
+
         try:
             with open(path) as file:
                 parser.parse(file.read())

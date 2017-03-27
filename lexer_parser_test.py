@@ -60,7 +60,7 @@ class ParserTest(TestCase):
 
     def assert_programs_raise(self, path, RaisedError):
         for invalid_program in glob(path + '*.sym'):
-            self.parser = create_parser()
+            self.parser = create_parser(invalid_program)
             
             try:
                 with open(invalid_program) as file:
@@ -76,7 +76,7 @@ class ParserTest(TestCase):
 
     def test_right(self):      
         for valid_program in glob(VALID_PROGRAMS_PATH + '*.sym'):
-            self.parser = create_parser()
+            self.parser = create_parser(valid_program)
             
             try:               
                 with open(valid_program) as file:
