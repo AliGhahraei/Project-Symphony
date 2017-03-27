@@ -70,7 +70,7 @@ class Directory():
     
 
     def initialize():
-        Directory.define_function('VOID', Directory.GLOBAL_SCOPE)
+        Directory.define_function('VOID', Directory.GLOBAL_SCOPE, 0)
 
 
     def clear():
@@ -82,32 +82,36 @@ class Directory():
         Directory.current_scope = Directory.GLOBAL_SCOPE
 
 
-    def declare_variables(parameters, variables, is_global=False):
+    def declare_variables(parameters, variables, line_number, is_global=False):
         for parameter in parameters:
             Directory.functions[Directory.current_scope].parameter_types.append(
                 parameter[0])
-            Directory._declare_variable(parameter[0], parameter[1], is_global)
+            Directory._declare_variable(parameter[0], parameter[1], is_global,
+                                        line_number)
 
         for variable in variables:
-            Directory._declare_variable(variable[0], variable[1], is_global)
+            Directory._declare_variable(variable[0], variable[1], is_global,
+                                        line_number)
 
 
-    def define_function(return_type, function):
+    def define_function(return_type, function, line_number):
         if function in Directory.functions:
-            raise RedeclarationError('Error: you are defining your "' + function
-                                   + '" function more than once')
+            raise RedeclarationError(f'Error on line {line_number}: you are'
+                                     f' defining your {function} function more'
+                                     f' than once')
 
         Directory.current_scope = function
         Directory.functions[function] = FunctionScope(return_type, function)
 
 
-    def _declare_variable(variable_type, variable, is_global):
+    def _declare_variable(variable_type, variable, is_global, line_number):
         current_scope = Directory.current_scope
         current_function_vars = Directory.functions[current_scope].variables
 
         if variable in current_function_vars:
-            raise RedeclarationError('Error: you are declaring your "' + variable
-                                   + '" variable more than once')
+            raise RedeclarationError(f'Error on line {line_number}: you are '
+                                     f'declaring your {variable} variable more'
+                                     f' than once')
 
         current_function_vars[variable] = (
             variable_type,
@@ -119,8 +123,26 @@ class Directory():
         )
 
 
+    def get_variable(name, line_number):
+        variable = None
+        try:
+            variable = Directory.functions[Directory.current_scope].variables[
+                name]
+        except KeyError:
+            try:
+                variable = Directory.functions[Directory.GLOBAL_SCOPE].variables[
+                name]
+            except KeyError:
+                raise UndeclaredError(f'Error on line {line_number}: You tried'
+                                      f' to use the variable {name}, but it was'
+                                      f' not declared beforehand. Check if you'
+                                      f' wrote the name correctly and if you are'
+                                      f' trying to use a variable defined inside'
+                                      f' another function')
+        return variable
+
+
 class QuadrupleGenerator():
-    operators = ['$']
     operands = []
     ADDRESSES = None
     CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
@@ -147,26 +169,65 @@ class QuadrupleGenerator():
 
 
     def clear():
-        QuadrupleGenerator.operators = ['$']
         QuadrupleGenerator.operands.clear()
         ADDRESSES = None
         CONSTANT_ADDRESS_DICT = {type_: None for type_ in Types}
 
 
-    def operate():
-        print(QuadrupleGenerator.operands)
-        right_type, right_address, right_val = QuadrupleGenerator.operands.pop()
-        left_type, left_address, left_val = QuadrupleGenerator.operands.pop()
-        operator_key = QuadrupleGenerator.operators.pop()
+    def operate(operator_symbol, line_number):
+        right_type, right_address = QuadrupleGenerator.operands.pop()
+        left_type, left_address = QuadrupleGenerator.operands.pop()
 
         try:
-            result_type = CUBE[left_type][right_type][OPERATORS[operator_key]]
+            result_type = CUBE[left_type][right_type][OPERATORS[operator_symbol]]
+            if(result_type == None):
+                raise IndexError('Result is None')
+            
+            result_address = QuadrupleGenerator.generate_temporal_address(
+                result_type)
+            
+            QuadrupleGenerator.generate_quad(operator_symbol, left_address,
+                                             right_address, result_address)
+            QuadrupleGenerator.operands.append((result_type, result_address))
         except IndexError:
             raise OperandTypeError(
-                f'Error: The {operator_key} operation cannot be used on '
-                f'{left_val} and {right_val}')
-        
-        QuadrupleGenerator.generate_quad(operator, left_address, right_address)
+                f'Error on line {line_number}: The {operator_symbol} operation'
+                f' cannot be used for types {left_type.name} and '
+                f'{right_type.name}')
+
+
+    def operate_unary(operator_symbol, line_number):
+        type_, address = QuadrupleGenerator.operands.pop()
+
+        try:
+            result_type = UNARY_TABLE[type_][UNARY_OPERATORS[operator_symbol]]
+            if(result_type == None):
+                raise IndexError('Result is None')
+            
+            result_address = QuadrupleGenerator.generate_temporal_address(
+                result_type)
+            QuadrupleGenerator.generate_quad(operator_symbol, address,
+                                             result_address)
+            QuadrupleGenerator.operands.append((result_type, result_address))
+        except IndexError:
+            raise OperandTypeError(
+                f'Error on line {line_number}: The {operator_symbol} operation'
+                f' cannot be used for type {type_.name}')
+
+
+    def assign(name, line_number):
+        variable = Directory.get_variable(name, line_number)
+        result_type, result_address = QuadrupleGenerator.operands.pop()
+        if variable[0] == result_type:
+            QuadrupleGenerator.generate_quad('=', result_address, variable[1])
+
+
+    def generate_quad(operation, operand1, operand2, operand3=None):
+        pass
+
+
+    def call(function):
+        QuadrupleGenerator.operands.pop()
 
     
     def generate_variable_address(variable_type, is_global):
@@ -191,7 +252,13 @@ class QuadrupleGenerator():
 
             QuadrupleGenerator.CONSTANT_ADDRESS_DICT[type_][value] = address
 
-        QuadrupleGenerator.operands.append((type_, address, value))
+        QuadrupleGenerator.operands.append((type_, address))
+
+
+    def generate_temporal_address(variable_type):
+        new_address = QuadrupleGenerator.ADDRESSES.temporal[variable_type]
+        QuadrupleGenerator.ADDRESSES.temporal[variable_type] = new_address + 1
+        return new_address
 
 
 class ParserError(Exception):
@@ -230,7 +297,7 @@ def p_create_global_scope(p):
     ''' create_global_scope : variable_declaration '''
     QuadrupleGenerator.initialize()
     Directory.initialize()
-    Directory.declare_variables([], p[1], is_global=True)
+    Directory.declare_variables([], p[1], p.lexer.lineno, is_global=True)
 
 
 def p_empty(p):
@@ -280,100 +347,78 @@ def p_id(p):
 
 
 def p_expression(p):
-    ''' expression : level1 pop_exp
-                   | level1 pop_exp push_exp '''
+    ''' expression : level1
+                   | exp_op '''
 
 
-def p_pop_exp(p):
-    ''' pop_exp : empty '''
-    if QuadrupleGenerator.operators[-1] == '**':
-        QuadrupleGenerator.operate()
-
-
-def p_push_exp(p):
-    ''' push_exp : EXPONENTIATION level1 '''
-    QuadrupleGenerator.operators.append(p[1])
+def p_exp_op(p):
+    ''' exp_op : level1 EXPONENTIATION level1 '''
+    QuadrupleGenerator.operate(p[2], p.lexer.lineno)
 
 
 def p_level1(p):
     ''' level1 : level2
-               | '+' level2
-               | '-' level2'''
+               | plus_minus_op '''
+
+
+def p_plus_minus_op(p):
+    ''' plus_minus_op : '+' level2
+                      | '-' level2 '''
+    QuadrupleGenerator.operate_unary(p[1], p.lexer.lineno)
 
 
 def p_level2(p):
-    ''' level2 : level3 pop_binary
-               | level3 pop_binary push_binary '''
+    ''' level2 : level3
+               | binary_op '''
 
 
-def p_pop_binary(p):
-    ''' pop_binary : empty '''
-    if QuadrupleGenerator.operators[-1] == 'and' \
-      or QuadrupleGenerator.operators[-1] == 'or':
-        QuadrupleGenerator.operate()
-
-
-def p_push_binary(p):
-    ''' push_binary : OR level3
-                    | AND level3 '''
-    QuadrupleGenerator.operators.append(p[1])
+def p_binary_op(p):
+    ''' binary_op : level3 OR level3
+                  | level3 AND level3 '''
+    QuadrupleGenerator.operate(p[2], p.lexer.lineno)
 
 
 def p_level3(p):
-    ''' level3 : level4 pop_rel
-               | level4 pop_rel push_rel '''
+    ''' level3 : level4 
+               | rel_op '''
 
 
-def p_pop_rel(p):
-    ''' pop_rel : empty '''
-    if QuadrupleGenerator.operators[-1] == '<' or QuadrupleGenerator.operators[-1] == '>' or QuadrupleGenerator.operators[-1] == '<=' \
-    or QuadrupleGenerator.operators[-1] == '>=' or QuadrupleGenerator.operators[-1] == '==':
-        QuadrupleGenerator.operate()
-
-
-def p_push_rel(p):
-    ''' push_rel : '<' level4
-                 | '>' level4 
-                 | LESS_EQUAL_THAN level4
-                 | GREATER_EQUAL_THAN level4
-                 | EQUALS level4 '''
-    QuadrupleGenerator.operators.append(p[1])
+def p_rel_op(p):
+    ''' rel_op : level4 '<' level4
+               | level4 '>' level4 
+               | level4 LESS_EQUAL_THAN level4
+               | level4 GREATER_EQUAL_THAN level4
+               | level4 EQUALS level4 '''
+    QuadrupleGenerator.operate(p[2], p.lexer.lineno)
 
 
 def p_level4(p):
-    ''' level4 : level5 pop_plus_minus
-               | level5 pop_plus_minus push_plus_minus '''
+    ''' level4 : level5
+               | add_subs_op '''
 
 
-def p_pop_plus_minus(p):
-    ''' pop_plus_minus : empty '''
-    if QuadrupleGenerator.operators[-1] == '+' or QuadrupleGenerator.operators[-1] == '-':
-        QuadrupleGenerator.operate()
-
-
-def p_push_plus_minus(p):
-    ''' push_plus_minus : '+' level5
-                        | '-' level5 '''
-    QuadrupleGenerator.operators.append(p[1])
+def p_add_subs_op(p):
+    ''' add_subs_op : level5 '+' level5
+                    | level5 '-' level5 '''
+    QuadrupleGenerator.operate(p[2], p.lexer.lineno)
 
 
 def p_level5(p):
-    ''' level5 : level6 pop_times_div_mod
-               | NOT level6
-               | level6 pop_times_div_mod push_times_div_mod '''
+    ''' level5 : level6
+               | times_div_mod_op 
+               | negation_op '''
 
 
-def p_pop_times_div_mod(p):
-    ''' pop_times_div_mod : empty '''
-    if QuadrupleGenerator.operators[-1] == '*' or QuadrupleGenerator.operators[-1] == '/' or QuadrupleGenerator.operators[-1] == 'mod':
-        QuadrupleGenerator.operate()
+def p_negation_op(p):
+    ''' negation_op : NOT level6 '''
+    QuadrupleGenerator.operate_unary(p[1], p.lexer.lineno)
 
 
-def p_push_times_div_mod(p):
-    ''' push_times_div_mod : '*' level6
-                           | '/' level6 
-                           | MOD level6 '''
-    QuadrupleGenerator.operators.append(p[1])
+def p_times_div_mod_op(p):
+    ''' times_div_mod_op : level6 '*' level6
+                         | level6 '/' level6 
+                         | level6 MOD level6 '''
+    QuadrupleGenerator.operate(p[2], p.lexer.lineno)
 
 
 def p_level6(p):
@@ -403,12 +448,12 @@ def p_function(p):
 
 def p_create_scope(p):
     ''' create_scope : FUN return_type ID '''
-    Directory.define_function(p[2], p[3])
+    Directory.define_function(p[2], p[3], p.lexer.lineno)
 
 
 def p_parameters_and_variables(p):
     ''' parameters_and_variables : '(' parameters ')' '{' variable_declaration '''
-    Directory.declare_variables(p[2], p[5])
+    Directory.declare_variables(p[2], p[5], p.lexer.lineno)
 
 
 def p_return_type(p):
@@ -444,6 +489,7 @@ def p_statute(p):
 
 def p_call(p):
     ''' call : ID '(' expressions ')' '''
+    QuadrupleGenerator.call(p[1])
 
 
 def p_expressions(p):
@@ -453,6 +499,7 @@ def p_expressions(p):
 
 def p_assignment(p):
     ''' assignment : id '=' expression '''
+    QuadrupleGenerator.assign(p[1], p.lexer.lineno)
 
 
 def p_condition(p):
@@ -465,6 +512,7 @@ def p_cycle(p):
 
 def p_special(p):
     ''' special : SPECIAL_ID '(' expressions ')' '''
+    QuadrupleGenerator.call(p[1])
 
 
 def p_return(p):
@@ -556,20 +604,8 @@ def p_bool_val(p):
 
 def p_variable_id(p):
     ''' variable_id : id '''
-    variable = None
-    try:
-        variable = Directory.functions[Directory.current_scope].variables[p[1]]
-    except KeyError:
-        try:
-            variable = Directory.functions[Directory.GLOBAL_SCOPE].variables[
-                p[1]]
-        except KeyError:
-            raise UndeclaredError(f'You tried to use the variable {p[1]}, but it\
-            was not declared beforehand. Check if you wrote the name correctly \
-            or if you are trying to use a variable defined inside another \
-            function')
-
-    QuadrupleGenerator.operands.append((variable[0], variable[1], variable[2]))
+    variable = Directory.get_variable(p[1], p.lexer.lineno)
+    QuadrupleGenerator.operands.append((variable[0], variable[1]))
 
 
 def p_function_result(p):
