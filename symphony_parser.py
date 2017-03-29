@@ -510,7 +510,17 @@ def p_assignment(p):
 
 
 def p_condition(p):
-    ''' condition : IF '(' expression ')' block elses '''
+    ''' condition : IF '(' expression if_quad ')' block elses add_pending_jump '''
+
+
+def p_if_quad(p):
+    ''' if_quad : empty '''
+    quadruple_generator.generate_if(p.lexer.lineno)
+
+
+def p_add_pending_jump(p):
+    ''' add_pending_jump : empty '''
+    quadruple_generator.add_pending_jump()
 
 
 def p_cycle(p):
