@@ -235,7 +235,6 @@ class QuadrupleGenerator():
         except KeyError:
             address = self.ADDRESSES.constant[type_]
             self.ADDRESSES.constant[type_] = address + 1
-            self.generate_quad('ASSIGN_LITERAL', value, address)
 
             self.CONSTANT_ADDRESS_DICT[type_][value] = address
 
