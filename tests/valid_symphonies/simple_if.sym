@@ -3,4 +3,6 @@ program simple_if;
 	if(2 * 3 > 4 / 2){
 		print("2 * 3 is greater than 4 / 2");
 	};
+
+	print("end");
 }
