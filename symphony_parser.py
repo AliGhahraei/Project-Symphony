@@ -142,7 +142,8 @@ class QuadrupleGenerator():
         self.filepath = filepath
         self.operands = []
         self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
-        self.quadruples = ''
+        self.quadruples = []
+        self.pending_jumps = []
 
         sector_iterator = iter(MEMORY_SECTORS)
         current_address = sector_iterator.__next__()[1]
@@ -201,6 +202,23 @@ class QuadrupleGenerator():
                 f' cannot be used for type {type_.name}')
 
 
+    def generate_if(self, line_number):
+        type_, address = self.operands.pop()
+
+        if type_ != Types.BOOL:
+            raise OperandTypeError(
+                f'Error on line {line_number}: The code inside your if '
+                f'must give a boolean as its final result, but a '
+                f'{result_type.value} was found.')
+
+        self.pending_jumps.append(len(self.quadruples))
+        self.generate_quad('GOTOF', address)
+
+
+    def add_pending_jump(self):
+        self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(self.quadruples))
+
+
     def assign(self, name, line_number):
         variable = directory.get_variable(name, line_number)
         result_type, result_address = self.operands.pop()
@@ -209,7 +227,7 @@ class QuadrupleGenerator():
 
 
     def generate_quad(self, *args):
-        self.quadruples += ' '.join(str(arg) for arg in args) + '\n'
+        self.quadruples.append(' '.join(str(arg) for arg in args))
 
 
     def call(self, function):
@@ -249,7 +267,7 @@ class QuadrupleGenerator():
 
     def write_quads(self):
         with open(self.filepath[:-4] + '.note', 'w') as file:
-            file.write(self.quadruples)
+            file.write('\n'.join(self.quadruples) + '\n')
 
 
 class ParserError(Exception):
