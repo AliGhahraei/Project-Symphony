@@ -167,7 +167,7 @@ class QuadrupleGenerator():
 
         try:
             result_type = CUBE[left_type][right_type][OPERATORS[operator_symbol]]
-            if(result_type == None):
+            if result_type == None:
                 raise IndexError('Result is None')
 
             result_address = self.generate_temporal_address(
@@ -188,7 +188,7 @@ class QuadrupleGenerator():
 
         try:
             result_type = UNARY_TABLE[type_][UNARY_OPERATORS[operator_symbol]]
-            if(result_type == None):
+            if result_type == None:
                 raise IndexError('Result is None')
 
             result_address = self.generate_temporal_address(result_type)
