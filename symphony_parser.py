@@ -219,6 +219,13 @@ class QuadrupleGenerator():
         self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(self.quadruples))
 
 
+    def add_else_jumps(self):
+        pending_if_jump = self.pending_jumps.pop()
+        self.pending_jumps.append(len(self.quadruples))
+        self.generate_quad('GOTO')
+        self.quadruples[pending_if_jump] += ' ' + str(len(self.quadruples))
+
+
     def assign(self, name, line_number):
         variable = directory.get_variable(name, line_number)
         result_type, result_address = self.operands.pop()
@@ -510,7 +517,12 @@ def p_assignment(p):
 
 
 def p_condition(p):
-    ''' condition : IF '(' expression if_quad ')' block elses add_pending_jump '''
+    ''' condition : IF '(' expression if_quad ')' block optional_elses'''
+
+
+def p_optional_elses(p):
+    ''' optional_elses : elses 
+                       | add_pending_jump '''
 
 
 def p_if_quad(p):
@@ -538,9 +550,27 @@ def p_return(p):
 
 
 def p_elses(p):
-    ''' elses : empty
-              | ELSE block
-              | ELSEIF '(' expression ')' block elses '''
+    ''' elses : elseif_else other_elses '''
+              
+
+def p_other_elses(p):
+    ''' other_elses : elseif_else
+                    | empty '''
+
+
+def p_elseif_else(p):
+    ''' elseif_else : else block add_pending_jump
+                    | elseif '(' expression if_quad ')' block optional_elses add_pending_jump'''
+
+
+def p_else(p):
+    ''' else : ELSE '''
+    quadruple_generator.add_else_jumps()
+
+
+def p_elseif(p):
+    ''' elseif : ELSEIF '''
+    quadruple_generator.add_else_jumps()
 
 
 def p_parameters(p):
