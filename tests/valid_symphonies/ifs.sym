@@ -6,48 +6,48 @@ int a, b;
 
 	if(a equals 10) {
 	    // Executes
-		print("Hey");
+		print(1 + 1);
 	};
 
 	if(not (a equals 10)) {
 	    // Doesn't execute
-		print("Hey");
+		print(1 + 1);
 	};
 
 	if(a equals 10) {
 	    // Executes
-		print("Hey");
+		print(1 + 1);
 	} elseif(not (a equals 10)) {
 	    // Doesn't execute
-	    print("Hey");
+	    print(1 + 1);
 	};
 
 	if(not (a equals 10)) {
 	    // Executes
-		print("Hey");
+		print(1 + 1);
 	} elseif(a equals 10) {
 	    // Doesn't execute
-	    print("Hey");
+	    print(1 + 1);
 	};
 
 	if(a equals 10) {
 	    // Executes
-		print("Hey");
+		print(1 + 1);
 	} elseif(not (a equals 10)) {
 	    // Doesn't execute
-	    print("Hey");
+	    print(1 + 1);
 	} else {
-	  	print("Hey");
+	  	print(1 + 1);
 	};
 
 	if(not (a equals 10)) {
 	    // Executes
-		print("Hey");
+		print(1 + 1);
 	} elseif(not (a equals 10)) {
 	    // Doesn't execute
-	    print("Hey");
+	    print(1 + 1);
 	} else {
-	  	print("Hey");
+	  	print(1 + 1);
 	};
 	
 	/*
