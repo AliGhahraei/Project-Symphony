@@ -79,7 +79,8 @@ class Directory():
         self.current_scope = Directory.GLOBAL_SCOPE
 
 
-    def declare_variables(self, parameters, variables, line_number, is_global=False):
+    def declare_variables(self, parameters, variables, line_number,
+                          is_global=False):
         for parameter in parameters:
             self.functions[self.current_scope].parameter_types.append(
                 parameter[0])
@@ -216,7 +217,8 @@ class QuadrupleGenerator():
 
 
     def add_pending_jump(self):
-        self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(self.quadruples))
+        self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(
+            self.quadruples))
 
 
     def add_else_jumps(self):
