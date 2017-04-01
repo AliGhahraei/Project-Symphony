@@ -203,22 +203,30 @@ class QuadrupleGenerator():
                 f' cannot be used for type {type_.name}')
 
 
-    def generate_if(self, line_number):
+    def generate_boolean_structure(self, line_number, structure_name):
         type_, address = self.operands.pop()
 
         if type_ != Types.BOOL:
             raise OperandTypeError(
-                f'Error on line {line_number}: The code inside your if '
-                f'must give a boolean as its final result, but a '
-                f'{result_type.value} was found.')
+                f'Error on line {line_number}: The code inside your '
+                f'{structure_name} must receive a boolean inside its '
+                f'parenthesis, but a {result_type.value} was found.')
 
         self.pending_jumps.append(len(self.quadruples))
-        self.generate_quad('GOTOF', address)
+        self.generate_quad('GOTOF', address)        
 
 
-    def add_pending_jump(self):
+    def add_pending_if(self):
         self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(
             self.quadruples))
+
+
+    def add_pending_while(self):
+        gotof_quad = self.pending_jumps.pop()
+        expression_quad = self.pending_jumps.pop()
+
+        self.generate_quad('GOTO', expression_quad)
+        self.quadruples[gotof_quad] += ' ' + str(len(self.quadruples))
 
 
     def add_else_jumps(self):
@@ -277,6 +285,10 @@ class QuadrupleGenerator():
     def write_quads(self):
         with open(self.filepath[:-4] + '.note', 'w') as file:
             file.write('\n'.join(self.quadruples) + '\n')
+
+
+    def store_expression_position(self):
+        self.pending_jumps.append(len(self.quadruples))
 
 
 class ParserError(Exception):
@@ -524,21 +536,36 @@ def p_condition(p):
 
 def p_optional_elses(p):
     ''' optional_elses : elses 
-                       | add_pending_jump '''
+                       | add_pending_if '''
 
 
 def p_if_quad(p):
     ''' if_quad : empty '''
-    quadruple_generator.generate_if(p.lexer.lineno)
+    quadruple_generator.generate_boolean_structure(p.lexer.lineno, 'if')
 
 
-def p_add_pending_jump(p):
-    ''' add_pending_jump : empty '''
-    quadruple_generator.add_pending_jump()
+def p_add_pending_if(p):
+    ''' add_pending_if : empty '''
+    quadruple_generator.add_pending_if()
 
 
 def p_cycle(p):
-    ''' cycle : WHILE '(' expression ')' block '''
+    ''' cycle : WHILE '(' store_expression_position expression while_quad ')' block add_pending_while'''
+
+
+def p_add_pending_while(p):
+    ''' add_pending_while : empty '''
+    quadruple_generator.add_pending_while()
+    
+
+def p_while_quad(p):
+    ''' while_quad : empty '''
+    quadruple_generator.generate_boolean_structure(p.lexer.lineno, 'while')
+
+
+def p_store_expression_position(p):
+    ''' store_expression_position : empty '''
+    quadruple_generator.store_expression_position()
 
 
 def p_special(p):
@@ -561,8 +588,8 @@ def p_other_elses(p):
 
 
 def p_elseif_else(p):
-    ''' elseif_else : else block add_pending_jump
-                    | elseif '(' expression if_quad ')' block optional_elses add_pending_jump'''
+    ''' elseif_else : else block add_pending_if
+                    | elseif '(' expression if_quad ')' block optional_elses add_pending_if'''
 
 
 def p_else(p):
