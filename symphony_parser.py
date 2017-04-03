@@ -179,7 +179,7 @@ class QuadrupleGenerator():
                                              right_address, result_address)
             self.operands.append((result_type, result_address))
         except IndexError:
-            raise OperandTypeError(
+            raise WrongTypeError(
                 f'Error on line {line_number}: The {operator_symbol} operation'
                 f' cannot be used for types {left_type.name} and '
                 f'{right_type.name}')
@@ -198,7 +198,7 @@ class QuadrupleGenerator():
                                result_address)
             self.operands.append((result_type, result_address))
         except IndexError:
-            raise OperandTypeError(
+            raise WrongTypeError(
                 f'Error on line {line_number}: The {operator_symbol} operation'
                 f' cannot be used for type {type_.name}')
 
@@ -207,10 +207,10 @@ class QuadrupleGenerator():
         type_, address = self.operands.pop()
 
         if type_ != Types.BOOL:
-            raise OperandTypeError(
+            raise WrongTypeError(
                 f'Error on line {line_number}: The code inside your '
                 f'{structure_name} must receive a boolean inside its '
-                f'parenthesis, but a {result_type.value} was found.')
+                f'parenthesis, but a {type_.value} was found.')
 
         self.pending_jumps.append(len(self.quadruples))
         self.generate_quad('GOTOF', address)        
@@ -241,6 +241,10 @@ class QuadrupleGenerator():
         result_type, result_address = self.operands.pop()
         if variable[0] == result_type:
             self.generate_quad('=', result_address, variable[1])
+        else:
+            raise WrongTypeError(f'Error on line {line_number}: you are trying '
+                                 f'to assign a {result_type} value to a '
+                                 f'{variable[0]} type')
 
 
     def generate_quad(self, *args):
@@ -304,7 +308,7 @@ class RedeclarationError(ParserError):
     pass
 
 
-class OperandTypeError(ParserError):
+class WrongTypeError(ParserError):
     pass
 
 

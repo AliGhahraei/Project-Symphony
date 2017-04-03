@@ -1,0 +1,9 @@
+program cycle;
+str mi_str;
+{
+	mi_str = 10;
+	
+	while(mi_str < 1) {
+		print("No");
+	};
+}

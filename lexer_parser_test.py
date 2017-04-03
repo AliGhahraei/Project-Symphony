@@ -1,7 +1,12 @@
 from lexer import lexer
 from glob import glob
-from symphony_parser import (create_parser, GrammaticalError,
-                             RedeclarationError, UndeclaredError)
+from symphony_parser import (
+    create_parser,
+    GrammaticalError,
+    RedeclarationError,
+    UndeclaredError,
+    WrongTypeError
+)
 from unittest import TestCase, main
 
 
@@ -9,6 +14,7 @@ VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
 GRAMMAR_PATH = 'tests/invalid_grammar/'
 REDECLARATION_PATH = 'tests/redeclaration/'
 UNDECLARED_PATH = 'tests/undeclared_variables/'
+WRONG_TYPES_PATH = 'tests/wrong_types/'
 
 
 class LexerTest(TestCase):
@@ -59,7 +65,10 @@ class ParserTest(TestCase):
 
 
     def assert_programs_raise(self, path, RaisedError):
+        for_entered = False
         for invalid_program in glob(path + '*.sym'):
+            for_entered = True
+
             self.parser = create_parser(invalid_program)
             
             try:
@@ -72,10 +81,15 @@ class ParserTest(TestCase):
                 print('\033[91m Error!\033[0m')
                 raise
             print()
+        if not for_entered:
+            raise Exception(f'No files could be found in {path}')
 
 
-    def test_right(self):      
+    def test_right(self):
+        for_entered = False
         for valid_program in glob(VALID_PROGRAMS_PATH + '*.sym'):
+            for_entered = True
+
             self.parser = create_parser(valid_program)
             
             try:               
@@ -86,6 +100,8 @@ class ParserTest(TestCase):
                 print('\033[91m Error!\033[0m')
                 raise
             print()
+        if not for_entered:
+            raise Exception(f'No files could be found in {VALID_PROGRAMS_PATH}')
 
 
     def test_grammar(self):
@@ -98,6 +114,10 @@ class ParserTest(TestCase):
 
     def test_undeclared_variables(self):
         self.assert_programs_raise(UNDECLARED_PATH, UndeclaredError)
+
+
+    def test_wrong_operand(self):
+        self.assert_programs_raise(WRONG_TYPES_PATH, WrongTypeError)
 
 
 if __name__ == '__main__':
