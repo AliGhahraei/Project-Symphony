@@ -4,7 +4,6 @@ from symphony_parser import (
     create_parser,
     GrammaticalError,
     RedeclarationError,
-    UndeclaredError,
 )
 from unittest import TestCase, main
 
@@ -112,7 +111,7 @@ class ParserTest(TestCase):
 
 
     def test_undeclared_variables(self):
-        self.assert_programs_raise(UNDECLARED_PATH, UndeclaredError)
+        self.assert_programs_raise(UNDECLARED_PATH, NameError)
 
 
     def test_wrong_operand(self):

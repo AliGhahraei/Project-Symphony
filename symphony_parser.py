@@ -134,12 +134,12 @@ class Directory():
             try:
                 variable = self.functions[Directory.GLOBAL_SCOPE].variables[name]
             except KeyError:
-                raise UndeclaredError(f'Error on line {line_number}: You tried'
-                                      f' to use the variable {name}, but it was'
-                                      f' not declared beforehand. Check if you'
-                                      f' wrote the name correctly and if you are'
-                                      f' trying to use a variable defined inside'
-                                      f' another function')
+                raise NameError(f'Error on line {line_number}: You tried'
+                                f' to use the variable {name}, but it was'
+                                f' not declared beforehand. Check if you'
+                                f' wrote the name correctly and if you are'
+                                f' trying to use a variable defined inside'
+                                f' another function')
         return variable
 
 
@@ -309,10 +309,6 @@ class GrammaticalError(Exception):
 
 
 class RedeclarationError(Exception):
-    pass
-
-
-class UndeclaredError(Exception):
     pass
 
 
