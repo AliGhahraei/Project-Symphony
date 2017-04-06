@@ -5,7 +5,6 @@ from symphony_parser import (
     GrammaticalError,
     RedeclarationError,
     UndeclaredError,
-    WrongTypeError
 )
 from unittest import TestCase, main
 
@@ -117,7 +116,7 @@ class ParserTest(TestCase):
 
 
     def test_wrong_operand(self):
-        self.assert_programs_raise(WRONG_TYPES_PATH, WrongTypeError)
+        self.assert_programs_raise(WRONG_TYPES_PATH, TypeError)
 
 
 if __name__ == '__main__':

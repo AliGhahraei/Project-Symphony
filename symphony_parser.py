@@ -63,6 +63,7 @@ class FunctionScope():
         self.return_type = return_type
         self.variables = {}
         self.parameter_types = []
+        self.first_quadruple = None
 
 
 class Directory():
@@ -77,19 +78,23 @@ class Directory():
     def clear_scope(self):
         self.functions[self.current_scope] = None
         self.current_scope = Directory.GLOBAL_SCOPE
+        quadruple_generator.generate_quad('ENDPROC')
 
 
     def declare_variables(self, parameters, variables, line_number,
                           is_global=False):
+        self.functions[self.current_scope].first_quadruple = len(
+            quadruple_generator.quadruples)
+        
         for parameter in parameters:
             self.functions[self.current_scope].parameter_types.append(
                 parameter[0])
             self._declare_variable(parameter[0], parameter[1], is_global,
-                              line_number)
+                                   line_number)
 
         for variable in variables:
             self._declare_variable(variable[0], variable[1], is_global,
-                                        line_number)
+                                   line_number)
 
 
     def define_function(self, return_type, function, line_number):
@@ -179,7 +184,7 @@ class QuadrupleGenerator():
                                              right_address, result_address)
             self.operands.append((result_type, result_address))
         except IndexError:
-            raise WrongTypeError(
+            raise TypeError(
                 f'Error on line {line_number}: The {operator_symbol} operation'
                 f' cannot be used for types {left_type.name} and '
                 f'{right_type.name}')
@@ -198,7 +203,7 @@ class QuadrupleGenerator():
                                result_address)
             self.operands.append((result_type, result_address))
         except IndexError:
-            raise WrongTypeError(
+            raise TypeError(
                 f'Error on line {line_number}: The {operator_symbol} operation'
                 f' cannot be used for type {type_.name}')
 
@@ -207,7 +212,7 @@ class QuadrupleGenerator():
         type_, address = self.operands.pop()
 
         if type_ != Types.BOOL:
-            raise WrongTypeError(
+            raise TypeError(
                 f'Error on line {line_number}: The code inside your '
                 f'{structure_name} must receive a boolean inside its '
                 f'parenthesis, but a {type_.value} was found.')
@@ -242,7 +247,7 @@ class QuadrupleGenerator():
         if variable[0] == result_type:
             self.generate_quad('=', result_address, variable[1])
         else:
-            raise WrongTypeError(f'Error on line {line_number}: you are trying '
+            raise TypeError(f'Error on line {line_number}: you are trying '
                                  f'to assign a {result_type} value to a '
                                  f'{variable[0]} type')
 
@@ -254,6 +259,10 @@ class QuadrupleGenerator():
     def call(self, function):
         self.operands.pop()
 
+
+    def special_call(self, function):
+        self.operands.pop()
+    
 
     def generate_variable_address(self, variable_type, is_global):
         new_address = None
@@ -296,8 +305,7 @@ class QuadrupleGenerator():
 
 
 class ParserError(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+    pass
 
 
 class GrammaticalError(ParserError):
@@ -305,10 +313,6 @@ class GrammaticalError(ParserError):
 
 
 class RedeclarationError(ParserError):
-    pass
-
-
-class WrongTypeError(ParserError):
     pass
 
 
@@ -520,8 +524,13 @@ def p_statute(p):
 
 
 def p_call(p):
-    ''' call : ID '(' expressions ')' '''
+    ''' call : init_call '(' expressions ')' '''
     quadruple_generator.call(p[1])
+
+
+def p_init_call(p):
+    ''' init_call : ID '''
+#    directory.init_call(p[1])
 
 
 def p_expressions(p):
@@ -574,7 +583,7 @@ def p_store_expression_position(p):
 
 def p_special(p):
     ''' special : SPECIAL_ID '(' expressions ')' '''
-    quadruple_generator.call(p[1])
+    quadruple_generator.special_call(p[1])
 
 
 def p_return(p):
