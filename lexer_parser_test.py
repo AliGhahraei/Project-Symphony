@@ -11,7 +11,7 @@ from unittest import TestCase, main
 VALID_PROGRAMS_PATH = 'tests/valid_symphonies/'
 GRAMMAR_PATH = 'tests/invalid_grammar/'
 REDECLARATION_PATH = 'tests/redeclaration/'
-UNDECLARED_PATH = 'tests/undeclared_variables/'
+UNDECLARED_PATH = 'tests/undeclared_usages/'
 WRONG_TYPES_PATH = 'tests/wrong_types/'
 
 
@@ -110,7 +110,7 @@ class ParserTest(TestCase):
         self.assert_programs_raise(REDECLARATION_PATH, RedeclarationError)
 
 
-    def test_undeclared_variables(self):
+    def test_undeclared_usages(self):
         self.assert_programs_raise(UNDECLARED_PATH, NameError)
 
 
