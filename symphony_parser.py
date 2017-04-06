@@ -304,19 +304,15 @@ class QuadrupleGenerator():
         self.pending_jumps.append(len(self.quadruples))
 
 
-class ParserError(Exception):
+class GrammaticalError(Exception):
     pass
 
 
-class GrammaticalError(ParserError):
+class RedeclarationError(Exception):
     pass
 
 
-class RedeclarationError(ParserError):
-    pass
-
-
-class UndeclaredError(ParserError):
+class UndeclaredError(Exception):
     pass
 
 
