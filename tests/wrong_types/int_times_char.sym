@@ -1,4 +1,4 @@
 program int_times_char;
 {
-	rint(1 * 'A');
+	print(1 * 'A');
 }
