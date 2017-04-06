@@ -143,6 +143,16 @@ class Directory():
         return variable
 
 
+    def verify_call_id(self, function, line_number):
+        try:
+            self.functions[function]
+        except KeyError:
+            raise NameError(f'Error on line {line_number}: You tried'
+                            f' to use the function {function}, but it was'
+                            f' not defined beforehand. Check if you'
+                            f' wrote the name correctly.')
+
+
 class QuadrupleGenerator():
     def __init__(self, filepath):
         self.filepath = filepath
@@ -516,13 +526,13 @@ def p_statute(p):
 
 
 def p_call(p):
-    ''' call : init_call '(' expressions ')' '''
+    ''' call : call_id '(' expressions ')' '''
     quadruple_generator.call(p[1])
 
 
-def p_init_call(p):
-    ''' init_call : ID '''
-#    directory.init_call(p[1])
+def p_call_id(p):
+    ''' call_id : ID '''
+    directory.verify_call_id(p[1], p.lexer.lineno)
 
 
 def p_expressions(p):
