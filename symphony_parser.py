@@ -118,7 +118,7 @@ class Directory():
         current_function_vars[variable] = (
             variable_type,
             quadruple_generator.generate_variable_address(variable_type,
-                                                         is_global),
+                                                          is_global),
             variable,
             # TODO: add code for storing array size
             None,
