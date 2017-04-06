@@ -44,8 +44,9 @@ keywords_to_types = {keyword: keyword.upper()
 keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in ['true', 'false']})
 
 
-special_ids = {'sqrt', 'log', 'random', 'little_star', 'A', 'B', 'C', 'D', 'E',
-               'F', 'G', 'concat', 'length', 'copy', 'get'}
+special_ids = {'print', 'println', 'read', 'sqrt', 'log', 'random',
+               'little_star', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'concat',
+               'length', 'copy', 'get'}
 
 
 def t__MULTI_LINE_COMMENT(t):
