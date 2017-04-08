@@ -19,13 +19,11 @@ class LexerTest(TestCase):
     def setUp(self):
         pass
 
-
     def assert_lexer_IO(self, lexer_input, expected_output):
         lexer.input(lexer_input)
         actual_output = ''.join([''.join(str(token.value).split()) + token.type
                                  for token in lexer])
         self.assertEqual(actual_output, ''.join(expected_output.split()))
-
 
     def test_types_right(self):
         self.assert_lexer_IO(
@@ -61,7 +59,6 @@ class ParserTest(TestCase):
     def setUp(self):
         pass
 
-
     def assert_programs_raise(self, path, RaisedError):
         for_entered = False
         for invalid_program in glob(path + '*.sym'):
@@ -82,7 +79,6 @@ class ParserTest(TestCase):
         if not for_entered:
             raise Exception(f'No files could be found in {path}')
 
-
     def test_right(self):
         for_entered = False
         for valid_program in glob(VALID_PROGRAMS_PATH + '*.sym'):
@@ -101,18 +97,14 @@ class ParserTest(TestCase):
         if not for_entered:
             raise Exception(f'No files could be found in {VALID_PROGRAMS_PATH}')
 
-
     def test_grammar(self):
         self.assert_programs_raise(GRAMMAR_PATH, GrammaticalError)
-
 
     def test_redeclaration(self):
         self.assert_programs_raise(REDECLARATION_PATH, RedeclarationError)
 
-
     def test_undeclared_usages(self):
         self.assert_programs_raise(UNDECLARED_PATH, NameError)
-
 
     def test_wrong_operand(self):
         self.assert_programs_raise(WRONG_TYPES_PATH, TypeError)
