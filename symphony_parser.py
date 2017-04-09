@@ -518,7 +518,7 @@ def p_function_declaration(p):
 
 
 def p_function(p):
-    '''function : create_scope parameters_and_variables statutes '}' ';' '''
+    '''function : create_scope parameters_and_variables statements '}' ';' '''
     directory.clear_scope()
 
 
@@ -547,13 +547,13 @@ def p_type(p):
     p[0] = Types[p[1].upper()]
 
 
-def p_statutes(p):
-    ''' statutes : statute ';' statutes
+def p_statements(p):
+    ''' statements : statement ';' statements
                  | empty'''
 
 
-def p_statute(p):
-    '''statute   : call
+def p_statement(p):
+    '''statement   : call
                  | assignment
                  | condition
                  | cycle
@@ -755,7 +755,7 @@ def p_function_result(p):
 
 
 def p_block(p):
-    ''' block : '{' statutes '}' '''
+    ''' block : '{' statements '}' '''
 
 
 def p_error(p):
