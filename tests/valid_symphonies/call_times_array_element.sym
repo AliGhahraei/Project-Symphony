@@ -5,5 +5,5 @@ fun dec func(dec x) {
 };
 {
 	array[1] = 2;
-	print(array[1 * func(1/2)] * func(4));
+	print(array[1 * func(1/2)] * func(4.0));
 }
