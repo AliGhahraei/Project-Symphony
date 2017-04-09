@@ -155,15 +155,9 @@ class Directory():
 
 class QuadrupleGenerator():
     def __init__(self, filepath):
-        self.filepath = filepath
-        self.operands = []
-        self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
-        self.quadruples = []
-        self.pending_jumps = []
-
         sector_iterator = iter(MEMORY_SECTORS)
         current_address = sector_iterator.__next__()[1]
-        self.ADDRESSES = []
+        addresses = []
         for sector in sector_iterator:
             next_address = sector[1]
             sector_size = next_address - current_address
@@ -173,9 +167,17 @@ class QuadrupleGenerator():
                                     int((sector_size) / len(Types)))]
             type_addresses = dict(zip(Types, type_addresses))
 
-            self.ADDRESSES.append(type_addresses)
+            addresses.append(type_addresses)
             current_address = next_address
-        self.ADDRESSES = ADDRESS_TUPLE._make(self.ADDRESSES)
+
+        self.ADDRESSES = ADDRESS_TUPLE._make(addresses)
+        self.filepath = filepath
+        self.operands = []
+        self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
+        self.quadruples = []
+        self.pending_jumps = []
+        self.called_function = None
+        self.argument_count = 0
 
 
     def operate(self, operator_symbol, line_number):
