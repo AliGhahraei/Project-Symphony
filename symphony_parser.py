@@ -224,8 +224,8 @@ class QuadrupleGenerator():
         if type_ != Types.BOOL:
             raise TypeError(
                 f'Error on line {line_number}: The code inside your '
-                f'{structure_name} must receive a boolean inside its '
-                f'parenthesis, but a {type_.value} was found.')
+                f'{structure_name} must receive a {Types.BOOL.name} inside its '
+                f'parenthesis, but a(n) {type_.name} was found.')
 
         self.pending_jumps.append(len(self.quadruples))
         self.generate_quad('GOTOF', address)        
@@ -258,8 +258,8 @@ class QuadrupleGenerator():
             self.generate_quad('=', result_address, variable[1])
         else:
             raise TypeError(f'Error on line {line_number}: you are trying '
-                                 f'to assign a {result_type} value to a '
-                                 f'{variable[0]} type')
+                            f'to assign a(n) {result_type.name} value to '
+                            f'a(n) {variable[0].name} type')
 
 
     def generate_quad(self, *args):
