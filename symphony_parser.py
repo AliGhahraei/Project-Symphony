@@ -728,4 +728,4 @@ if __name__ == "__main__":
             with open(path) as file:
                 parser.parse(file.read())
         except FileNotFoundError:
-            print("The file", path, "was not found")
+            print("The file", path, "was not found. Skipping...")
