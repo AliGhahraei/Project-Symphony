@@ -76,7 +76,7 @@ class Directory():
 
 
     def clear_scope(self):
-        self.functions[self.current_scope] = None
+        # self.functions[self.current_scope] = None
         self.current_scope = Directory.GLOBAL_SCOPE
         quadruple_generator.generate_quad('ENDPROC')
 
@@ -85,7 +85,7 @@ class Directory():
                           is_global=False):
         self.functions[self.current_scope].first_quadruple = len(
             quadruple_generator.quadruples)
-        
+
         for parameter in parameters:
             self.functions[self.current_scope].parameter_types.append(
                 parameter[0])
@@ -141,16 +141,6 @@ class Directory():
                                 f' trying to use a variable defined inside'
                                 f' another function')
         return variable
-
-
-    def verify_call_id(self, function, line_number):
-        try:
-            self.functions[function]
-        except KeyError:
-            raise NameError(f'Error on line {line_number}: You tried'
-                            f' to use the function {function}, but it was'
-                            f' not defined beforehand. Check if you'
-                            f' wrote the name correctly.')
 
 
 class QuadrupleGenerator():
@@ -230,7 +220,7 @@ class QuadrupleGenerator():
                 f'parenthesis, but a(n) {type_.name} was found.')
 
         self.pending_jumps.append(len(self.quadruples))
-        self.generate_quad('GOTOF', address)        
+        self.generate_quad('GOTOF', address)
 
 
     def add_pending_if(self):
@@ -269,12 +259,20 @@ class QuadrupleGenerator():
 
 
     def call(self, function):
-        self.operands.pop()
+        expected_parameter_count = len(directory.functions[
+            self.called_function].parameter_types)
+
+        if self.argument_count -1 != expected_parameter_count:
+            raise IndexError(f'Error on line {line_number}: You are sending '
+                             f'too few parameters to {self.called_function}. '
+                             f'It needs {expected_parameter_count}')
+
+        self.generate_quad('GOSUB', self.called_function)
 
 
     def special_call(self, function):
-        self.operands.pop()
-    
+        pass
+
 
     def generate_variable_address(self, variable_type, is_global):
         new_address = None
@@ -314,6 +312,44 @@ class QuadrupleGenerator():
 
     def store_expression_position(self):
         self.pending_jumps.append(len(self.quadruples))
+
+    def init_call(self, function, line_number):
+        try:
+            directory.functions[function]
+        except KeyError:
+            raise NameError(f'Error on line {line_number}: You tried'
+                            f' to use the function {function}, but it was'
+                            f' not defined beforehand. Check if you'
+                            f' wrote the name correctly.')
+
+        self.generate_quad('ERA', function)
+        self.argument_count = 1
+        self.called_function = function
+
+    def init_special(self, function, line_number):
+        pass
+
+    def generate_parameter(self, line_number):
+        parameter_type, parameter_address = self.operands.pop()
+        try:
+            expected_type = directory.functions[
+                self.called_function].parameter_types[- self.argument_count]
+        except IndexError:
+            raise IndexError(f'Error on line {line_number}: You are sending '
+                             f'too many parameters to {self.called_function}. '
+                             f'It only needs {self.argument_count - 1}')
+
+        if parameter_type != expected_type:
+            raise TypeError(f'Error on line {line_number}: Your call to '
+                            f'{self.called_function} sent a(n) {parameter_type.name} '
+                            f'as the argument number {self.argument_count + 1}, '
+                            f'but a(n) {expected_type.name} was expected')
+
+        self.generate_quad('PARAM', parameter_address, self.argument_count)
+        self.argument_count += 1
+
+    def generate_special_parameter(self, line_number):
+        pass
 
 
 class GrammaticalError(Exception):
@@ -528,18 +564,19 @@ def p_statute(p):
 
 
 def p_call(p):
-    ''' call : call_id '(' expressions ')' '''
+    ''' call : call_id '(' parameter_expressions ')' '''
     quadruple_generator.call(p[1])
 
 
 def p_call_id(p):
     ''' call_id : ID '''
-    directory.verify_call_id(p[1], p.lexer.lineno)
+    quadruple_generator.init_call(p[1], p.lexer.lineno)
 
 
-def p_expressions(p):
-    ''' expressions : expression
-                    | expression ',' expressions '''
+def p_parameter_expressions(p):
+    ''' parameter_expressions : expression
+                              | expression ',' parameter_expressions '''
+    quadruple_generator.generate_parameter(p.lexer.lineno)
 
 
 def p_assignment(p):
@@ -552,7 +589,7 @@ def p_condition(p):
 
 
 def p_optional_elses(p):
-    ''' optional_elses : elses 
+    ''' optional_elses : elses
                        | add_pending_if '''
 
 
@@ -573,7 +610,7 @@ def p_cycle(p):
 def p_add_pending_while(p):
     ''' add_pending_while : empty '''
     quadruple_generator.add_pending_while()
-    
+
 
 def p_while_quad(p):
     ''' while_quad : empty '''
@@ -586,8 +623,19 @@ def p_store_expression_position(p):
 
 
 def p_special(p):
-    ''' special : SPECIAL_ID '(' expressions ')' '''
+    ''' special : special_id '(' special_parameter_expressions ')' '''
     quadruple_generator.special_call(p[1])
+
+
+def p_special_id(p):
+    ''' special_id : SPECIAL_ID '''
+    quadruple_generator.init_special(p[1], p.lexer.lineno)
+
+
+def p_special_parameter_expressions(p):
+    ''' special_parameter_expressions : expression
+                                      | expression ',' special_parameter_expressions '''
+    quadruple_generator.generate_special_parameter(p.lexer.lineno)
 
 
 def p_return(p):
@@ -597,7 +645,7 @@ def p_return(p):
 
 def p_elses(p):
     ''' elses : elseif_else other_elses '''
-              
+
 
 def p_other_elses(p):
     ''' other_elses : elseif_else
@@ -728,6 +776,6 @@ if __name__ == "__main__":
 
         try:
             with open(path) as file:
-                parser.parse(file.read())
+                parser.parse(file.read(), debug=True)
         except FileNotFoundError:
             print("The file", path, "was not found. Skipping...")
