@@ -85,7 +85,7 @@ class Directory():
             raise ReturnError(f'Error on line {line_number}: This function '
                               f'was supposed to return a(n) '
                               f'{current_function.return_type.name}, but it '
-                              f'does not')
+                              f'does not return anything')
 
         # self.functions[self.current_scope] = None
         self.current_scope = Directory.GLOBAL_SCOPE
