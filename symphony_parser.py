@@ -268,21 +268,23 @@ class QuadrupleGenerator():
         self.quadruples.append(' '.join(str(arg) for arg in args))
 
 
-    def call(self, function):
+    def call(self, function, line_number):
         current_function = directory.functions[self.called_function]
 
         expected_parameter_count = len(current_function.parameter_types)
 
         if self.argument_count -1 != expected_parameter_count:
             raise ArityError(f'Error on line {line_number}: You are sending '
-                             f'too few parameters to {self.called_function}. '
+                             f'too few arguments to {self.called_function}. '
                              f'It needs {expected_parameter_count}')
 
-        result_address = self.generate_temporal_address(
-            current_function.return_type)
         self.generate_quad('GOSUB', self.called_function)
-        self.generate_quad('=', current_function.return_address, result_address)
-        self.operands.append((current_function.return_type, result_address))
+
+        if current_function.return_type != 'VOID':
+            result_address = self.generate_temporal_address(
+                current_function.return_type)
+            self.operands.append((current_function.return_type, result_address))
+            self.generate_quad('=', current_function.return_address, result_address)
 
 
     def special_call(self, function):
@@ -351,7 +353,7 @@ class QuadrupleGenerator():
                 self.called_function].parameter_types[- self.argument_count]
         except IndexError:
             raise ArityError(f'Error on line {line_number}: You are sending '
-                             f'too many parameters to {self.called_function}. '
+                             f'too many arguments to {self.called_function}. '
                              f'It only needs {self.argument_count - 1}')
 
         if parameter_type != expected_type:
@@ -615,8 +617,8 @@ def p_statement(p):
 
 
 def p_call(p):
-    ''' call : call_id '(' parameter_expressions ')' '''
-    quadruple_generator.call(p[1])
+    ''' call : call_id '(' arguments ')' '''
+    quadruple_generator.call(p[1], p.lexer.lineno)
 
 
 def p_call_id(p):
@@ -624,9 +626,14 @@ def p_call_id(p):
     quadruple_generator.init_call(p[1], p.lexer.lineno)
 
 
-def p_parameter_expressions(p):
-    ''' parameter_expressions : expression
-                              | expression ',' parameter_expressions '''
+def p_arguments(p):
+    ''' arguments : empty
+                  | argument_list '''
+
+
+def p_argument_list(p):
+    ''' argument_list : expression
+                      | expression ',' argument_list '''
     quadruple_generator.generate_parameter(p.lexer.lineno)
 
 
