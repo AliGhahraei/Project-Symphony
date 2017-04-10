@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from collections import deque
 from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS
 from ply.yacc import yacc
 from sys import exit, argv
@@ -177,7 +178,7 @@ class QuadrupleGenerator():
         self.quadruples = []
         self.pending_jumps = []
         self.called_function = None
-        self.argument_count = 0
+        self.arguments = deque()
 
 
     def operate(self, operator_symbol, line_number):
@@ -268,17 +269,36 @@ class QuadrupleGenerator():
         self.quadruples.append(' '.join(str(arg) for arg in args))
 
 
+    def read_parameter(self):
+        self.arguments.appendleft(self.operands.pop())
+
+
     def call(self, function, line_number):
         current_function = directory.functions[self.called_function]
+        parameter_types = current_function.parameter_types
 
-        expected_parameter_count = len(current_function.parameter_types)
-
-        if self.argument_count -1 != expected_parameter_count:
+        if len(self.arguments) != len(parameter_types):
             raise ArityError(f'Error on line {line_number}: You are sending '
-                             f'too few arguments to {self.called_function}. '
-                             f'It needs {expected_parameter_count}')
+                             f'the wrong number of arguments '
+                             f'({len(self.arguments)}) to '
+                             f'{self.called_function}. It needs '
+                             f'{len(parameter_types)}')
+
+        for i, (argument, parameter_type) in enumerate(
+          zip(self.arguments, parameter_types), start=1):
+            argument_type, argument_address = argument
+
+            if argument_type != parameter_type:
+                raise TypeError(f'Error on line {line_number}: Your call to '
+                                f'{self.called_function} sent a(n) '
+                                f'{argument_type.name} as the argument number '
+                                f'{i}, but a(n) {parameter_type.name} was '
+                                f'expected')
+
+            self.generate_quad('PARAM', argument_address, i)
 
         self.generate_quad('GOSUB', self.called_function)
+        self.arguments.clear()
 
         if current_function.return_type != 'VOID':
             result_address = self.generate_temporal_address(
@@ -340,31 +360,10 @@ class QuadrupleGenerator():
                             f' wrote the name correctly.')
 
         self.generate_quad('ERA', function)
-        self.argument_count = 1
         self.called_function = function
 
     def init_special(self, function, line_number):
         pass
-
-    def generate_parameter(self, line_number):
-        parameter_type, parameter_address = self.operands.pop()
-        try:
-            expected_type = directory.functions[
-                self.called_function].parameter_types[- self.argument_count]
-        except IndexError:
-            raise ArityError(f'Error on line {line_number}: You are sending '
-                             f'too many arguments to {self.called_function}. '
-                             f'It only needs {self.argument_count - 1}')
-
-        if parameter_type != expected_type:
-            raise TypeError(f'Error on line {line_number}: Your call to '
-                            f'{self.called_function} sent a(n) '
-                            f'{parameter_type.name} as the argument number '
-                            f'{self.argument_count + 1}, but a(n) '
-                            f'{expected_type.name} was expected')
-
-        self.generate_quad('PARAM', parameter_address, self.argument_count)
-        self.argument_count += 1
 
     def generate_special_parameter(self, line_number):
         pass
@@ -633,8 +632,8 @@ def p_arguments(p):
 
 def p_argument_list(p):
     ''' argument_list : expression
-                      | expression ',' argument_list '''
-    quadruple_generator.generate_parameter(p.lexer.lineno)
+                      | expression ',' arguments '''
+    quadruple_generator.read_parameter()
 
 
 def p_assignment(p):
