@@ -13,7 +13,7 @@ fun int fun1(int x, dec y, char z, bool mi, str fru) {
 
 
 fun dec fun2(int x) {
-
+	return 2.0;
 };
 
 fun char fun3() {
@@ -32,4 +32,3 @@ fun str fun5() {
 {
 
 }
-
