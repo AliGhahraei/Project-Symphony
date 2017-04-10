@@ -384,8 +384,8 @@ class QuadrupleGenerator():
 
         if return_type != expected_type:
             raise TypeError(f'Error on line {line_number}: Your '
-                            f'{self.called_function} should return an '
-                            f'{expected_type.name}, but it tried to return an '
+                            f'{current_function.name} should return a(n) '
+                            f'{expected_type.name}, but it tried to return a(n) '
                             f'{return_type.name}')
 
         current_function.return_address = return_address
