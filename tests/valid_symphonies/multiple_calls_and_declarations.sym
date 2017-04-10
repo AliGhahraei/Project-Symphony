@@ -30,7 +30,7 @@ fun str fun5() {
 };
 
 {
-	print(fun5());
+	print(fun5() + (fun3() + fun3()));
 	print(fun4());
 	print(fun2(1) * fun1(1, 1.0, 'a', true, "a"));
 }
