@@ -64,6 +64,7 @@ class FunctionScope():
         self.variables = {}
         self.parameter_types = []
         self.first_quadruple = None
+        self.return_address = None
 
 
 class Directory():
@@ -75,7 +76,16 @@ class Directory():
         self.define_function('VOID', Directory.GLOBAL_SCOPE, 0)
 
 
-    def clear_scope(self):
+    def end_definition(self, line_number):
+        current_function = self.functions[self.current_scope]
+
+        if (current_function.return_type != 'VOID'
+          and current_function.return_address is None):
+            raise ReturnError(f'Error on line {line_number}: This function '
+                              f'was supposed to return a(n) '
+                              f'{current_function.return_type.name}, but it '
+                              f'does not')
+
         # self.functions[self.current_scope] = None
         self.current_scope = Directory.GLOBAL_SCOPE
         quadruple_generator.generate_quad('ENDPROC')
@@ -259,15 +269,20 @@ class QuadrupleGenerator():
 
 
     def call(self, function):
-        expected_parameter_count = len(directory.functions[
-            self.called_function].parameter_types)
+        current_function = directory.functions[self.called_function]
+
+        expected_parameter_count = len(current_function.parameter_types)
 
         if self.argument_count -1 != expected_parameter_count:
             raise IndexError(f'Error on line {line_number}: You are sending '
                              f'too few parameters to {self.called_function}. '
                              f'It needs {expected_parameter_count}')
 
+        result_address = self.generate_temporal_address(
+            current_function.return_type)
         self.generate_quad('GOSUB', self.called_function)
+        self.generate_quad('=', current_function.return_address, result_address)
+        self.operands.append((current_function.return_type, result_address))
 
 
     def special_call(self, function):
@@ -341,9 +356,10 @@ class QuadrupleGenerator():
 
         if parameter_type != expected_type:
             raise TypeError(f'Error on line {line_number}: Your call to '
-                            f'{self.called_function} sent a(n) {parameter_type.name} '
-                            f'as the argument number {self.argument_count + 1}, '
-                            f'but a(n) {expected_type.name} was expected')
+                            f'{self.called_function} sent a(n) '
+                            f'{parameter_type.name} as the argument number '
+                            f'{self.argument_count + 1}, but a(n) '
+                            f'{expected_type.name} was expected')
 
         self.generate_quad('PARAM', parameter_address, self.argument_count)
         self.argument_count += 1
@@ -351,12 +367,38 @@ class QuadrupleGenerator():
     def generate_special_parameter(self, line_number):
         pass
 
+    def generate_return(self, line_number):
+        current_function = directory.functions[directory.current_scope]
+
+        if current_function.return_address is not None:
+            raise ReturnError('You cannot have multiple returns inside a '
+                              'function')
+
+        if directory.current_scope == directory.GLOBAL_SCOPE:
+            raise ReturnError(f'Error on line {line_number}: You cannot use '
+                              f'return if you are not inside a function')
+
+        return_type, return_address = self.operands.pop()
+        expected_type = current_function.return_type
+
+        if return_type != expected_type:
+            raise TypeError(f'Error on line {line_number}: Your '
+                            f'{self.called_function} should return an '
+                            f'{expected_type.name}, but it tried to return an '
+                            f'{return_type.name}')
+
+        current_function.return_address = return_address
+
 
 class GrammaticalError(Exception):
     pass
 
 
 class RedeclarationError(Exception):
+    pass
+
+
+class ReturnError(Exception):
     pass
 
 
@@ -519,7 +561,7 @@ def p_function_declaration(p):
 
 def p_function(p):
     '''function : create_scope parameters_and_variables statements '}' ';' '''
-    directory.clear_scope()
+    directory.end_definition(p.lexer.lineno)
 
 
 def p_create_scope(p):
@@ -534,8 +576,13 @@ def p_parameters_and_variables(p):
 
 def p_return_type(p):
     ''' return_type : type
-                    | VOID '''
+                    | void '''
     p[0] = p[1]
+
+
+def p_void(p):
+    ''' void : VOID '''
+    p[0] = p[1].upper()
 
 
 def p_type(p):
@@ -639,8 +686,8 @@ def p_special_parameter_expressions(p):
 
 
 def p_return(p):
-    ''' return : RETURN expression
-               | RETURN '''
+    ''' return : RETURN expression '''
+    quadruple_generator.generate_return(p.lexer.lineno)
 
 
 def p_elses(p):
