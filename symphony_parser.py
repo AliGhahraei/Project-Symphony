@@ -25,7 +25,7 @@ CUBE = [
     [
         [],
         [Types.STR],
-        [None] * 6 + [Types.BOOL] * 5,
+        [Types.STR] + [None] * 5 + [Types.BOOL] * 5,
         [],
         [],
     ],
