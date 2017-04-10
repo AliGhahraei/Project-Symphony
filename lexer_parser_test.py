@@ -4,6 +4,7 @@ from symphony_parser import (
     create_parser,
     GrammaticalError,
     RedeclarationError,
+    ArityError,
 )
 from unittest import TestCase, main
 

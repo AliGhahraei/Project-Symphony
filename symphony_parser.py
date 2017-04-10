@@ -274,7 +274,7 @@ class QuadrupleGenerator():
         expected_parameter_count = len(current_function.parameter_types)
 
         if self.argument_count -1 != expected_parameter_count:
-            raise IndexError(f'Error on line {line_number}: You are sending '
+            raise ArityError(f'Error on line {line_number}: You are sending '
                              f'too few parameters to {self.called_function}. '
                              f'It needs {expected_parameter_count}')
 
@@ -350,7 +350,7 @@ class QuadrupleGenerator():
             expected_type = directory.functions[
                 self.called_function].parameter_types[- self.argument_count]
         except IndexError:
-            raise IndexError(f'Error on line {line_number}: You are sending '
+            raise ArityError(f'Error on line {line_number}: You are sending '
                              f'too many parameters to {self.called_function}. '
                              f'It only needs {self.argument_count - 1}')
 
@@ -399,6 +399,10 @@ class RedeclarationError(Exception):
 
 
 class ReturnError(Exception):
+    pass
+
+
+class ArityError(Exception):
     pass
 
 
