@@ -1,7 +1,7 @@
 program global_variables;
 int alpha, beta;
-fun int frob(){
-    dec b;
+fun void frob(){
+	dec b;
 	b = alpha / 3;
 };
 {
