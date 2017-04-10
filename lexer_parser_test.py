@@ -14,6 +14,7 @@ GRAMMAR_PATH = 'tests/invalid_grammar/'
 REDECLARATION_PATH = 'tests/redeclaration/'
 UNDECLARED_PATH = 'tests/undeclared_usages/'
 WRONG_TYPES_PATH = 'tests/wrong_types/'
+ARITY_PATH = 'tests/arity/'
 
 
 class LexerTest(TestCase):
@@ -44,14 +45,14 @@ class LexerTest(TestCase):
             "my string"
             program
             ''',
-            
+
             '''
             int INT dec DEC char CHAR str STR bool BOOL 12 INT_VAL 4.75 DEC_VAL
             0.9 DEC_VAL a CHAR_VAL hello STR_VAL true BOOL_VAL false BOOL_VAL
             void VOID , , ; ; ( ( ) ) { { } } [ [ ] ] = = + + - - * * / /
-            ** EXPONENTIATION ++ INCREMENT -- DECREMENT mod MOD equals EQUALS > > 
+            ** EXPONENTIATION ++ INCREMENT -- DECREMENT mod MOD equals EQUALS > >
             < < >= GREATER_EQUAL_THAN <= LESS_EQUAL_THAN and AND or OR not NOT
-            fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID sqrt 
+            fun FUN while WHILE if IF else ELSE elseif ELSEIF hello ID sqrt
             SPECIAL_ID return RETURN my string STR_VAL program PROGRAM
             ''')
 
@@ -66,10 +67,10 @@ class ParserTest(TestCase):
             for_entered = True
 
             self.parser = create_parser(invalid_program)
-            
+
             try:
                 with open(invalid_program) as file:
-                    
+
                     with self.assertRaises(RaisedError):
                         print('Testing', invalid_program + '...', end=' ')
                         self.parser.parse(file.read())
@@ -86,8 +87,8 @@ class ParserTest(TestCase):
             for_entered = True
 
             self.parser = create_parser(valid_program)
-            
-            try:               
+
+            try:
                 with open(valid_program) as file:
                     print('Testing', valid_program + '...', end=' ')
                     self.parser.parse(file.read())
@@ -109,6 +110,9 @@ class ParserTest(TestCase):
 
     def test_wrong_operand(self):
         self.assert_programs_raise(WRONG_TYPES_PATH, TypeError)
+
+    def test_arity(self):
+        self.assert_programs_raise(ARITY_PATH, ArityError)
 
 
 if __name__ == '__main__':
