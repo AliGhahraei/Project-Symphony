@@ -382,6 +382,11 @@ class QuadrupleGenerator():
         return_type, return_address = self.operands.pop()
         expected_type = current_function.return_type
 
+        if expected_type == 'VOID':
+            raise ReturnError(f'Error on line {line_number}: This function was '
+                            f'declared with a VOID return type, so it should '
+                            f'not have a return here')
+
         if return_type != expected_type:
             raise TypeError(f'Error on line {line_number}: Your '
                             f'{current_function.name} should return a(n) '
