@@ -63,7 +63,7 @@ class FunctionScope():
         self.name = name
         self.return_type = return_type
         self.variables = {}
-        self.parameter_types = []
+        self.parameter_types = deque()
         self.first_quadruple = None
         self.return_address = None
 
@@ -98,7 +98,7 @@ class Directory():
             quadruple_generator.quadruples)
 
         for parameter in parameters:
-            self.functions[self.current_scope].parameter_types.append(
+            self.functions[self.current_scope].parameter_types.appendleft(
                 parameter[0])
             self._declare_variable(parameter[0], parameter[1], is_global,
                                    line_number)
