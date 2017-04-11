@@ -103,27 +103,27 @@ def play_note(lines, constants):
     for line in line_list[:-1]:
         quad = line.split()
         try:
-            current_operation = OPERATIONS[quad[0]]
+            operation = OPERATIONS[quad[0]]
         except KeyError:
             raise NotImplementedError(f"This operation isn't supported yet "
                                       f"({quad[0]})")
+
+        address1 = quad[1]
+        address2 = quad[2]
         try:
-            operand1 = quad[1]
+            address3 = quad[3]
         except IndexError:
-            # No parameters
-            current_operation()
-        try:
-            operand2 = quad[2]
-        except IndexError:
-            # Only 1 operand because the second wasn't there
-            result = current_operation(value(operand1))
-            store(result, quad[-1])
-        try:
-            result = current_operation(value(operand1))(value(operand2))
-            store(result, quad[-1])
-        except KeyError as e:
-            raise NotImplementedError(
-                f'The address {str(e)} was not found in memory, which means '
-                f'that a necessary VM feature for your program is still '
-                f'pending. Please contact our dev team. Sorry! *crashes '
-                f'shamefully*')
+            # Only 1 operand and 1 address to store the result
+            result = operation(value(address1))
+            store(result, address2)
+        else:
+            try:
+                # 2 operands and 1 address to store the result
+                result = operation(value(address1))(value(address2))
+                store(result, address3)
+            except KeyError as e:
+                raise NotImplementedError(
+                    f'The address {str(e)} was not found in memory, which means '
+                    f'that a necessary VM feature for your program is still '
+                    f'pending. Please contact our dev team. Sorry! *crashes '
+                    f'shamefully*')
