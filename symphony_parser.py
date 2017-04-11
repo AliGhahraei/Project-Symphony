@@ -5,7 +5,7 @@ from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS, DUPLICATED_OPERATOR
 from ply.yacc import yacc
 from sys import exit, argv
 
-from orchestra import generate_memory_addresses
+from orchestra import generate_memory_addresses, play_note
 
 
 CUBE = [
@@ -829,5 +829,13 @@ if __name__ == "__main__":
         try:
             with open(path) as file:
                 parser.parse(file.read())
+
+            with open(quadruple_generator.filepath) as file:
+                constants = {type_: {address: value for value, address in
+                                     value_address.items()}
+                             for type_, value_address in
+                             quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
+
+                play_note(file.read(), constants)
         except FileNotFoundError:
             print("The file", path, "was not found. Skipping...")
