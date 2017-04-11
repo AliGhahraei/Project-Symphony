@@ -346,8 +346,10 @@ class QuadrupleGenerator():
 
 
     def write_quads(self):
-        with open(self.filepath[:-4] + '.note', 'w') as file:
-            file.write('\n'.join(self.quadruples) + '\n')
+        self.filepath = self.filepath[:-4] + '.note'
+
+        with open(self.filepath, 'w') as file:
+            file.write('\n'.join(self.quadruples))
 
 
     def store_expression_position(self):
