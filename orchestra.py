@@ -49,10 +49,6 @@ def generate_memory_addresses(end_addresses=False):
 addresses = generate_memory_addresses(end_addresses=True)
 
 
-def assign():
-    pass
-
-
 def value(address):
     address = int(address)
     return get_address_container(address)[address]
@@ -92,8 +88,9 @@ OPERATIONS = {
     DUPLICATED_OPERATORS['+'] : pos,
     DUPLICATED_OPERATORS['-'] : neg,
     'not' : not_,
-    '=' : assign,
+    '=' : lambda value: value,
 }
+
 
 POLYMORPHIC_FUNCS = {'print'}
 
