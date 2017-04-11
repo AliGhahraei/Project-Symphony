@@ -165,7 +165,7 @@ class QuadrupleGenerator():
 
             type_addresses = [starting_address for starting_address in
                               range(current_address, next_address,
-                                    int((sector_size) / len(Types)))]
+                                    int(sector_size / len(Types)))]
             type_addresses = dict(zip(Types, type_addresses))
 
             addresses.append(type_addresses)
