@@ -5,7 +5,7 @@ from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS, DUPLICATED_OPERATOR
 from ply.yacc import yacc
 from sys import exit, argv
 
-from orchestra import MEMORY_SECTORS, ADDRESS_TUPLE
+from orchestra import generate_memory_addresses
 
 
 CUBE = [
@@ -156,22 +156,7 @@ class Directory():
 
 class QuadrupleGenerator():
     def __init__(self, filepath):
-        sector_iterator = iter(MEMORY_SECTORS)
-        current_address = sector_iterator.__next__()[1]
-        addresses = []
-        for sector in sector_iterator:
-            next_address = sector[1]
-            sector_size = next_address - current_address
-
-            type_addresses = [starting_address for starting_address in
-                              range(current_address, next_address,
-                                    int(sector_size / len(Types)))]
-            type_addresses = dict(zip(Types, type_addresses))
-
-            addresses.append(type_addresses)
-            current_address = next_address
-
-        self.ADDRESSES = ADDRESS_TUPLE._make(addresses)
+        self.ADDRESSES = generate_memory_addresses()
         self.filepath = filepath
         self.operands = []
         self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
