@@ -31,7 +31,6 @@ def generate_memory_addresses():
 
     return ADDRESS_TUPLE._make(addresses)
 
-#memory = ADDRESS_TUPLE._make(meh)
 
 
 def assign():
