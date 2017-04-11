@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from collections import deque
-from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS
+from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS, DUPLICATED_OPERATORS
 from ply.yacc import yacc
 from sys import exit, argv
 
@@ -212,8 +212,11 @@ class QuadrupleGenerator():
                 raise IndexError('Result is None')
 
             result_address = self.generate_temporal_address(result_type)
-            self.generate_quad(operator_symbol, address,
-                               result_address)
+
+            if operator_symbol in DUPLICATED_OPERATORS:
+                operator_symbol = DUPLICATED_OPERATORS[operator_symbol],
+
+            self.generate_quad(operator_symbol, address, result_address)
             self.operands.append((result_type, result_address))
         except IndexError:
             raise TypeError(

@@ -34,6 +34,7 @@ OPERATORS = dict(zip(OPERATOR_LIST, [counter for counter in
 UNARY_OPERATOR_LIST = ['++', '--', '+', '-', 'not']
 UNARY_OPERATORS = dict(zip(UNARY_OPERATOR_LIST, [counter for counter in
                                      range(len(UNARY_OPERATOR_LIST))]))
+DUPLICATED_OPERATORS = {'+' : 'PLUS', '-' : 'MIN'}
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
@@ -105,7 +106,7 @@ def t_error(t):
 def t_SINGLE_LINE_COMMENT(t):
 
 def t_MULTI_LINE_COMMENT(t):
-""" 
+"""
 
 t_ignore_SINGLE_LINE_COMMENT = r'//.*'
 t_ignore = " \t"
