@@ -600,7 +600,7 @@ def p_statements(p):
 
 
 def p_statement(p):
-    '''statement   : call
+    '''statement : call
                  | assignment
                  | condition
                  | cycle
