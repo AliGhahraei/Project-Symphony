@@ -106,11 +106,27 @@ def play_note(lines, constants):
     for line in line_list[:-1]:
         quad = line.split()
         try:
-            result = OPERATIONS[quad[0]](value(quad[1]))(value(quad[2]))
-            store(result, quad[-1])
+            current_operation = OPERATIONS[quad[0]]
+        except KeyError:
+            raise NotImplementedError(f"This operation isn't supported yet "
+                                      f"({quad[0]})")
+        try:
+            operand1 = quad[1]
+        except IndexError:
+            raise NotImplementedError(f"Parameterless VM operations aren't "
+                                      f"supported yet ({quad[0]})")
+        try:
+            operand2 = quad[2]
+        except IndexError:
+            # Only 1 operand because the second wasn't there
+            result = current_operation(value(operand1))
+        try:
+            result = current_operation(value(operand1))(value(operand2))
         except KeyError as e:
             raise NotImplementedError(
                 f'The address {str(e)} was not found in memory, which means '
                 f'that a necessary VM feature for your program is still '
                 f'pending. Please contact our dev team. Sorry! *crashes '
                 f'shamefully*')
+
+        store(result, quad[-1])
