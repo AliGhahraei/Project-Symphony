@@ -113,20 +113,20 @@ def play_note(lines, constants):
         try:
             operand1 = quad[1]
         except IndexError:
-            raise NotImplementedError(f"Parameterless VM operations aren't "
-                                      f"supported yet ({quad[0]})")
+            # No parameters
+            current_operation()
         try:
             operand2 = quad[2]
         except IndexError:
             # Only 1 operand because the second wasn't there
             result = current_operation(value(operand1))
+            store(result, quad[-1])
         try:
             result = current_operation(value(operand1))(value(operand2))
+            store(result, quad[-1])
         except KeyError as e:
             raise NotImplementedError(
                 f'The address {str(e)} was not found in memory, which means '
                 f'that a necessary VM feature for your program is still '
                 f'pending. Please contact our dev team. Sorry! *crashes '
                 f'shamefully*')
-
-        store(result, quad[-1])
