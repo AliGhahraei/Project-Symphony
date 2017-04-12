@@ -199,7 +199,7 @@ class QuadrupleGenerator():
             result_address = self.generate_temporal_address(result_type)
 
             if operator_symbol in DUPLICATED_OPERATORS:
-                operator_symbol = DUPLICATED_OPERATORS[operator_symbol],
+                operator_symbol = DUPLICATED_OPERATORS[operator_symbol]
 
             self.generate_quad(operator_symbol, address, result_address)
             self.operands.append((result_type, result_address))
