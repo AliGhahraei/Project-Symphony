@@ -18,6 +18,9 @@ memory = {sector[0]: {type_ : {} for type_ in Types}
           for sector in MEMORY_SECTORS[:-1]}
 
 
+parameters = []
+
+
 def generate_memory_addresses(end_addresses=False):
     ADDRESS_TUPLE = namedtuple('ADDRESSES', [address[0] for address
                                              in MEMORY_SECTORS[:-1]])
@@ -69,6 +72,15 @@ def get_address_container(address):
                     return memory[sector_name][type_]
 
 
+def store_param(address):
+    address = int(address)
+    parameters.append(address)
+
+
+def print_(end='\n'):
+    print(parameters.pop(), end=end)
+
+
 OPERATIONS = {
     '+' : add,
     '-' : sub,
@@ -91,6 +103,11 @@ OPERATIONS = {
     '=' : lambda value: value,
 }
 
+VM_FUNCTIONS = {
+    'PARAM' : store_param,
+    'print' : partial(print_, end=''),
+    'println' : print_,
+}
 
 SPECIAL_PARAMETER_TYPES = {
     'print' : [{type_ for type_ in Types}],
@@ -110,25 +127,34 @@ def play_note(lines, constants):
         try:
             operation = OPERATIONS[quad[0]]
         except KeyError:
-            raise NotImplementedError(f"This operation isn't supported yet "
-                                      f"({quad[0]})")
-
-        address1 = quad[1]
-        address2 = quad[2]
-        try:
-            address3 = quad[3]
-        except IndexError:
-            # Only 1 operand and 1 address to store the result
-            result = operation(value(address1))
-            store(result, address2)
-        else:
             try:
-                # 2 operands and 1 address to store the result
-                result = operation(value(address1))(value(address2))
-                store(result, address3)
-            except KeyError as e:
-                raise NotImplementedError(
-                    f'The address {str(e)} was not found in memory, which means '
-                    f'that a necessary VM feature for your program is still '
-                    f'pending. Please contact our dev team. Sorry! *crashes '
-                    f'shamefully*')
+                operation = VM_FUNCTIONS[quad[0]]
+                address1 = quad[1]
+                operation(value(address1))
+            except IndexError:
+                # Parameterless
+                operation()
+            except KeyError:
+                raise NotImplementedError(f"This operation isn't supported yet "
+                                          f"({quad[0]})")
+        else:
+            address1 = quad[1]
+            address2 = quad[2]
+
+            try:
+                address3 = quad[3]
+            except IndexError:
+                # Only 1 operand and 1 address to store the result
+                result = operation(value(address1))
+                store(result, address2)
+            else:
+                try:
+                    # 2 operands and 1 address to store the result
+                    result = operation(value(address1))(value(address2))
+                    store(result, address3)
+                except KeyError as e:
+                    raise NotImplementedError(
+                        f'The address {str(e)} was not found in memory, which '
+                        f'means that a necessary VM feature for your program '
+                        f'is still pending. Please contact our dev team. '
+                        f'Sorry! *crashes shamefully*')
