@@ -117,6 +117,42 @@ SPECIAL_PARAMETER_TYPES = {
 }
 
 
+def handle_vm_function(quad):
+    try:
+        operation = VM_FUNCTIONS[quad[0]]
+        address1 = quad[1]
+        operation(value(address1))
+    except IndexError:
+        # Parameterless
+        operation()
+    except KeyError:
+        raise NotImplementedError(f"This operation isn't supported yet "
+                                  f"({quad[0]})")
+
+
+def handle_operation(quad, operation):
+    address1 = quad[1]
+    address2 = quad[2]
+
+    try:
+        address3 = quad[3]
+    except IndexError:
+        # Only 1 operand and 1 address to store the result
+        result = operation(value(address1))
+        store(result, address2)
+    else:
+        try:
+            # 2 operands and 1 address to store the result
+            result = operation(value(address1), value(address2))
+            store(result, address3)
+        except KeyError as e:
+            raise NotImplementedError(
+                f'The address {str(e)} was not found in memory, which '
+                f'means that a necessary VM feature for your program '
+                f'is still pending. Please contact our dev team. '
+                f'Sorry! *crashes shamefully*')
+
+
 def play_note(lines, constants):
     memory['constant'] = constants
 
@@ -127,37 +163,9 @@ def play_note(lines, constants):
         try:
             operation = OPERATIONS[quad[0]]
         except KeyError:
-            try:
-                operation = VM_FUNCTIONS[quad[0]]
-                address1 = quad[1]
-                operation(value(address1))
-            except IndexError:
-                # Parameterless
-                operation()
-            except KeyError:
-                raise NotImplementedError(f"This operation isn't supported yet "
-                                          f"({quad[0]})")
+            handle_vm_function(quad)
         except IndexError:
             # No operation (empty line): ignore
             pass
         else:
-            address1 = quad[1]
-            address2 = quad[2]
-
-            try:
-                address3 = quad[3]
-            except IndexError:
-                # Only 1 operand and 1 address to store the result
-                result = operation(value(address1))
-                store(result, address2)
-            else:
-                try:
-                    # 2 operands and 1 address to store the result
-                    result = operation(value(address1), value(address2))
-                    store(result, address3)
-                except KeyError as e:
-                    raise NotImplementedError(
-                        f'The address {str(e)} was not found in memory, which '
-                        f'means that a necessary VM feature for your program '
-                        f'is still pending. Please contact our dev team. '
-                        f'Sorry! *crashes shamefully*')
+            handle_operation(quad, operation)
