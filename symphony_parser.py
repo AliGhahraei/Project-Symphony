@@ -5,7 +5,7 @@ from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS, DUPLICATED_OPERATOR
 from ply.yacc import yacc
 from sys import exit, argv
 
-from orchestra import generate_memory_addresses, play_note
+from orchestra import generate_memory_addresses, play_note, SPECIAL_PARAMETER_TYPES
 
 
 CUBE = [
@@ -162,7 +162,7 @@ class QuadrupleGenerator():
         self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
         self.quadruples = []
         self.pending_jumps = []
-        self.called_function = None
+        self.called_functions = []
         self.arguments = deque()
 
 
@@ -262,14 +262,15 @@ class QuadrupleGenerator():
 
 
     def call(self, function, line_number):
-        current_function = directory.functions[self.called_function]
-        parameter_types = current_function.parameter_types
+        called_function_name = self.called_functions.pop()
+        called_function = directory.functions[called_function_name]
+        parameter_types = called_function.parameter_types
 
         if len(self.arguments) != len(parameter_types):
             raise ArityError(f'Error on line {line_number}: You are sending '
                              f'the wrong number of arguments '
                              f'({len(self.arguments)}) to '
-                             f'{self.called_function}. It needs '
+                             f'{called_function_name}. It needs '
                              f'{len(parameter_types)}')
 
         for i, (argument, parameter_type) in enumerate(
@@ -278,25 +279,52 @@ class QuadrupleGenerator():
 
             if argument_type != parameter_type:
                 raise TypeError(f'Error on line {line_number}: Your call to '
-                                f'{self.called_function} sent a(n) '
+                                f'{called_function_name} sent a(n) '
                                 f'{argument_type.name} as the argument number '
                                 f'{i}, but a(n) {parameter_type.name} was '
                                 f'expected')
 
             self.generate_quad('PARAM', argument_address, i)
 
-        self.generate_quad('GOSUB', self.called_function)
+        self.generate_quad('GOSUB', called_function_name)
         self.arguments.clear()
 
-        if current_function.return_type != 'VOID':
+        if called_function.return_type != 'VOID':
             result_address = self.generate_temporal_address(
-                current_function.return_type)
-            self.operands.append((current_function.return_type, result_address))
-            self.generate_quad('=', current_function.return_address, result_address)
+                called_function.return_type)
+            self.operands.append((called_function.return_type, result_address))
+            self.generate_quad('=', called_function.return_address, result_address)
 
 
     def special_call(self, function):
-        pass
+        called_function_name = self.called_functions.pop()
+        parameter_types = SPECIAL_PARAMETER_TYPES[called_function_name]
+
+        if len(self.arguments) != len(parameter_types):
+            raise ArityError(f'Error on line {line_number}: You are sending '
+                             f'the wrong number of arguments '
+                             f'({len(self.arguments)}) to '
+                             f'{called_function_name}. It needs '
+                             f'{len(parameter_types)}')
+
+        for i, (argument, allowed_types) in enumerate(
+          zip(self.arguments, parameter_types), start=1):
+            argument_type, argument_address = argument
+
+            if argument_type not in allowed_types:
+                allowed_list = ', '.join([type_name.name for type_name
+                                         in allowed_types])
+
+                raise TypeError(f'Error on line {line_number}: Your call to '
+                                f'{called_function_name} sent a(n) '
+                                f'{argument_type.name} as the argument number '
+                                f'{i}, but one of these was expected: '
+                                f'{allowed_list}')
+
+            self.generate_quad('PARAM', argument_address, i)
+
+        self.generate_quad(called_function_name)
+        self.arguments.clear()
 
 
     def generate_variable_address(self, variable_type, is_global):
@@ -304,6 +332,7 @@ class QuadrupleGenerator():
 
         if is_global:
             new_address = self.ADDRESSES.global_[variable_type]
+
             self.ADDRESSES.global_[variable_type] = new_address + 1
         else:
             new_address = self.ADDRESSES.local[variable_type]
@@ -350,13 +379,10 @@ class QuadrupleGenerator():
                             f' wrote the name correctly.')
 
         self.generate_quad('ERA', function)
-        self.called_function = function
+        self.called_functions.append(function)
 
     def init_special(self, function, line_number):
-        pass
-
-    def generate_special_parameter(self, line_number):
-        pass
+        self.called_functions.append(function)
 
     def generate_return(self, line_number):
         current_function = directory.functions[directory.current_scope]
@@ -675,19 +701,13 @@ def p_store_expression_position(p):
 
 
 def p_special(p):
-    ''' special : special_id '(' special_parameter_expressions ')' '''
+    ''' special : special_id '(' arguments ')' '''
     quadruple_generator.special_call(p[1])
 
 
 def p_special_id(p):
     ''' special_id : SPECIAL_ID '''
     quadruple_generator.init_special(p[1], p.lexer.lineno)
-
-
-def p_special_parameter_expressions(p):
-    ''' special_parameter_expressions : expression
-                                      | expression ',' special_parameter_expressions '''
-    quadruple_generator.generate_special_parameter(p.lexer.lineno)
 
 
 def p_return(p):

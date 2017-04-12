@@ -92,7 +92,12 @@ OPERATIONS = {
 }
 
 
-POLYMORPHIC_FUNCS = {'print'}
+SPECIAL_PARAMETER_TYPES = {
+    'print' : [{type_ for type_ in Types}],
+    'println' : [{type_ for type_ in Types}],
+    'str' : [{type_ for type_ in Types}],
+    'get' : [{Types.STR}, {Types.INT}],
+}
 
 
 def play_note(lines, constants):
