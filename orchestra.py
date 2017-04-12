@@ -96,7 +96,7 @@ OPERATIONS = {
     'and' : and_,
     'or' : or_,
     '++' : partial(add, 1),
-    '--' : partial(sub, 1),
+    '--' : lambda value: sub(value, 1),
     DUPLICATED_OPERATORS['+'] : pos,
     DUPLICATED_OPERATORS['-'] : neg,
     'not' : not_,
