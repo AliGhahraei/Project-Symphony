@@ -130,7 +130,7 @@ def handle_vm_function(quad):
                                   f"({quad[0]})")
 
 
-def handle_operation(quad, operation):
+def handle_operation(operation, quad):
     address1 = quad[1]
     address2 = quad[2]
 
@@ -168,4 +168,4 @@ def play_note(lines, constants):
             # No operation (empty line): ignore
             pass
         else:
-            handle_operation(quad, operation)
+            handle_operation(operation, quad)
