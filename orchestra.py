@@ -150,7 +150,7 @@ def play_note(lines, constants):
             else:
                 try:
                     # 2 operands and 1 address to store the result
-                    result = operation(value(address1))(value(address2))
+                    result = operation(value(address1), value(address2))
                     store(result, address3)
                 except KeyError as e:
                     raise NotImplementedError(
