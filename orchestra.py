@@ -137,6 +137,9 @@ def play_note(lines, constants):
             except KeyError:
                 raise NotImplementedError(f"This operation isn't supported yet "
                                           f"({quad[0]})")
+        except IndexError:
+            # No operation (empty line): ignore
+            pass
         else:
             address1 = quad[1]
             address2 = quad[2]
