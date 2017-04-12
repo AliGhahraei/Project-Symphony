@@ -105,7 +105,7 @@ def play_note(lines, constants):
 
     line_list = lines.split('\n')
 
-    for line in line_list[:-1]:
+    for line in line_list:
         quad = line.split()
         try:
             operation = OPERATIONS[quad[0]]
