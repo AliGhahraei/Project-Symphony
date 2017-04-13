@@ -142,8 +142,14 @@ def handle_operation(operation, quad):
     else:
         try:
             # 2 operands and 1 address to store the result
-            result = operation(value(address1), value(address2))
+            value1 = value(address1)
+            value2 = value(address2)
+            result = operation(value1, value2)
             store(result, address3)
+        except ZeroDivisionError:
+            print(f'Oops! You tried to divide {value1} by 0. Please correct '
+                  f'your program')
+            exit()
         except KeyError as e:
             raise NotImplementedError(
                 f'The address {str(e)} was not found in memory, which '
