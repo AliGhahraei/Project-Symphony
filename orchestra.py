@@ -21,6 +21,10 @@ memory = {sector[0]: {type_ : {} for type_ in Types}
 parameters = []
 
 
+class UninitializedError(Exception):
+    pass
+
+
 def generate_memory_addresses(end_addresses=False):
     ADDRESS_TUPLE = namedtuple('ADDRESSES', [address[0] for address
                                              in MEMORY_SECTORS[:-1]])
@@ -53,8 +57,12 @@ addresses = generate_memory_addresses(end_addresses=True)
 
 
 def value(address):
-    address = int(address)
-    return get_address_container(address)[address]
+    try:
+        address = int(address)
+        return get_address_container(address)[address]
+    except KeyError as e:
+        raise UninitializedError(f'Sorry, but you tried to use a variable '
+                                 f'before assignment. Please check your program')
 
 
 def store(value, address):
@@ -160,12 +168,6 @@ def handle_operation(operation, quad):
         except ZeroDivisionError as e:
             raise ZeroDivisionError(f'Oops! You tried to divide {value1} by 0. '
                                     f'Please correct your program') from e
-        except KeyError as e:
-            raise NotImplementedError(
-                f'The address {str(e)} was not found in memory, which '
-                f'means that a necessary VM feature for your program '
-                f'is still pending. Please contact our dev team. '
-                f'Sorry! *crashes shamefully*')
 
 
 def play_note(lines, constants):
