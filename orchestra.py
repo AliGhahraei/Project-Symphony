@@ -73,8 +73,7 @@ def get_address_container(address):
 
 
 def store_param(address):
-    address = int(address)
-    parameters.append(address)
+    parameters.append(value(address))
 
 
 def print_(end='\n'):
@@ -120,8 +119,8 @@ SPECIAL_PARAMETER_TYPES = {
 def handle_vm_function(quad):
     try:
         operation = VM_FUNCTIONS[quad[0]]
-        address1 = quad[1]
-        operation(value(address1))
+        address = quad[1]
+        operation(address)
     except IndexError:
         # Parameterless
         operation()
