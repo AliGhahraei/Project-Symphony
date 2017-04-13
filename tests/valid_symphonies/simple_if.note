@@ -3,6 +3,6 @@
 > 170000 194000 188000
 GOTOF 188000 6
 PARAM 216000 1
-print
+println
 PARAM 216001 1
-print
+println
