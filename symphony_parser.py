@@ -1,11 +1,13 @@
 #!/usr/bin/python
 
 from collections import deque
-from lexer import tokens, Types, OPERATORS, UNARY_OPERATORS, DUPLICATED_OPERATORS
+from lexer import (tokens, Types, OPERATORS, UNARY_OPERATORS,
+                   DUPLICATED_OPERATORS, CONSTANT_VALS)
 from ply.yacc import yacc
 from sys import exit, argv
 
-from orchestra import generate_memory_addresses, play_note, SPECIAL_PARAMETER_TYPES
+from orchestra import (generate_memory_addresses, play_note,
+                       SPECIAL_PARAMETER_TYPES)
 
 
 CUBE = [
@@ -812,7 +814,7 @@ def p_str_val(p):
 
 def p_bool_val(p):
     ''' bool_val : BOOL_VAL '''
-    quadruple_generator.push_constant(Types.BOOL, p[1].capitalize())
+    quadruple_generator.push_constant(Types.BOOL, CONSTANT_VALS[p[1]])
 
 
 def p_variable_id(p):

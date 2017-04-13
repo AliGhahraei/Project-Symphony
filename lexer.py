@@ -35,6 +35,7 @@ UNARY_OPERATOR_LIST = ['++', '--', '+', '-', 'not']
 UNARY_OPERATORS = dict(zip(UNARY_OPERATOR_LIST, [counter for counter in
                                      range(len(UNARY_OPERATOR_LIST))]))
 DUPLICATED_OPERATORS = {'+' : 'PLUS', '-' : 'MIN'}
+CONSTANT_VALS = {'true' : True, 'false' : False}
 
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
@@ -42,7 +43,7 @@ keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
                            'dec', 'char', 'str', 'bool', 'return']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
-keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in ['true', 'false']})
+keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in CONSTANT_VALS})
 
 
 special_ids = {'print', 'println', 'read', 'sqrt', 'log', 'random',
