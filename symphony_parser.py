@@ -812,7 +812,7 @@ def p_str_val(p):
 
 def p_bool_val(p):
     ''' bool_val : BOOL_VAL '''
-    quadruple_generator.push_constant(Types.BOOL, p[1])
+    quadruple_generator.push_constant(Types.BOOL, p[1].capitalize())
 
 
 def p_variable_id(p):
