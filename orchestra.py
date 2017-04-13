@@ -157,10 +157,9 @@ def handle_operation(operation, quad):
             value2 = value(address2)
             result = operation(value1, value2)
             store(result, address3)
-        except ZeroDivisionError:
-            print(f'Oops! You tried to divide {value1} by 0. Please correct '
-                  f'your program')
-            exit()
+        except ZeroDivisionError as e:
+            raise ZeroDivisionError(f'Oops! You tried to divide {value1} by 0. '
+                                    f'Please correct your program') from e
         except KeyError as e:
             raise NotImplementedError(
                 f'The address {str(e)} was not found in memory, which '
