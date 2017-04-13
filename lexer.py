@@ -34,6 +34,7 @@ OPERATORS = dict(zip(OPERATOR_LIST, [counter for counter in
 UNARY_OPERATOR_LIST = ['++', '--', '+', '-', 'not']
 UNARY_OPERATORS = dict(zip(UNARY_OPERATOR_LIST, [counter for counter in
                                      range(len(UNARY_OPERATOR_LIST))]))
+SELF_UPDATE_OPERATORS = ['++', '--']
 DUPLICATED_OPERATORS = {'+' : 'PLUS', '-' : 'MIN'}
 CONSTANT_VALS = {'true' : True, 'false' : False}
 
