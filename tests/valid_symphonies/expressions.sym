@@ -8,6 +8,15 @@ int a, b;
 	println(+10);
 	println(5 mod 4);
 	println((true equals true) equals true);
+	println(4 > 3);
+	println(5 < 3);
+	println(2 >= 2);
+	println(1 <= 0);
+	println(true and false);
+	println(false or false);
+	println(not false);
 	println("Hi");
 	println(('Y' + 'e') + "ah");
+
+
 }
