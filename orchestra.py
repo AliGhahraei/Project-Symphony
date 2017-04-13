@@ -80,6 +80,11 @@ def print_(end='\n'):
     print(parameters.pop(), end=end)
 
 
+def gotof(address, jump):
+    if not value(address):
+        return int(jump)
+
+
 OPERATIONS = {
     '+' : add,
     '-' : sub,
@@ -106,6 +111,8 @@ VM_FUNCTIONS = {
     'PARAM' : store_param,
     'print' : partial(print_, end=''),
     'println' : print_,
+    'GOTO' : lambda value: int(value),
+    'GOTOF': gotof,
 }
 
 SPECIAL_PARAMETER_TYPES = {
@@ -119,11 +126,15 @@ SPECIAL_PARAMETER_TYPES = {
 def handle_vm_function(quad):
     try:
         operation = VM_FUNCTIONS[quad[0]]
-        address = quad[1]
-        operation(address)
+        address1 = quad[1]
+        return operation(address1)
+    except TypeError:
+        # Thrown if function needs two parameters
+        address2 = quad[2]
+        return operation(address1, address2)
     except IndexError:
-        # Parameterless
-        operation()
+        # No quad 0: parameterless
+        return operation()
     except KeyError:
         raise NotImplementedError(f"This operation isn't supported yet "
                                   f"({quad[0]})")
@@ -161,16 +172,28 @@ def handle_operation(operation, quad):
 def play_note(lines, constants):
     memory['constant'] = constants
 
-    line_list = lines.split('\n')
+    line_list = [line.split() for line in lines.split('\n')]
 
-    for line in line_list:
-        quad = line.split()
+    current_quad_idx = 0
+    while current_quad_idx < len(line_list):
+        try:
+            quad = line_list[current_quad_idx]
+        except IndexError:
+            # Exit when accessing a non_existent quadruple
+            exit()
+
         try:
             operation = OPERATIONS[quad[0]]
         except KeyError:
-            handle_vm_function(quad)
+            vm_result = handle_vm_function(quad)
+
+            if(vm_result is not None):
+                current_quad_idx = vm_result
+            else:
+                current_quad_idx += 1
         except IndexError:
-            # No operation (empty line): ignore
-            pass
+            # No operation (empty line) might only be found at the end
+            exit()
         else:
             handle_operation(operation, quad)
+            current_quad_idx += 1
