@@ -2,6 +2,9 @@ program variable_declaration;
 int x, y;
 str hola, adios;
 {
-	print(x);
-	print(adios);
+	x = 999;
+	adios = "adios";
+
+	println(x);
+	println(adios);
 }
