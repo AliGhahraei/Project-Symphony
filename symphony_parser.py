@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.6
 
 from collections import deque
 from lexer import (tokens, Types, OPERATORS, UNARY_OPERATORS, CONSTANT_VALS,
@@ -499,18 +499,8 @@ def p_expression(p):
 
 
 def p_exp_op(p):
-    ''' exp_op : level1 EXPONENTIATION level1 chained_exp_ops '''
+    ''' exp_op : level1 EXPONENTIATION expression '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
-
-
-def p_chained_exp_ops(p):
-    ''' chained_exp_ops : chained_exp_op
-                        | empty '''
-
-
-def p_chained_exp_op(p):
-    ''' chained_exp_op : EXPONENTIATION level1 chained_exp_ops '''
-    quadruple_generator.operate(p[1], p.lexer.lineno)
 
 
 def p_level1(p):
@@ -530,8 +520,8 @@ def p_level2(p):
 
 
 def p_logical_op(p):
-    ''' logical_op : level2 OR level2
-                   | level2 AND level2 '''
+    ''' logical_op : level3 OR level2
+                   | level3 AND level2 '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
 
 
@@ -545,7 +535,7 @@ def p_rel_op(p):
                | level4 '>' level4
                | level4 LESS_EQUAL_THAN level4
                | level4 GREATER_EQUAL_THAN level4
-               | level4 EQUALS level4 '''
+               | level4 EQUALS level3 '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
 
 
@@ -555,8 +545,8 @@ def p_level4(p):
 
 
 def p_add_subs_op(p):
-    ''' add_subs_op : level5 '+' level5
-                    | level5 '-' level5 '''
+    ''' add_subs_op : level5 '+' level4
+                    | level5 '-' level4 '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
 
 
@@ -572,9 +562,9 @@ def p_negation_op(p):
 
 
 def p_times_div_mod_op(p):
-    ''' times_div_mod_op : level6 '*' level6
-                         | level6 '/' level6
-                         | level6 MOD level6 '''
+    ''' times_div_mod_op : level6 '*' level5
+                         | level6 '/' level5
+                         | level6 MOD level5 '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
 
 
