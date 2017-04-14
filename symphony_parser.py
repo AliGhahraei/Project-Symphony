@@ -499,8 +499,18 @@ def p_expression(p):
 
 
 def p_exp_op(p):
-    ''' exp_op : level1 EXPONENTIATION level1 '''
+    ''' exp_op : level1 EXPONENTIATION level1 chained_exp_ops '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
+
+
+def p_chained_exp_ops(p):
+    ''' chained_exp_ops : chained_exp_op
+                        | empty '''
+
+
+def p_chained_exp_op(p):
+    ''' chained_exp_op : EXPONENTIATION level1 chained_exp_ops '''
+    quadruple_generator.operate(p[1], p.lexer.lineno)
 
 
 def p_level1(p):
