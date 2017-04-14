@@ -526,12 +526,12 @@ def p_plus_minus_op(p):
 
 def p_level2(p):
     ''' level2 : level3
-               | binary_op '''
+               | logical_op '''
 
 
-def p_binary_op(p):
-    ''' binary_op : level3 OR level3
-                  | level3 AND level3 '''
+def p_logical_op(p):
+    ''' logical_op : level2 OR level2
+                   | level2 AND level2 '''
     quadruple_generator.operate(p[2], p.lexer.lineno)
 
 
