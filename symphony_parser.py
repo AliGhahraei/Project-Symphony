@@ -474,7 +474,7 @@ def finalize():
 
 
 def p_program(p):
-    ''' program : PROGRAM ID ';' global_declarations function_declaration block '''
+    ''' program : PROGRAM ID ';' global_declarations function_declaration statements '''
     finalize()
 
 
@@ -671,7 +671,7 @@ def p_function_declaration(p):
 
 
 def p_function(p):
-    '''function : create_scope parameters_and_variables statements '}' ';' '''
+    '''function : create_scope parameters_and_variables statements '}' '''
     directory.end_definition(p.lexer.lineno)
 
 
@@ -707,18 +707,22 @@ def p_type(p):
 
 def p_statements(p):
     ''' statements : statement ';' statements
-                 | empty'''
+                   | no_colon_statement statements
+                   | empty'''
 
 
 def p_statement(p):
     '''statement : call
                  | assignment
-                 | condition
-                 | cycle
                  | special
                  | return
                  | increment
                  | decrement '''
+
+
+def p_no_colon_statement(p):
+    ''' no_colon_statement : condition
+                           | cycle '''
 
 
 def p_call(p):
