@@ -1,4 +1,0 @@
-ENDPROC
-ERA func
-PARAM 216000 1
-GOSUB func
