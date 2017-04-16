@@ -73,9 +73,11 @@ class ParserTest(TestCase):
             try:
                 with open(invalid_program) as file:
 
-                    with self.assertRaises(RaisedError):
+                    with self.assertRaises(RaisedError) as exception_context:
                         print('Testing', invalid_program + '...', end=' ')
                         self.parser.parse(file.read())
+
+                    # print(str(exception_context.exception))
             except:
                 print('\033[91m Error!\033[0m')
                 raise
