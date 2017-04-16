@@ -1,6 +1,4 @@
 program char_increment;
 char a;
-{
-	a = 'a';
-	print(++a);
-}
+a = 'a';
+print(++a);

@@ -1,7 +1,5 @@
 program condition;
 int num; 
-{
-	if(num) {
-		println("Oops");
-	};
+if(num) {
+	println("Oops");
 }

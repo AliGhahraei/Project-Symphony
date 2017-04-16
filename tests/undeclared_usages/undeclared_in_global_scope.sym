@@ -1,4 +1,2 @@
 program undeclared_in_global_scope;
-{
-  y = x * 1;
-}
+y = x * 1;

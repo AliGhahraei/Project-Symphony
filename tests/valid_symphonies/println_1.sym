@@ -1,4 +1,2 @@
 program println_1;
-{
-	println(2 * 4);
-}
+println(2 * 4);

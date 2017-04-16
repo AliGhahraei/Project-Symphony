@@ -1,4 +1,2 @@
 program undeclared_func;
-{
-	func("Hi");
-}
+func("Hi");

@@ -2,6 +2,3 @@ program undeclared_in_function_scope;
 fun int test(){
 	print(lalalalalalala * 5);
 }
-{
-
-}

@@ -3,7 +3,5 @@ int alpha, beta;
 fun void frob(){
 	dec b;
 	b = alpha / 3;
-};
-{
-	println(alpha + beta);
 }
+println(alpha + beta);
