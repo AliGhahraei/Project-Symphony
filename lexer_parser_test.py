@@ -116,7 +116,7 @@ class ParserTest(TestCase):
     def test_arity(self):
         self.assert_programs_raise(ARITY_PATH, ArityError)
 
-    def test_arity(self):
+    def test_return(self):
         self.assert_programs_raise(RETURN_PATH, ReturnError)
 
 
