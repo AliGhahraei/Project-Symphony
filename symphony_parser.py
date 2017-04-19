@@ -946,6 +946,6 @@ if __name__ == "__main__":
                              quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
 
                 output = play_note(file.read(), constants)
-                print(output, end='')
+                print(''.join(output), end='')
         except FileNotFoundError:
             print("The file", path, "was not found. Skipping...")
