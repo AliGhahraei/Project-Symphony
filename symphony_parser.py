@@ -212,7 +212,7 @@ class QuadrupleGenerator():
                 result_address = self.generate_temporal_address(
                     result_type)
 
-                self.generate_quad(operator, left_address, right_address, 
+                self.generate_quad(operator, left_address, right_address,
                                    result_address)
                 left_operand = (result_type, result_address)
             except IndexError:
@@ -224,7 +224,7 @@ class QuadrupleGenerator():
         self.chained_operators.clear()
         del self.operands[first_operand_idx:]
 
-        self.operands.append(left_operand)            
+        self.operands.append(left_operand)
 
     def operate_unary(self, operator_symbol, line_number):
         type_, address = self.operands.pop()
@@ -562,8 +562,8 @@ def p_logical_op(p):
 
 
 def p_chained_logical_ops(p):
-    ''' chained_logical_ops : chained_logical_op  
-                            | empty ''' 
+    ''' chained_logical_ops : chained_logical_op
+                            | empty '''
 
 def p_chained_logical_op(p):
     ''' chained_logical_op : OR level3 chained_logical_ops
@@ -582,22 +582,22 @@ def p_rel_op(p):
                | level4 LESS_EQUAL_THAN level4 chained_rel_ops
                | level4 GREATER_EQUAL_THAN level4 chained_rel_ops
                | level4 EQUALS level4 chained_rel_ops '''
-    quadruple_generator.operate_left(p[2], p.lexer.lineno) 
+    quadruple_generator.operate_left(p[2], p.lexer.lineno)
 
 
 def p_chained_rel_ops(p):
-    ''' chained_rel_ops : chained_rel_op  
-                        | empty ''' 
+    ''' chained_rel_ops : chained_rel_op
+                        | empty '''
 
 def p_chained_rel_op(p):
     ''' chained_rel_op : '<' level4 chained_rel_ops
-                       | '>' level4 chained_rel_ops 
-                       | LESS_EQUAL_THAN level4 chained_rel_ops 
-                       | GREATER_EQUAL_THAN level4 chained_rel_ops 
+                       | '>' level4 chained_rel_ops
+                       | LESS_EQUAL_THAN level4 chained_rel_ops
+                       | GREATER_EQUAL_THAN level4 chained_rel_ops
                        | EQUALS level4 chained_rel_ops '''
     quadruple_generator.chained_operators.append(p[1])
-    
-    
+
+
 def p_level4(p):
     ''' level4 : level5
                | add_subs_op '''
@@ -610,8 +610,8 @@ def p_add_subs_op(p):
 
 
 def p_chained_add_subs_ops(p):
-    ''' chained_add_subs_ops : chained_add_subs_op  
-                             | empty ''' 
+    ''' chained_add_subs_ops : chained_add_subs_op
+                             | empty '''
 
 def p_chained_add_subs_op(p):
     ''' chained_add_subs_op : '+' level5 chained_add_subs_ops
@@ -638,12 +638,12 @@ def p_times_div_mod_op(p):
 
 
 def p_chained_times_div_mod_ops(p):
-    ''' chained_times_div_mod_ops : chained_times_div_mod_op  
-                                  | empty ''' 
+    ''' chained_times_div_mod_ops : chained_times_div_mod_op
+                                  | empty '''
 
 def p_chained_times_div_mod_op(p):
-    ''' chained_times_div_mod_op : '*' level6 chained_times_div_mod_ops 
-                                 | '/' level6 chained_times_div_mod_ops 
+    ''' chained_times_div_mod_op : '*' level6 chained_times_div_mod_ops
+                                 | '/' level6 chained_times_div_mod_ops
                                  | MOD level6 chained_times_div_mod_ops '''
     quadruple_generator.chained_operators.append(p[1])
 
