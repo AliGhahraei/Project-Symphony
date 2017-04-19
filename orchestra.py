@@ -90,9 +90,13 @@ def print_(end='\n'):
     # print(printed_value, end=end)
 
 
+def goto(jump):
+    return int(jump)
+
+
 def gotof(address, jump):
     if not value(address):
-        return int(jump)
+        return goto(jump)
 
 
 OPERATIONS = {
@@ -121,7 +125,7 @@ VM_FUNCTIONS = {
     'PARAM' : store_param,
     'print' : partial(print_, end=''),
     'println' : print_,
-    'GOTO' : lambda value: int(value),
+    'GOTO' : goto,
     'GOTOF': gotof,
 }
 
