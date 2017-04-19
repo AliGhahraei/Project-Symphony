@@ -931,21 +931,27 @@ def create_parser(filepath):
     return yacc()
 
 
+def parse_file(path):
+    parser = create_parser(path)
+
+    with open(path) as file:
+        parser.parse(file.read())
+
+    with open(quadruple_generator.filepath) as file:
+        constants = {type_: {address: value for value, address in
+                             value_address.items()}
+                     for type_, value_address in
+                     quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
+
+        return ''.join(play_note(file.read(), constants))
+
+
 if __name__ == "__main__":
-    for path in argv[1:]:
-        parser = create_parser(path)
-
+    for file in argv[1:]:
         try:
-            with open(path) as file:
-                parser.parse(file.read())
-
-            with open(quadruple_generator.filepath) as file:
-                constants = {type_: {address: value for value, address in
-                                     value_address.items()}
-                             for type_, value_address in
-                             quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
-
-                output = play_note(file.read(), constants)
-                print(''.join(output), end='')
-        except FileNotFoundError:
-            print("The file", path, "was not found. Skipping...")
+            program_output = parse_file(file)
+        except FileNotFoundError as e:
+            print("\033[91mFile", file, "was not found. Skipping...\033[0m")
+        else:
+            print(f'\033[92m{file}\033[0m')
+            print(program_output)
