@@ -183,7 +183,7 @@ def play_note(lines, constants):
         try:
             quad = line_list[current_quad_idx]
         except IndexError:
-            # Finish when accessing a non-existent quadruple
+            # Finish when accessing non-existent quadruple (naive GOTO did it)
             return output
 
         try:
@@ -201,3 +201,5 @@ def play_note(lines, constants):
         else:
             handle_operation(operation, quad)
             current_quad_idx += 1
+
+    return output
