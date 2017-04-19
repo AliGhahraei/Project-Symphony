@@ -1,4 +1,0 @@
-program chained_multiplication;
-{
-	print(1 * 2 * 3);
-}
