@@ -20,6 +20,7 @@ memory = {sector[0]: {type_ : {} for type_ in Types}
 
 parameters = []
 
+output = []
 
 class UninitializedError(Exception):
     pass
@@ -85,7 +86,8 @@ def store_param(address):
 
 
 def print_(end='\n'):
-    print(parameters.pop(), end=end)
+    output.append(str(parameters.pop()) + end)
+    # print(printed_value, end=end)
 
 
 def gotof(address, jump):
@@ -172,6 +174,7 @@ def handle_operation(operation, quad):
 
 def play_note(lines, constants):
     memory['constant'] = constants
+    output.clear()
 
     line_list = [line.split() for line in lines.split('\n')]
 
@@ -180,8 +183,8 @@ def play_note(lines, constants):
         try:
             quad = line_list[current_quad_idx]
         except IndexError:
-            # Exit when accessing a non_existent quadruple
-            exit()
+            # Finish when accessing a non-existent quadruple
+            return output
 
         try:
             operation = OPERATIONS[quad[0]]
@@ -194,7 +197,7 @@ def play_note(lines, constants):
                 current_quad_idx += 1
         except IndexError:
             # No operation (empty line) might only be found at the end
-            exit()
+            return output
         else:
             handle_operation(operation, quad)
             current_quad_idx += 1
