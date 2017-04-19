@@ -6,6 +6,7 @@ from lexer import (tokens, Types, OPERATORS, UNARY_OPERATORS, CONSTANT_VALS,
 from ply.yacc import yacc
 from sys import exit, argv
 
+from print_colors import print_red, print_green
 from orchestra import (generate_memory_addresses, play_note,
                        SPECIAL_PARAMETER_TYPES)
 
@@ -951,7 +952,7 @@ if __name__ == "__main__":
         try:
             program_output = parse_file(file)
         except FileNotFoundError as e:
-            print("\033[91mFile", file, "was not found. Skipping...\033[0m")
+            print_red("File", file, "was not found. Skipping...")
         else:
-            print(f'\033[92m{file}\033[0m')
+            print_green(file)
             print(program_output)

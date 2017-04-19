@@ -1,3 +1,5 @@
+from print_colors import print_red
+
 from lexer import lexer
 from glob import glob
 from symphony_parser import (
@@ -79,7 +81,7 @@ class ParserTest(TestCase):
 
                     # print(str(exception_context.exception))
             except:
-                print('\033[91m Error!\033[0m')
+                print_red('Error!')
                 raise
             print()
         if not for_entered:
