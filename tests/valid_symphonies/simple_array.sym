@@ -1,5 +1,6 @@
 program symple_array;
-str strings[10], string, strings2[7];
+str strings[10], strings2[7];
+str greeting, farewell;
 
 greeting = "hi";
 farewell = "bye";
