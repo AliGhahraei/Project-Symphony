@@ -374,7 +374,6 @@ class QuadrupleGenerator():
 
         if is_global:
             new_address = self.ADDRESSES.global_[variable_type]
-
             self.ADDRESSES.global_[variable_type] = new_address + 1
         else:
             new_address = self.ADDRESSES.local[variable_type]
