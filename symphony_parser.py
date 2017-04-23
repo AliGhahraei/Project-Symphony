@@ -142,8 +142,7 @@ class Directory():
     def get_variable(self, name, line_number):
         variable = None
         try:
-            variable = self.functions[self.current_scope].variables[
-                name]
+            variable = self.functions[self.current_scope].variables[name]
         except KeyError:
             try:
                 variable = self.functions[Directory.GLOBAL_SCOPE].variables[name]
