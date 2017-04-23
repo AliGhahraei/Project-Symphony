@@ -10,6 +10,10 @@ class Types(IntEnum):
     DEC = 4
 
 
+class NonUserTypes(IntEnum):
+    ARRAY = 5
+
+
 tokens = (
     'VOID', 'INT_VAL', 'DEC_VAL', 'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'RETURN',
     'EXPONENTIATION', 'INCREMENT', 'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN',

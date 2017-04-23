@@ -1,8 +1,8 @@
 #!/usr/bin/python3.6
 
 from collections import deque
-from lexer import (tokens, Types, OPERATORS, UNARY_OPERATORS, CONSTANT_VALS,
-                   DUPLICATED_OPERATORS, SELF_UPDATE_OPERATORS)
+from lexer import (tokens, Types, NonUserTypes, OPERATORS, UNARY_OPERATORS,
+                   CONSTANT_VALS, DUPLICATED_OPERATORS, SELF_UPDATE_OPERATORS)
 from ply.yacc import yacc
 from sys import exit, argv
 
