@@ -103,12 +103,10 @@ class Directory():
         for parameter in parameters:
             self.functions[self.current_scope].parameter_types.appendleft(
                 parameter[0])
-            self._declare_variable(parameter[0], parameter[1], is_global,
-                                   line_number)
+            self._declare_variable(parameter, is_global, line_number)
 
         for variable in variables:
-            self._declare_variable(variable[0], variable[1], is_global,
-                                   line_number)
+            self._declare_variable(variable, is_global, line_number)
 
 
     def define_function(self, return_type, function, line_number):
@@ -121,26 +119,49 @@ class Directory():
         self.functions[function] = FunctionScope(return_type, function)
 
 
-    def _declare_variable(self, variable_type, variable, is_global, line_number):
+    def _declare_variable(self, variable, is_global, line_number):
         current_function_vars = self.functions[self.current_scope].variables
 
-        if variable in current_function_vars:
-            raise RedeclarationError(f'Error on line {line_number}: you are '
-                                     f'declaring your {variable} variable more'
-                                     f' than once')
+        try:
+            variable_type, (variable_name, array_size) = variable
+            array_size_type, array_size_value = array_size
+        except ValueError:
+            variable_type, variable_name = variable
 
-        current_function_vars[variable] = (
-            variable_type,
-            quadruple_generator.generate_variable_address(variable_type,
-                                                          is_global),
-            variable,
-            # TODO: add code for storing array size
-            None,
-        )
+            if variable_name in current_function_vars:
+                raise RedeclarationError(f'Error on line {line_number}: you are '
+                                         f'declaring your {variable_name} '
+                                         f' variable more than once')
+
+            current_function_vars[variable_name] = (
+                variable_type,
+                quadruple_generator.generate_variable_address(variable_type,
+                                                              is_global),
+                variable_name,
+            )
+        else:
+            if variable_name in current_function_vars:
+                raise RedeclarationError(f'Error on line {line_number}: you are '
+                                         f'declaring your {variable_name} variable '
+                                         f'more than once')
+
+            if array_size_type != Types.INT:
+                raise TypeError(f'Error on line {line_number}: you are trying to'
+                                f' declare an array size using a(n) '
+                                f'{array_size_type.name}, but you should use '
+                                f'a(n) {Types.INT.name} instead')
+
+            current_function_vars[variable_name] = (
+                NonUserTypes.ARRAY,
+                quadruple_generator.generate_variable_address(variable_type,
+                                                              is_global),
+                variable_name,
+                variable_type,
+                array_size_value
+            )
 
 
     def get_variable(self, name, line_number):
-        variable = None
         try:
             variable = self.functions[self.current_scope].variables[name]
         except KeyError:
@@ -189,6 +210,7 @@ class QuadrupleGenerator():
                 f'Error on line {line_number}: The {operator_symbol} operation'
                 f' cannot be used for types {left_type.name} and '
                 f'{right_type.name}')
+
 
     def operate_left(self, operator_symbol, line_number):
         self.chained_operators.append(operator_symbol)
@@ -285,13 +307,47 @@ class QuadrupleGenerator():
 
     def assign(self, name, line_number):
         variable = directory.get_variable(name, line_number)
-        result_type, result_address = self.operands.pop()
-        if variable[0] == result_type:
-            self.generate_quad('=', result_address, variable[1])
+
+        try:
+            offset_type, offset_value = directory.current_array_offset
+            del directory.current_array_offset
+        except AttributeError:
+            left_type = variable[0]
+            left_address = variable[1]
+
+            if left_type == NonUserTypes.ARRAY:
+                raise TypeError(f"Error on line {line_number}: You can't assign "
+                                f"an array directly. You can, however, assign "
+                                f"each element individually using the '[]' "
+                                f"symbols")
+        else:
+            if offset_type != Types.INT:
+                raise TypeError(f'Error on line {line_number}: you are trying to'
+                                f' access an array using a(n) '
+                                f'{offset_type.name}, but you should use '
+                                f'a(n) {Types.INT.name}')
+
+            if variable[0] != NonUserTypes.ARRAY:
+                raise TypeError(f"Error on line {line_number}: you tried to access "
+                                f"your {name} variable, but it's not an array")
+
+            # The array's real type
+            left_type = variable[3]
+
+            array_size_value = variable[4]
+            self.generate_quad('VER', offset_value, 0, array_size_value)
+
+            base_address = variable[1]
+            left_address = self.generate_temporal_address(left_type)
+            self.generate_quad('ACCESS', base_address, offset_value, left_address)
+
+        right_type, right_address = self.operands.pop()
+        if left_type == right_type:
+            self.generate_quad('=', right_address, left_address)
         else:
             raise TypeError(f'Error on line {line_number}: you are trying '
-                            f'to assign a(n) {result_type.name} value to '
-                            f'a(n) {variable[0].name} type')
+                            f'to assign a(n) {right_type.name} value to '
+                            f'a(n) {left_type.name} type')
 
 
     def generate_quad(self, *args):
@@ -337,7 +393,7 @@ class QuadrupleGenerator():
             self.generate_quad('=', called_function.return_address, result_address)
 
 
-    def special_call(self, function):
+    def special_call(self, function, line_number):
         called_function_name = self.called_functions.pop()
         parameter_types = SPECIAL_PARAMETER_TYPES[called_function_name]
 
@@ -452,6 +508,34 @@ class QuadrupleGenerator():
         current_function.return_address = return_address
 
 
+    def generate_access(self, array_name, line_number):
+        offset_type, offset_value = self.operands.pop()
+
+        if offset_type != Types.INT:
+            raise TypeError(f'Error on line {line_number}: you are trying to'
+                            f' access an array using a(n) '
+                            f'{offset_type.name}, but you should use '
+                            f'a(n) {Types.INT.name} instead')
+
+        variable = directory.get_variable(array_name, line_number)
+
+        type_ = variable[0]
+
+        if type_ != NonUserTypes.ARRAY:
+            raise TypeError(f"Error on line {line_number}: you tried to access "
+                            f"your {array_name} variable, but it's not an array")
+
+        array_size_value = variable[4]
+        self.generate_quad('VER', offset_value, 0, array_size_value)
+
+        base_address = variable[1]
+        real_type = variable[3]
+        result_address = self.generate_temporal_address(real_type)
+
+        self.generate_quad('ACCESS', base_address, offset_value, result_address)
+        return real_type, result_address
+
+
 class GrammaticalError(Exception):
     pass
 
@@ -504,7 +588,7 @@ def p_variable_group(p):
 
 
 def p_declaration_ids(p):
-    ''' declaration_ids : id other_declaration_ids '''
+    ''' declaration_ids : declaration_id other_declaration_ids '''
     if p[2]:
         p[2].append(p[1])
         p[0] = p[2]
@@ -521,11 +605,49 @@ def p_other_declaration_ids(p):
         p[0] = p[2]
 
 
-def p_id(p):
-    ''' id : ID
-           | ID '[' expression ']' '''
+def p_declaration_id(p):
+    ''' declaration_id : non_array_id
+                       | array_declaration '''
     p[0] = p[1]
-    # TODO: add code for array size
+
+
+def p_usage_id(p):
+    ''' usage_id : non_array_usage
+                 | array_usage '''
+    p[0] = p[1]
+
+
+def p_assignment_id(p):
+    ''' assignment_id : non_array_id
+                      | array_assignment '''
+    p[0] = p[1]
+
+
+def p_non_array_id(p):
+    ''' non_array_id : ID '''
+    p[0] = p[1]
+
+
+def p_array_declaration(p):
+    ''' array_declaration : ID '[' expression ']' '''
+    p[0] = p[1], quadruple_generator.operands.pop()
+
+
+def p_non_array_usage(p):
+    ''' non_array_usage : ID '''
+    # return type and address from vartable
+    p[0] = directory.get_variable(p[1], p.lexer.lineno)[0:2]
+
+
+def p_array_usage(p):
+    ''' array_usage : ID '[' expression ']' '''
+    p[0] = quadruple_generator.generate_access(p[1], p.lexer.lineno)
+
+
+def p_array_assignment(p):
+    ''' array_assignment : ID '[' expression ']' '''
+    directory.current_array_offset = quadruple_generator.operands.pop()
+    p[0] = p[1]
 
 
 def p_expression(p):
@@ -746,7 +868,7 @@ def p_argument_list(p):
 
 
 def p_assignment(p):
-    ''' assignment : id '=' expression '''
+    ''' assignment : assignment_id '=' expression '''
     quadruple_generator.assign(p[1], p.lexer.lineno)
 
 
@@ -790,7 +912,7 @@ def p_store_expression_position(p):
 
 def p_special(p):
     ''' special : special_id '(' arguments ')' '''
-    quadruple_generator.special_call(p[1])
+    quadruple_generator.special_call(p[1], p.lexer.lineno)
 
 
 def p_special_id(p):
@@ -904,9 +1026,8 @@ def p_bool_val(p):
 
 
 def p_variable_id(p):
-    ''' variable_id : id '''
-    variable = directory.get_variable(p[1], p.lexer.lineno)
-    quadruple_generator.operands.append((variable[0], variable[1]))
+    ''' variable_id : usage_id '''
+    quadruple_generator.operands.append((p[1][0], p[1][1]))
 
 
 def p_function_result(p):
