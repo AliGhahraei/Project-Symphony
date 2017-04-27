@@ -195,12 +195,12 @@ def play_note(lines, constants):
         except KeyError:
             vm_result = handle_vm_function(quad)
 
-            if(vm_result is not None):
+            if vm_result is not None:
                 current_quad_idx = vm_result
             else:
                 current_quad_idx += 1
         except IndexError:
-            # No operation (empty line) might only be found at the end
+            # Empty operation (empty line) might only be found at the end
             return output
         else:
             handle_operation(operation, quad)
