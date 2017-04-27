@@ -153,8 +153,11 @@ class Directory():
 
             current_function_vars[variable_name] = (
                 NonUserTypes.ARRAY,
-                quadruple_generator.generate_variable_address(variable_type,
-                                                              is_global),
+                quadruple_generator.generate_variable_address(
+                    variable_type,
+                    is_global,
+                    array_size_value
+                ),
                 variable_name,
                 variable_type,
                 array_size_value
@@ -340,6 +343,7 @@ class QuadrupleGenerator():
             base_address = variable[1]
             left_address = self.generate_temporal_address(left_type)
             self.generate_quad('ACCESS', base_address, offset_value, left_address)
+            left_address = "&" + str(left_address)
 
         right_type, right_address = self.operands.pop()
         if left_type == right_type:
@@ -424,15 +428,13 @@ class QuadrupleGenerator():
         self.arguments.clear()
 
 
-    def generate_variable_address(self, variable_type, is_global):
-        new_address = None
-
+    def generate_variable_address(self, variable_type, is_global, reserved=1):
         if is_global:
             new_address = self.ADDRESSES.global_[variable_type]
-            self.ADDRESSES.global_[variable_type] = new_address + 1
+            self.ADDRESSES.global_[variable_type] = new_address + reserved
         else:
             new_address = self.ADDRESSES.local[variable_type]
-            self.ADDRESSES.local[variable_type] = new_address + 1
+            self.ADDRESSES.local[variable_type] = new_address + reserved
 
         return new_address
 
@@ -533,7 +535,7 @@ class QuadrupleGenerator():
         result_address = self.generate_temporal_address(real_type)
 
         self.generate_quad('ACCESS', base_address, offset_value, result_address)
-        return real_type, result_address
+        return real_type, "&" + str(result_address)
 
 
 class GrammaticalError(Exception):
@@ -629,8 +631,10 @@ def p_non_array_id(p):
 
 
 def p_array_declaration(p):
-    ''' array_declaration : ID '[' expression ']' '''
-    p[0] = p[1], quadruple_generator.operands.pop()
+    ''' array_declaration : ID '[' int_val ']' '''
+    p[0] = p[1], p[3]
+    # The array size won't be used by anyone else
+    quadruple_generator.operands.pop()
 
 
 def p_non_array_usage(p):
@@ -1003,6 +1007,7 @@ def p_const(p):
 def p_int_val(p):
     ''' int_val : INT_VAL '''
     quadruple_generator.push_constant(Types.INT, p[1])
+    p[0] = Types.INT, p[1]
 
 
 def p_dec_val(p):

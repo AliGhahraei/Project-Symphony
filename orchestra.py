@@ -60,15 +60,24 @@ addresses = generate_memory_addresses(end_addresses=True)
 def value(address):
     try:
         address = int(address)
-        return get_address_container(address)[address]
+    except ValueError:
+        # Array pointer was found, so remove '&' at the beginning
+        address = value(address[1:])
     except KeyError as e:
         raise UninitializedError(f'Sorry, but you tried to use a variable '
                                  f'before assignment. Please check your program')
 
+    return get_address_container(address)[address]
 
-def store(value, address):
-    address = int(address)
-    get_address_container(address)[address] = value
+
+def store(value_to_store, address):
+    try:
+        address = int(address)
+    except ValueError:
+        # Array pointer was found, so remove '&' at the beginning
+        address = value(address[1:])
+
+    get_address_container(address)[address] = value_to_store
 
 
 def get_address_container(address):
@@ -99,6 +108,22 @@ def gotof(address, jump):
         return goto(jump)
 
 
+def verify_limits(offset_address, min_, array_size):
+    offset = value(offset_address)
+    array_size = int(array_size)
+    min_ = int(min_)
+
+    if not min_ <= offset < array_size:
+        raise IndexError(f"Index out of bounds: {offset}. This one should be "
+                         f"greater than or equal to {min_} and smaller than "
+                         f"{array_size}")
+
+def array_access(base_dir, offset_address, address_pointer):
+    offset = value(offset_address)
+    base_dir = int(base_dir)
+    store(base_dir + offset, address_pointer)
+
+
 OPERATIONS = {
     '+' : add,
     '-' : sub,
@@ -127,6 +152,8 @@ VM_FUNCTIONS = {
     'println' : print_,
     'GOTO' : goto,
     'GOTOF': gotof,
+    'ACCESS' : array_access,
+    'VER' : verify_limits,
 }
 
 SPECIAL_PARAMETER_TYPES = {
@@ -145,7 +172,12 @@ def handle_vm_function(quad):
     except TypeError:
         # Thrown if function needs two parameters
         address2 = quad[2]
-        return operation(address1, address2)
+
+        try:
+            return operation(address1, address2)
+        except TypeError:
+            address3 = quad[3]
+            return operation(address1, address2, address3)
     except IndexError:
         # No quad 0: parameterless
         return operation()
