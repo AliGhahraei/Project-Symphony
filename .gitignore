@@ -1,3 +1,6 @@
+# Symphony's intermediate code
+*.note
+
 # PLY generated files
 parsetab.py
 parser.out

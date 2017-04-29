@@ -1,6 +1,0 @@
-= 200000 10001
-= 216000 26000
-PARAM 10001 1
-println
-PARAM 26000 1
-println
