@@ -10,4 +10,4 @@ fun int factorial(int number){
 
 	return result;
 }
-print(factorial(4));
+print(factorial(10) + factorial(4));
