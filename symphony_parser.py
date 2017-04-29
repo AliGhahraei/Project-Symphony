@@ -200,9 +200,22 @@ class QuadrupleGenerator():
         self.chained_operators = []
 
 
+    def pop_operand(self, line_number):
+        try:
+            return self.operands.pop()
+        except IndexError:
+            self.empty_operand_error(line_number)
+
+
+    def empty_operand_error(self, line_number):
+        raise TypeError(f"Error on line {line_number}: You can't use a "
+                        f"void function here because it does not return a "
+                        f"value")
+
+
     def operate_right(self, operator_symbol, line_number):
-        right_type, right_address = self.operands.pop()
-        left_type, left_address = self.operands.pop()
+        right_type, right_address = self.pop_operand(line_number)
+        left_type, left_address = self.pop_operand(line_number)
 
         try:
             result_type = CUBE[left_type][right_type][OPERATORS[operator_symbol]]
@@ -229,8 +242,11 @@ class QuadrupleGenerator():
         right_operands_start = -len(self.chained_operators)
         first_operand_idx = right_operands_start  - 1
 
-        left_operand = self.operands[first_operand_idx]
-        right_operands = self.operands[right_operands_start:]
+        try:
+            left_operand = self.operands[first_operand_idx]
+            right_operands = self.operands[right_operands_start:]
+        except IndexError:
+            self.empty_operand_error(line_number)
 
         for right_operand, operator in zip(right_operands, operators):
             right_type, right_address = right_operand
@@ -259,7 +275,7 @@ class QuadrupleGenerator():
         self.operands.append(left_operand)
 
     def operate_unary(self, operator_symbol, line_number):
-        type_, address = self.operands.pop()
+        type_, address = self.pop_operand(line_number)
 
         try:
             result_type = UNARY_TABLE[type_][UNARY_OPERATORS[operator_symbol]]
@@ -283,7 +299,7 @@ class QuadrupleGenerator():
 
 
     def generate_boolean_structure(self, line_number, structure_name):
-        type_, address = self.operands.pop()
+        type_, address = self.pop_operand(line_number)
 
         if type_ != Types.BOOL:
             raise TypeError(
@@ -352,7 +368,7 @@ class QuadrupleGenerator():
             self.generate_quad('ACCESS', base_address, offset_value, left_address)
             left_address = "&" + str(left_address)
 
-        right_type, right_address = self.operands.pop()
+        right_type, right_address = self.pop_operand(line_number)
         if left_type == right_type:
             self.generate_quad('=', right_address, left_address)
         else:
@@ -365,10 +381,12 @@ class QuadrupleGenerator():
         self.quadruples.append(' '.join(str(arg) for arg in args))
 
 
-    def read_parameter(self):
-        self.arguments.appendleft(self.operands.pop())
     def generate_main_goto(self):
         self.quadruples[0] += ' ' + str(len(self.quadruples))
+
+
+    def read_parameter(self, line_number):
+        self.arguments.appendleft(self.pop_operand(line_number))
 
 
     def call(self, function, line_number):
@@ -485,7 +503,6 @@ class QuadrupleGenerator():
                             f' not defined beforehand. Check if you'
                             f' wrote the name correctly.')
 
-        self.generate_quad('ERA', function)
         self.called_functions.append(function)
 
     def init_special(self, function, line_number):
@@ -502,7 +519,7 @@ class QuadrupleGenerator():
             raise ReturnError(f'Error on line {line_number}: You cannot use '
                               f'return if you are not inside a function')
 
-        return_type, return_address = self.operands.pop()
+        return_type, return_address = self.pop_operand(line_number)
         expected_type = current_function.return_type
 
         if expected_type == 'VOID':
@@ -520,7 +537,7 @@ class QuadrupleGenerator():
 
 
     def generate_access(self, array_name, line_number):
-        offset_type, offset_value = self.operands.pop()
+        offset_type, offset_value = self.pop_operand(line_number)
 
         if offset_type != Types.INT:
             raise TypeError(f'Error on line {line_number}: you are trying to'
@@ -883,7 +900,7 @@ def p_arguments(p):
 def p_argument_list(p):
     ''' argument_list : expression
                       | expression ',' arguments '''
-    quadruple_generator.read_parameter()
+    quadruple_generator.read_parameter(p.lexer.lineno)
 
 
 def p_assignment(p):
