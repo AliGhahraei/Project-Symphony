@@ -419,8 +419,10 @@ class QuadrupleGenerator():
         self.arguments.clear()
 
         if called_function.return_type != 'VOID':
-            result_address = self.generate_temporal_address(
-                called_function.return_type)
+            is_global = directory.current_scope == directory.GLOBAL_SCOPE
+
+            result_address = self.generate_variable_address(
+                called_function.return_type, is_global)
             self.operands.append((called_function.return_type, result_address))
 
             if called_function.return_address == None:
