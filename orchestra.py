@@ -1,29 +1,36 @@
 from collections import namedtuple
+from copy import deepcopy
 from functools import partial
 from lexer import Types, DUPLICATED_OPERATORS
 from operator import (add, sub, mul, truediv, mod, eq, gt, lt, ge, le, and_,
                       or_, pos, neg, not_)
 
 
-MEMORY_SECTORS = [
+MEMORY_SECTORS = (
     ('global_', 10_000),
-    ('local', 50_000),
-    ('temporal', 170_000),
+    ('temporal', 130_000),
     ('constant', 200_000),
-    ('end', 240_000),
-]
+    ('local', 250_000),
+    ('end', 350_000),
+)
 
 
 memory = {sector[0]: {type_ : {} for type_ in Types}
           for sector in MEMORY_SECTORS[:-1]}
 
+activation_records = []
+stored_program_counters = []
 
 parameters = []
-
 output = []
 
 class UninitializedError(Exception):
     pass
+
+
+class ChangeContext(Exception):
+    def __init__(self, goto_line):
+        self.goto_line = goto_line
 
 
 def generate_memory_addresses(end_addresses=False):
@@ -124,6 +131,25 @@ def array_access(base_dir, offset_address, address_pointer):
     store(base_dir + offset, address_pointer)
 
 
+def end_proc():
+    memory['local'] = activation_records.pop()
+    return stored_program_counters.pop() + 1
+
+
+def gosub(function_name):
+    activation_records.append(deepcopy(memory['local']))
+
+    global directory
+    function = directory.functions[function_name]
+    for type_, address, argument in zip(function.parameter_types,
+                                        function.parameter_addresses,
+                                        parameters):
+        memory['local'][type_][address] = argument
+
+    parameters.clear()
+    raise ChangeContext(function.starting_quad)
+
+
 OPERATIONS = {
     '+' : add,
     '-' : sub,
@@ -154,6 +180,8 @@ VM_FUNCTIONS = {
     'GOTOF': gotof,
     'ACCESS' : array_access,
     'VER' : verify_limits,
+    'GOSUB' : gosub,
+    'ENDPROC' : end_proc,
 }
 
 SPECIAL_PARAMETER_TYPES = {
@@ -164,7 +192,7 @@ SPECIAL_PARAMETER_TYPES = {
 }
 
 
-def handle_vm_function(quad):
+def handle_vm_function(quad, current_quad_idx):
     try:
         operation = VM_FUNCTIONS[quad[0]]
         address1 = quad[1]
@@ -181,6 +209,10 @@ def handle_vm_function(quad):
     except IndexError:
         # No quad 0: parameterless
         return operation()
+    except ChangeContext as e:
+        stored_program_counters.append(current_quad_idx)
+
+        return e.goto_line
     except KeyError:
         raise NotImplementedError(f"This operation isn't supported yet "
                                   f"({quad[0]})")
@@ -208,7 +240,10 @@ def handle_operation(operation, quad):
                                     f'Please correct your program') from e
 
 
-def play_note(lines, constants):
+def play_note(lines, constants, directory_):
+    global directory
+    directory = directory_
+
     memory['constant'] = constants
     output.clear()
 
@@ -225,7 +260,7 @@ def play_note(lines, constants):
         try:
             operation = OPERATIONS[quad[0]]
         except KeyError:
-            vm_result = handle_vm_function(quad)
+            vm_result = handle_vm_function(quad, current_quad_idx)
 
             if vm_result is not None:
                 current_quad_idx = vm_result

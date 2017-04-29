@@ -62,13 +62,15 @@ quadruple_generator = None
 
 
 class FunctionScope():
-    def __init__(self, return_type, name):
+    def __init__(self, return_type, name, starting_quad):
         self.name = name
         self.return_type = return_type
         self.variables = {}
         self.parameter_types = deque()
+        self.parameter_addresses = deque()
         self.first_quadruple = None
         self.return_address = None
+        self.starting_quad = starting_quad
 
 
 class Directory():
@@ -103,7 +105,10 @@ class Directory():
         for parameter in parameters:
             self.functions[self.current_scope].parameter_types.appendleft(
                 parameter[0])
+
             self._declare_variable(parameter, is_global, line_number)
+            self.functions[self.current_scope].parameter_addresses.appendleft(
+                self.functions[self.current_scope].variables[parameter[1]][1])
 
         for variable in variables:
             self._declare_variable(variable, is_global, line_number)
@@ -115,8 +120,10 @@ class Directory():
                                      f' defining your {function} function more'
                                      f' than once')
 
+        starting_quad = len(quadruple_generator.quadruples)
         self.current_scope = function
-        self.functions[function] = FunctionScope(return_type, function)
+        self.functions[function] = FunctionScope(return_type, function,
+                                                 starting_quad)
 
 
     def _declare_variable(self, variable, is_global, line_number):
@@ -360,6 +367,8 @@ class QuadrupleGenerator():
 
     def read_parameter(self):
         self.arguments.appendleft(self.operands.pop())
+    def generate_main_goto(self):
+        self.quadruples[0] += ' ' + str(len(self.quadruples))
 
 
     def call(self, function, line_number):
@@ -559,12 +568,18 @@ def finalize():
 
 
 def p_program(p):
-    ''' program : PROGRAM ID ';' global_declarations function_declaration statements '''
+    ''' program : PROGRAM ID ';' global_declarations function_declaration main_goto statements '''
     finalize()
+
+
+def p_main_goto(p):
+    ''' main_goto : empty '''
+    quadruple_generator.generate_main_goto()
 
 
 def p_global_declarations(p):
     ''' global_declarations : variable_declaration '''
+    quadruple_generator.generate_quad('GOTO')
     directory.declare_variables([], p[1], p.lexer.lineno, is_global=True)
 
 
@@ -1068,7 +1083,8 @@ def parse_file(path):
                      for type_, value_address in
                      quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
 
-        return ''.join(play_note(file.read(), constants))
+        global directory
+        return ''.join(play_note(file.read(), constants, directory))
 
 
 if __name__ == "__main__":
