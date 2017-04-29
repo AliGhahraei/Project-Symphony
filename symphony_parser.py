@@ -90,7 +90,7 @@ class Directory():
                               f'{current_function.return_type.name}, but it '
                               f'does not return anything')
 
-        # self.functions[self.current_scope] = None
+        self.functions[self.current_scope].variables.clear()
         self.current_scope = Directory.GLOBAL_SCOPE
         quadruple_generator.generate_quad('ENDPROC')
 
