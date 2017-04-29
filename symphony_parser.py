@@ -94,7 +94,7 @@ class Directory():
 
         self.functions[self.current_scope].variables.clear()
         self.current_scope = Directory.GLOBAL_SCOPE
-        quadruple_generator.generate_quad('ENDPROC')
+        quadruple_generator.generate_quad('ENDPROC', current_function.name)
 
 
     def declare_variables(self, parameters, variables, line_number,
@@ -198,6 +198,7 @@ class QuadrupleGenerator():
         self.called_functions = []
         self.arguments = deque()
         self.chained_operators = []
+        self.recursive_calls = []
 
 
     def pop_operand(self, line_number):
@@ -421,7 +422,14 @@ class QuadrupleGenerator():
             result_address = self.generate_temporal_address(
                 called_function.return_type)
             self.operands.append((called_function.return_type, result_address))
-            self.generate_quad('=', called_function.return_address, result_address)
+
+            if called_function.return_address == None:
+                self.recursive_calls.append((len(self.quadruples),
+                                             result_address))
+                self.generate_quad('=')
+            else:
+                self.generate_quad('=', called_function.return_address,
+                                   result_address)
 
 
     def special_call(self, function, line_number):
@@ -534,6 +542,8 @@ class QuadrupleGenerator():
                             f'{return_type.name}')
 
         current_function.return_address = return_address
+        for quad_idx, result_address in self.recursive_calls:
+            self.quadruples[quad_idx] += f' {return_address} {result_address}'
 
 
     def generate_access(self, array_name, line_number):
@@ -1110,6 +1120,8 @@ if __name__ == "__main__":
             program_output = parse_file(file)
         except FileNotFoundError as e:
             print_red("File", file, "was not found. Skipping...")
+        except Exception as e:
+            print_red(f"ERROR in {file}: {str(e)}")
         else:
             print_green(file)
             print(program_output)

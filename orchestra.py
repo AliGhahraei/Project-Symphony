@@ -139,7 +139,16 @@ def array_access(base_dir, offset_address, address_pointer):
     store(base_dir + offset, address_pointer)
 
 
-def end_proc():
+def end_proc(function_name):
+    return_address = directory.functions[function_name].return_address
+    if return_address != None:
+        return_type = directory.functions[function_name].return_type
+        try:
+            return_value = memory['local'][return_type][return_address]
+            activation_records[-1][return_type][return_address] = return_value
+        except KeyError:
+            pass
+
     memory['local'] = activation_records.pop()
     return stored_program_counters.pop() + 1
 
