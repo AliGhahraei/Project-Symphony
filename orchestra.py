@@ -70,11 +70,12 @@ def value(address):
     except ValueError:
         # Array pointer was found, so remove '&' at the beginning
         address = value(address[1:])
+
+    try:
+        return get_address_container(address)[address]
     except KeyError as e:
         raise UninitializedError(f'Sorry, but you tried to use a variable '
                                  f'before assignment. Please check your program')
-
-    return get_address_container(address)[address]
 
 
 def store(value_to_store, address):
@@ -102,7 +103,14 @@ def store_param(address):
 
 
 def print_(end='\n'):
-    output.append(str(parameters.pop()) + end)
+    parameter = parameters.pop()
+
+    if isinstance(parameter, bool):
+        parameter = str(parameter).lower()
+    else:
+        parameter = str(parameter)
+
+    output.append(parameter + end)
     # print(printed_value, end=end)
 
 
