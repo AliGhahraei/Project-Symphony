@@ -14,4 +14,4 @@ fun int fibonacci(int term) {
 
 	return result;
 }
-print(fibonacci(6));
+print(fibonacci(9));
