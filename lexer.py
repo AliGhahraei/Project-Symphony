@@ -53,7 +53,7 @@ keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in CONSTANT_VALS})
 
 special_ids = {'print', 'println', 'read', 'sqrt', 'log', 'random',
                'little_star', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'concat',
-               'length', 'copy', 'get'}
+               'length', 'copy', 'get', 'to_str', 'input'}
 
 
 def t__MULTI_LINE_COMMENT(t):

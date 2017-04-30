@@ -2,6 +2,8 @@ from collections import namedtuple
 from copy import deepcopy
 from functools import partial
 from lexer import Types, DUPLICATED_OPERATORS
+from math import sqrt, log
+from random import random
 from operator import (add, sub, mul, truediv, mod, eq, gt, lt, ge, le, and_,
                       or_, pos, neg, not_)
 
@@ -99,11 +101,11 @@ def get_address_container(address):
 
 
 def store_param(address):
-    parameters.append(value(address))
+    parameters.append(address)
 
 
 def print_(end='\n'):
-    parameter = parameters.pop()
+    parameter = value(parameters.pop())
 
     if isinstance(parameter, bool):
         parameter = str(parameter).lower()
@@ -112,6 +114,27 @@ def print_(end='\n'):
 
     output.append(parameter + end)
     # print(printed_value, end=end)
+
+
+def get(return_address):
+    index = value(parameters.pop())
+    string = value(parameters.pop())
+    char = string[index]
+    store(char, return_address)
+
+
+def copy():
+    destination_address = parameters.pop()
+    source_value = value(parameters.pop())
+    store(source_value, destination_address)
+
+
+def length(return_address):
+    store(len(value(parameters.pop())), return_address)
+
+
+def sqrt_(return_address):
+    store(sqrt(value(parameters.pop())), return_address)
 
 
 def goto(jump):
@@ -161,10 +184,58 @@ def gosub(function_name):
     for type_, address, argument in zip(function.parameter_types,
                                         function.parameter_addresses,
                                         parameters):
-        memory['local'][type_][address] = argument
+        memory['local'][type_][address] = value(argument)
 
     parameters.clear()
     raise ChangeContext(function.starting_quad)
+
+
+def log_(return_address):
+    store(log(value(parameters.pop())), return_address)
+
+
+def random_(return_address):
+    store(random(), return_address)
+
+
+def little_star():
+    pass
+
+
+def A():
+    pass
+
+
+def B():
+    pass
+
+
+def C():
+    pass
+
+
+def D():
+    pass
+
+
+def E():
+    pass
+
+
+def F():
+    pass
+
+
+def G():
+    pass
+
+
+def to_str(return_address):
+    store(str(value(parameters.pop())), return_address)
+
+
+def input_(return_address):
+    store("proximamente", return_address)
 
 
 OPERATIONS = {
@@ -193,6 +264,22 @@ VM_FUNCTIONS = {
     'PARAM' : store_param,
     'print' : partial(print_, end=''),
     'println' : print_,
+    'sqrt' : sqrt_,
+    'log' : log_,
+    'get' : get,
+    'little_star' : little_star,
+    'A' : A,
+    'B' : B,
+    'C' : C,
+    'D' : D,
+    'E' : E,
+    'F' : F,
+    'G' : G,
+    'length' : length,
+    'copy' : copy,
+    'random' : random_,
+    'to_str' : to_str,
+    'input' : input_,
     'GOTO' : goto,
     'GOTOF': gotof,
     'ACCESS' : array_access,
@@ -201,11 +288,26 @@ VM_FUNCTIONS = {
     'ENDPROC' : end_proc,
 }
 
-SPECIAL_PARAMETER_TYPES = {
-    'print' : [{type_ for type_ in Types}],
-    'println' : [{type_ for type_ in Types}],
-    'to_str' : [{type_ for type_ in Types}],
-    'get' : [{Types.STR}, {Types.INT}],
+SPECIAL_SIGNATURES = {
+    'print' : (None, [{type_ for type_ in Types}]),
+    'println' : (None, [{type_ for type_ in Types}]),
+    'to_str' : (Types.STR, [{type_ for type_ in Types}]),
+    'get' : (Types.CHAR, [{Types.STR}, {Types.INT}]),
+    'sqrt' : (Types.DEC, [{Types.INT, Types.DEC}]),
+    'log' : (Types.DEC, [{Types.INT, Types.DEC}]),
+    'random' : (Types.DEC, []),
+    'little_star' : (None, []),
+    'A' : (None, []),
+    'B' : (None, []),
+    'C' : (None, []),
+    'D' : (None, []),
+    'E' : (None, []),
+    'F' : (None, []),
+    'G' : (None, []),
+    'length' : (Types.INT, [{Types.STR}]),
+    'copy' : (None, [{Types.STR}, {Types.STR}]),
+    'to_str' : (Types.STR, [{type_ for type_ in Types}]),
+    'input' : (Types.STR, []),
 }
 
 

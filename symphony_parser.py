@@ -8,7 +8,7 @@ from sys import exit, argv
 
 from print_colors import print_red, print_green
 from orchestra import (generate_memory_addresses, play_note,
-                       SPECIAL_PARAMETER_TYPES)
+                       SPECIAL_SIGNATURES)
 
 
 CUBE = [
@@ -454,7 +454,7 @@ class QuadrupleGenerator():
 
     def special_call(self, function, line_number):
         called_function_name = self.called_functions.pop()
-        parameter_types = SPECIAL_PARAMETER_TYPES[called_function_name]
+        return_type, parameter_types = SPECIAL_SIGNATURES[called_function_name]
 
         if len(self.arguments) != len(parameter_types):
             raise ArityError(f'Error on line {line_number}: You are sending '
@@ -479,7 +479,13 @@ class QuadrupleGenerator():
 
             self.generate_quad('PARAM', argument_address, i)
 
-        self.generate_quad(called_function_name)
+        if return_type == None:
+            self.generate_quad(called_function_name)
+        else:
+            return_address = self.generate_temporal_address(return_type)
+            self.generate_quad(called_function_name, return_address)
+            self.operands.append((return_type, return_address))
+
         self.arguments.clear()
 
 
@@ -696,7 +702,7 @@ def p_array_declaration(p):
     ''' array_declaration : ID '[' int_val ']' '''
     p[0] = p[1], p[3]
     # The array size won't be used by anyone else
-    quadruple_generator.operands.pop()
+    quadruple_generator.pop_operand(p.lexer.lineno)
 
 
 def p_non_array_usage(p):
@@ -712,7 +718,8 @@ def p_array_usage(p):
 
 def p_array_assignment(p):
     ''' array_assignment : ID '[' expression ']' '''
-    directory.current_array_offset = quadruple_generator.operands.pop()
+    directory.current_array_offset = quadruple_generator.pop_operand(
+        p.lexer.lineno)
     p[0] = p[1]
 
 
