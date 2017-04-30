@@ -1149,8 +1149,8 @@ def parse_file(path):
         return ''.join(play_note(file.read(), constants, directory))
 
 
-if __name__ == "__main__":
-    for file in argv[1:]:
+def parse(files=argv[1:]):
+    for file in files:
         try:
             program_output = parse_file(file)
         except FileNotFoundError as e:
@@ -1160,3 +1160,7 @@ if __name__ == "__main__":
         else:
             print_green(file)
             print(program_output)
+
+
+if __name__ == "__main__":
+    parse()

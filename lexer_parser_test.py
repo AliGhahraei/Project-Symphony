@@ -8,6 +8,7 @@ from symphony_parser import (
     RedeclarationError,
     MisplacedStatementError,
     ArityError,
+    parse,
 )
 from unittest import TestCase, main
 
@@ -122,6 +123,11 @@ class ParserTest(TestCase):
 
     def test_misplaced(self):
         self.assert_programs_raise(MISPLACED_PATH, MisplacedStatementError)
+
+
+class OrchestraTest(TestCase):
+    def test_right(self):
+        parse(glob(VALID_PROGRAMS_PATH + '*.sym'))
 
 
 if __name__ == '__main__':
