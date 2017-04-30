@@ -199,7 +199,21 @@ def random_(return_address):
 
 
 def little_star():
-    pass
+    C()
+    C()
+    G()
+    G()
+    A()
+    A()
+    G()
+
+    F()
+    F()
+    E()
+    E()
+    D()
+    D()
+    C()
 
 
 def A():
