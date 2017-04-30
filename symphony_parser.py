@@ -199,6 +199,7 @@ class QuadrupleGenerator():
         self.arguments = deque()
         self.chained_operators = []
         self.recursive_calls = []
+        self.pending_breaks = []
 
 
     def pop_operand(self, line_number):
@@ -322,7 +323,18 @@ class QuadrupleGenerator():
         expression_quad = self.pending_jumps.pop()
 
         self.generate_quad('GOTO', expression_quad)
-        self.quadruples[gotof_quad] += ' ' + str(len(self.quadruples))
+
+        quad_after_while = len(self.quadruples)
+        self.quadruples[gotof_quad] += ' ' + str(quad_after_while)
+
+        for pending_break_quad in self.pending_breaks:
+            self.quadruples[pending_break_quad] += ' ' + str(quad_after_while)
+        self.pending_breaks.clear()
+
+
+    def generate_break(self, line_number):
+        self.pending_breaks.append(len(self.quadruples))
+        self.generate_quad('GOTO')
 
 
     def add_else_jumps(self):
@@ -834,6 +846,11 @@ def p_decrement(p):
     quadruple_generator.operate_unary(p[1], p.lexer.lineno)
 
 
+def p_break(p):
+    ''' break : BREAK '''
+    quadruple_generator.generate_break(p.lexer.lineno)
+
+
 def p_function_declaration(p):
     ''' function_declaration : function function_declaration
                              | empty'''
@@ -886,7 +903,8 @@ def p_statement(p):
                  | special
                  | return
                  | increment
-                 | decrement '''
+                 | decrement
+                 | break '''
 
 
 def p_no_colon_statement(p):

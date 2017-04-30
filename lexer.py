@@ -18,7 +18,7 @@ tokens = (
     'VOID', 'INT_VAL', 'DEC_VAL', 'CHAR_VAL', 'STR_VAL', 'BOOL_VAL', 'RETURN',
     'EXPONENTIATION', 'INCREMENT', 'DECREMENT', 'EQUALS', 'GREATER_EQUAL_THAN',
     'LESS_EQUAL_THAN', 'AND', 'OR', 'NOT', 'FUN', 'WHILE', 'IF', 'ELSE',
-    'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD', 'PROGRAM',
+    'ELSEIF', 'ID', 'SPECIAL_ID', 'MOD', 'PROGRAM', 'BREAK'
 ) + tuple(datatype.name for datatype in Types)
 
 
@@ -45,7 +45,7 @@ CONSTANT_VALS = {'true' : True, 'false' : False}
 
 keywords_named_as_types = ['void', 'equals', 'and', 'or', 'not', 'fun', 'while',
                            'if', 'else', 'elseif', 'program', 'mod', 'int',
-                           'dec', 'char', 'str', 'bool', 'return']
+                           'dec', 'char', 'str', 'bool', 'return', 'break']
 keywords_to_types = {keyword: keyword.upper()
                      for keyword in keywords_named_as_types}
 keywords_to_types.update({keyword: 'BOOL_VAL' for keyword in CONSTANT_VALS})
