@@ -4,7 +4,7 @@ int one_before, two_before, i, sum, t;
 
 term = 8;
 
-if(term <= 0 or (term equals 1)) {
+if(term <= 0 or term equals 1) {
 	result = 0;
 } else {
 	one_before = 1;
