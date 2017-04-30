@@ -87,7 +87,7 @@ class Directory():
 
         if (current_function.return_type != 'VOID'
           and current_function.return_address is None):
-            raise ReturnError(f'Error on line {line_number}: This function '
+            raise MisplacedStatementError(f'Error on line {line_number}: This function '
                               f'was supposed to return a(n) '
                               f'{current_function.return_type.name}, but it '
                               f'does not return anything')
@@ -200,6 +200,7 @@ class QuadrupleGenerator():
         self.chained_operators = []
         self.recursive_calls = []
         self.pending_breaks = []
+        self.open_whiles = 0
 
 
     def pop_operand(self, line_number):
@@ -333,6 +334,11 @@ class QuadrupleGenerator():
 
 
     def generate_break(self, line_number):
+        if self.open_whiles == 0:
+            raise MisplacedStatementError(f'Error on line {line_number}: You '
+                                          f'must be inside a while to use a '
+                                          f'break')
+
         self.pending_breaks.append(len(self.quadruples))
         self.generate_quad('GOTO')
 
@@ -534,18 +540,18 @@ class QuadrupleGenerator():
         current_function = directory.functions[directory.current_scope]
 
         if current_function.return_address is not None:
-            raise ReturnError('You cannot have multiple returns inside a '
+            raise MisplacedStatementError('You cannot have multiple returns inside a '
                               'function')
 
         if directory.current_scope == directory.GLOBAL_SCOPE:
-            raise ReturnError(f'Error on line {line_number}: You cannot use '
+            raise MisplacedStatementError(f'Error on line {line_number}: You cannot use '
                               f'return if you are not inside a function')
 
         return_type, return_address = self.pop_operand(line_number)
         expected_type = current_function.return_type
 
         if expected_type == 'VOID':
-            raise ReturnError(f'Error on line {line_number}: This function was '
+            raise MisplacedStatementError(f'Error on line {line_number}: This function was '
                             f'declared with a VOID return type, so it should '
                             f'not have a return here')
 
@@ -596,7 +602,7 @@ class RedeclarationError(Exception):
     pass
 
 
-class ReturnError(Exception):
+class MisplacedStatementError(Exception):
     pass
 
 
@@ -959,6 +965,7 @@ def p_add_pending_if(p):
 
 def p_cycle(p):
     ''' cycle : WHILE '(' store_expression_position expression while_quad ')' block add_pending_while'''
+    quadruple_generator.open_whiles -= 1
 
 
 def p_add_pending_while(p):
@@ -969,6 +976,7 @@ def p_add_pending_while(p):
 def p_while_quad(p):
     ''' while_quad : empty '''
     quadruple_generator.generate_boolean_structure(p.lexer.lineno, 'while')
+    quadruple_generator.open_whiles += 1
 
 
 def p_store_expression_position(p):

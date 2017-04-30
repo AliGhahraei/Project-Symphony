@@ -6,7 +6,7 @@ from symphony_parser import (
     create_parser,
     GrammaticalError,
     RedeclarationError,
-    ReturnError,
+    MisplacedStatementError,
     ArityError,
 )
 from unittest import TestCase, main
@@ -18,7 +18,7 @@ REDECLARATION_PATH = 'tests/redeclaration/'
 UNDECLARED_PATH = 'tests/undeclared_usages/'
 WRONG_TYPES_PATH = 'tests/wrong_types/'
 ARITY_PATH = 'tests/arity/'
-RETURN_PATH = 'tests/return/'
+MISPLACED_PATH = 'tests/misplaced/'
 
 
 class LexerTest(TestCase):
@@ -120,8 +120,8 @@ class ParserTest(TestCase):
     def test_arity(self):
         self.assert_programs_raise(ARITY_PATH, ArityError)
 
-    def test_return(self):
-        self.assert_programs_raise(RETURN_PATH, ReturnError)
+    def test_misplaced(self):
+        self.assert_programs_raise(MISPLACED_PATH, MisplacedStatementError)
 
 
 if __name__ == '__main__':
