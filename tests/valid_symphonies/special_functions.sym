@@ -1,5 +1,8 @@
 program special_functions;
 str string, string2;
+dec val;
+
+val = 3.14;
 string = "Normal string";
 copy(string, string2);
 
@@ -10,6 +13,7 @@ println("length: " + to_str(length(string)));
 println("square root: " + to_str(sqrt(9) + sqrt(2.5)));
 println("log: " + to_str(log(10)));
 println("random: " + to_str(random()));
+println("floor & ceil: " + to_str(floor(val)) + " " + to_str(ceil(val)));
 println("input: " + input());
 
 little_star();

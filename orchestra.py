@@ -2,7 +2,7 @@ from collections import namedtuple
 from copy import deepcopy
 from functools import partial
 from lexer import Types, DUPLICATED_OPERATORS
-from math import sqrt, log
+from math import sqrt, log, floor, ceil
 from random import random
 from operator import (add, sub, mul, truediv, mod, eq, gt, lt, ge, le, and_,
                       or_, pos, neg, not_)
@@ -234,6 +234,14 @@ def to_str(return_address):
     store(str(value(parameters.pop())), return_address)
 
 
+def floor_(return_address):
+    store(floor(value(parameters.pop())), return_address)
+
+
+def ceil_(return_address):
+    store(ceil(value(parameters.pop())), return_address)
+
+
 def input_(return_address):
     store("proximamente", return_address)
 
@@ -280,6 +288,8 @@ VM_FUNCTIONS = {
     'random' : random_,
     'to_str' : to_str,
     'input' : input_,
+    'floor' : floor_,
+    'ceil' : ceil_,
     'GOTO' : goto,
     'GOTOF': gotof,
     'ACCESS' : array_access,
@@ -308,6 +318,8 @@ SPECIAL_SIGNATURES = {
     'copy' : (None, [{Types.STR}, {Types.STR}]),
     'to_str' : (Types.STR, [{type_ for type_ in Types}]),
     'input' : (Types.STR, []),
+    'floor' : (Types.INT, [{Types.DEC}]),
+    'ceil' : (Types.INT, [{Types.DEC}]),
 }
 
 
