@@ -1,4 +1,11 @@
 #!/usr/bin/python3.6
+"""Parser for project symphony. It uses PLY's grammar and two helper classes.
+
+The module uses PLY's grammar with extra actions between rules to generate the
+correct semantic actions. It employs a QuadrupleGenerator class and a Directory
+class to validate the user's code through semantics and to generate intermediate
+code for orchestra
+ """
 
 from collections import deque
 from lexer import (tokens, Types, NonUserTypes, OPERATORS, UNARY_OPERATORS,
@@ -11,6 +18,9 @@ from orchestra import (generate_memory_addresses, play_note,
                        SPECIAL_SIGNATURES)
 
 
+# Semantic cube. In charge of validating if an operation can be applied to two
+# operands. It can return a None or raise an IndexError if the types can't be
+# operated or a symphony type if they can.
 CUBE = [
     [
         [Types.INT] * 3 + [Types.DEC] + [Types.INT] * 2 + [Types.BOOL] * 5,
@@ -49,6 +59,7 @@ CUBE = [
     ],
 ]
 
+# Unary table. Validates that a unary operator can be applied to a given type
 UNARY_TABLE = [
     [Types.INT.value] * 4,
     [],
@@ -57,11 +68,16 @@ UNARY_TABLE = [
     [Types.DEC.value] *4,
 ]
 
+# Directory an quadruple generator contain the single instance of their eponymous
+# classes. This was not necessary, but the team did not know about the
+# possibility of encapsulating parts of the grammar and semantics in a module
+# when working with PLY
 directory = None
 quadruple_generator = None
 
 
 class FunctionScope():
+    """ Manage all contents of a given scope """
     def __init__(self, return_type, name, starting_quad):
         self.name = name
         self.return_type = return_type
@@ -74,6 +90,11 @@ class FunctionScope():
 
 
 class Directory():
+    """Control function definition and variable declaration and access
+
+    This module has a global scope, a current one and a dictionary of functions.
+    It also provides functions to access and modify such objects
+    """
     GLOBAL_SCOPE = None
 
     def __init__(self):
@@ -83,8 +104,10 @@ class Directory():
 
 
     def end_definition(self, line_number):
+        """ Called to finish defining a function in the grammar """
         current_function = self.functions[self.current_scope]
 
+        # Validate that every function has a return if not VOID
         if (current_function.return_type != 'VOID'
           and current_function.return_address is None):
             raise MisplacedStatementError(f'Error on line {line_number}: This function '
@@ -99,27 +122,40 @@ class Directory():
 
     def declare_variables(self, parameters, variables, line_number,
                           is_global=False):
+        """Invoked to declare groups of variables in functions (even global)
+
+        This function declares variables in 'bundles' collected in a function
+        definition. It declares parameters and variables. If one wishes to
+        define the global scope, a keyword can be passed
+        """
+        # Store where the function starts
         self.functions[self.current_scope].first_quadruple = len(
             quadruple_generator.quadruples)
 
         for parameter in parameters:
+            # parameter[0] has its type, which is stored in the signature
             self.functions[self.current_scope].parameter_types.appendleft(
                 parameter[0])
 
+            # Declare the actual variable and also store it in parameters
             self._declare_variable(parameter, is_global, line_number)
             self.functions[self.current_scope].parameter_addresses.appendleft(
                 self.functions[self.current_scope].variables[parameter[1]][1])
 
+        # Declare each normal variable
         for variable in variables:
             self._declare_variable(variable, is_global, line_number)
 
 
     def define_function(self, return_type, function, line_number):
+        """ Define an individual function """
+        # Reject multiple declarations
         if function in self.functions:
             raise RedeclarationError(f'Error on line {line_number}: you are'
                                      f' defining your {function} function more'
                                      f' than once')
 
+        # Create a new function with a starting quad in the current quad
         starting_quad = len(quadruple_generator.quadruples)
         self.current_scope = function
         self.functions[function] = FunctionScope(return_type, function,
@@ -127,12 +163,15 @@ class Directory():
 
 
     def _declare_variable(self, variable, is_global, line_number):
+        """ Declare individual variables """
         current_function_vars = self.functions[self.current_scope].variables
 
         try:
+            # Unpack variable and array size
             variable_type, (variable_name, array_size) = variable
             array_size_type, array_size_value = array_size
         except ValueError:
+            # An exception means that the variable is not an array
             variable_type, variable_name = variable
 
             if variable_name in current_function_vars:
@@ -140,6 +179,7 @@ class Directory():
                                          f'declaring your {variable_name} '
                                          f' variable more than once')
 
+            # Create a non-dimensional variable
             current_function_vars[variable_name] = (
                 variable_type,
                 quadruple_generator.generate_variable_address(variable_type,
@@ -149,15 +189,18 @@ class Directory():
         else:
             if variable_name in current_function_vars:
                 raise RedeclarationError(f'Error on line {line_number}: you are '
-                                         f'declaring your {variable_name} variable '
-                                         f'more than once')
+                                         f'declaring your {variable_name} '
+                                         f'variable more than once')
 
+
+            # Validate array size type
             if array_size_type != Types.INT:
                 raise TypeError(f'Error on line {line_number}: you are trying to'
                                 f' declare an array size using a(n) '
                                 f'{array_size_type.name}, but you should use '
                                 f'a(n) {Types.INT.name} instead')
 
+            # Create a dimensional variable
             current_function_vars[variable_name] = (
                 NonUserTypes.ARRAY,
                 quadruple_generator.generate_variable_address(
@@ -172,6 +215,7 @@ class Directory():
 
 
     def get_variable(self, name, line_number):
+        """ Try to return a variable and fail if it's not defined """
         try:
             variable = self.functions[self.current_scope].variables[name]
         except KeyError:
@@ -188,6 +232,14 @@ class Directory():
 
 
 class QuadrupleGenerator():
+    """Generate quadruples and assign addresses in semantics
+
+    This class registers addresses for each value in the language (including
+    constants, variables, temporals, etc.) It also stores any kind of
+    information that is necessary in order to generate quadruples like
+    operands, jumps, recursive calls (They are created when a function
+    definition is not finished and must receive a return address later on).
+    """
     def __init__(self, filepath):
         self.ADDRESSES = generate_memory_addresses()
         self.filepath = filepath
@@ -204,6 +256,7 @@ class QuadrupleGenerator():
 
 
     def pop_operand(self, line_number):
+        """ Give an operand to the caller or fail with an exception """
         try:
             return self.operands.pop()
         except IndexError:
@@ -217,10 +270,13 @@ class QuadrupleGenerator():
 
 
     def operate_right(self, operator_symbol, line_number):
+        """ Called for right-associative operators """
+        # Pop left and right operands
         right_type, right_address = self.pop_operand(line_number)
         left_type, left_address = self.pop_operand(line_number)
 
         try:
+            # try to get a result type and generate a quadruple if successful
             result_type = CUBE[left_type][right_type][OPERATORS[operator_symbol]]
             if result_type == None:
                 raise IndexError('Result is None')
@@ -239,9 +295,18 @@ class QuadrupleGenerator():
 
 
     def operate_left(self, operator_symbol, line_number):
+        """ Called for left-associative operators
+
+        This function provides a similar interface to operate_right, but needs
+        to iterate its chained operands. That is because a botttom-up parser
+        will read its operands from right to left and, in order to correct that,
+        a queue was used to store chained operators until the end of the current
+        operator level"""
         self.chained_operators.append(operator_symbol)
         operators = self.chained_operators[::-1]
 
+        # Right operands are chained operands after the first one. This will be
+        # iterated over and operated against the operator before each of them
         right_operands_start = -len(self.chained_operators)
         first_operand_idx = right_operands_start  - 1
 
@@ -251,11 +316,13 @@ class QuadrupleGenerator():
         except IndexError:
             self.empty_operand_error(line_number)
 
+        # Iterate over the right operands and operate with the left one
         for right_operand, operator in zip(right_operands, operators):
             right_type, right_address = right_operand
             left_type, left_address = left_operand
 
             try:
+                # Generate quad if result type is valid
                 result_type = CUBE[left_type][right_type][OPERATORS[operator]]
                 if result_type == None:
                     raise IndexError('Result is None')
@@ -272,12 +339,14 @@ class QuadrupleGenerator():
                     f' cannot be used for types {left_type.name} and '
                     f'{right_type.name}')
 
+        # Clean the chained operators and store the last result in operands
         self.chained_operators.clear()
         del self.operands[first_operand_idx:]
 
         self.operands.append(left_operand)
 
     def operate_unary(self, operator_symbol, line_number):
+        """ Same as the other operating functions, but for unary operators """
         type_, address = self.pop_operand(line_number)
 
         try:
@@ -302,6 +371,7 @@ class QuadrupleGenerator():
 
 
     def generate_boolean_structure(self, line_number, structure_name):
+        """ Generates a while or an if with its GOTOF """
         type_, address = self.pop_operand(line_number)
 
         if type_ != Types.BOOL:
@@ -315,6 +385,7 @@ class QuadrupleGenerator():
 
 
     def add_pending_if(self):
+        """ Called to close an unclosed if's jump using the current quad """
         self.quadruples[self.pending_jumps.pop()] += ' ' + str(len(
             self.quadruples))
 
@@ -325,6 +396,8 @@ class QuadrupleGenerator():
 
         self.generate_quad('GOTO', expression_quad)
 
+        # Store the quad that will go after the while, because it may be used
+        # in GOTOS from whiles or breaks
         quad_after_while = len(self.quadruples)
         self.quadruples[gotof_quad] += ' ' + str(quad_after_while)
 
@@ -351,6 +424,7 @@ class QuadrupleGenerator():
 
 
     def assign(self, name, line_number):
+        """ Assign a variable with a given name """
         variable = directory.get_variable(name, line_number)
 
         try:
@@ -379,12 +453,17 @@ class QuadrupleGenerator():
             # The array's real type
             left_type = variable[3]
 
+            # generate verification quad
             array_size_value = variable[4]
             self.generate_quad('VER', offset_value, 0, array_size_value)
 
+            # Generate a left address using the offset of the access
             base_address = variable[1]
             left_address = self.generate_temporal_address(left_type)
             self.generate_quad('ACCESS', base_address, offset_value, left_address)
+            # '&' is used for pointers in orchestra. As the base address and the
+            # offset address were added like integers, the VM has to remember to
+            # Dereference the addition
             left_address = "&" + str(left_address)
 
         right_type, right_address = self.pop_operand(line_number)
@@ -409,6 +488,7 @@ class QuadrupleGenerator():
 
 
     def call(self, function, line_number):
+        """ Call a function, verifying its signature first """
         called_function_name = self.called_functions.pop()
         called_function = directory.functions[called_function_name]
         parameter_types = called_function.parameter_types
@@ -420,6 +500,7 @@ class QuadrupleGenerator():
                              f'{called_function_name}. It needs '
                              f'{len(parameter_types)}')
 
+        # Generate parameter load quadruples if types allow it
         for i, (argument, parameter_type) in enumerate(
           zip(self.arguments, parameter_types), start=1):
             argument_type, argument_address = argument
@@ -436,14 +517,21 @@ class QuadrupleGenerator():
         self.generate_quad('GOSUB', called_function_name)
         self.arguments.clear()
 
+        # Generate a return function for non-voids
         if called_function.return_type != 'VOID':
             is_global = directory.current_scope == directory.GLOBAL_SCOPE
 
+            # Store the resulting address of a local variable which will
+            # contain the return value. It's local to prevent the VM from
+            # wiping it when changing context
             result_address = self.generate_variable_address(
                 called_function.return_type, is_global)
             self.operands.append((called_function.return_type, result_address))
 
             if called_function.return_address == None:
+                # If a function has no return address, it is because its
+                # definition is not yet finished, which implies a recursive
+                # call
                 self.recursive_calls.append((len(self.quadruples),
                                              result_address))
                 self.generate_quad('=')
@@ -453,6 +541,7 @@ class QuadrupleGenerator():
 
 
     def special_call(self, function, line_number):
+        """ Call the last special function """
         called_function_name = self.called_functions.pop()
         return_type, parameter_types = SPECIAL_SIGNATURES[called_function_name]
 
@@ -463,11 +552,13 @@ class QuadrupleGenerator():
                              f'{called_function_name}. It needs '
                              f'{len(parameter_types)}')
 
+        # Iterate each argument and set of allowed types for a given function
         for i, (argument, allowed_types) in enumerate(
           zip(self.arguments, parameter_types), start=1):
             argument_type, argument_address = argument
 
             if argument_type not in allowed_types:
+                # Join for error message
                 allowed_list = ', '.join([type_name.name for type_name
                                          in allowed_types])
 
@@ -482,6 +573,7 @@ class QuadrupleGenerator():
         if return_type == None:
             self.generate_quad(called_function_name)
         else:
+            # If the special call has a return type, add a temp address
             return_address = self.generate_temporal_address(return_type)
             self.generate_quad(called_function_name, return_address)
             self.operands.append((return_type, return_address))
@@ -490,7 +582,9 @@ class QuadrupleGenerator():
 
 
     def generate_variable_address(self, variable_type, is_global, reserved=1):
+        """ Generates an address. Employs an address counter obtained from VM """
         if is_global:
+            # ADDRESSES is a special structure for book keeping
             new_address = self.ADDRESSES.global_[variable_type]
             self.ADDRESSES.global_[variable_type] = new_address + reserved
         else:
@@ -501,9 +595,11 @@ class QuadrupleGenerator():
 
 
     def push_constant(self, type_, value):
+        """ Add a constat to the constant dictionary """
         try:
             address = self.CONSTANT_ADDRESS_DICT[type_][value]
         except KeyError:
+            # Store address just to use it later (Otherwise it's a += 1)
             address = self.ADDRESSES.constant[type_]
             self.ADDRESSES.constant[type_] = address + 1
 
@@ -519,6 +615,7 @@ class QuadrupleGenerator():
 
 
     def write_quads(self):
+        """ Write quadruples in a .note file named like the original symphony"""
         self.filepath = self.filepath[:-4] + '.note'
 
         with open(self.filepath, 'w') as file:
@@ -526,9 +623,11 @@ class QuadrupleGenerator():
 
 
     def store_expression_position(self):
+        """ add the current quadruple to pending jumps """
         self.pending_jumps.append(len(self.quadruples))
 
     def init_call(self, function, line_number):
+        """ Initialize a call to a function """
         try:
             directory.functions[function]
         except KeyError:
@@ -543,6 +642,7 @@ class QuadrupleGenerator():
         self.called_functions.append(function)
 
     def generate_return(self, line_number):
+        """ Generate a retun """
         current_function = directory.functions[directory.current_scope]
 
         if current_function.return_address is not None:
@@ -558,8 +658,8 @@ class QuadrupleGenerator():
 
         if expected_type == 'VOID':
             raise MisplacedStatementError(f'Error on line {line_number}: This function was '
-                            f'declared with a VOID return type, so it should '
-                            f'not have a return here')
+                                          f'declared with a VOID return type, so it should '
+                                          f'not have a return here')
 
         if return_type != expected_type:
             raise TypeError(f'Error on line {line_number}: Your '
@@ -567,12 +667,14 @@ class QuadrupleGenerator():
                             f'{expected_type.name}, but it tried to return a(n) '
                             f'{return_type.name}')
 
+        # Store return address in this quadruple and in recursive functions
         current_function.return_address = return_address
         for quad_idx, result_address in self.recursive_calls:
             self.quadruples[quad_idx] += f' {return_address} {result_address}'
 
 
     def generate_access(self, array_name, line_number):
+        """ Generate an array access """
         offset_type, offset_value = self.pop_operand(line_number)
 
         if offset_type != Types.INT:
@@ -601,19 +703,19 @@ class QuadrupleGenerator():
 
 
 class GrammaticalError(Exception):
-    pass
+    """ Raise when PLY's can't parse the file """
 
 
 class RedeclarationError(Exception):
-    pass
+    """ Raise when something is redeclared (a variable, a function, etc.) """
 
 
 class MisplacedStatementError(Exception):
-    pass
+    """ Raise when a statement is misplaced (like a break outside a loop) """
 
 
 class ArityError(Exception):
-    pass
+    """ Raise when some structure is repeated an invalid number of times """
 
 
 def finalize():
@@ -1134,12 +1236,14 @@ def create_parser(filepath):
 
 
 def parse_file(path):
+    """ Parse a single file from a path. Returns a list with the output """
     parser = create_parser(path)
 
     with open(path) as file:
         parser.parse(file.read())
 
     with open(quadruple_generator.filepath) as file:
+        # Invert the constant's dictionary to address -> value
         constants = {type_: {address: value for value, address in
                              value_address.items()}
                      for type_, value_address in
@@ -1150,12 +1254,14 @@ def parse_file(path):
 
 
 def parse(files=argv[1:]):
+    """ Parse all files in an interactive manner """
     for file in files:
         try:
             program_output = parse_file(file)
         except FileNotFoundError as e:
             print_red("File", file, "was not found. Skipping...")
         except Exception as e:
+            # Display any unexpected error
             print_red(f"ERROR in {file}: {str(e)}")
         else:
             print_green(file)
