@@ -8,6 +8,7 @@ from operator import (add, sub, mul, truediv, mod, eq, gt, lt, ge, le, and_,
                       or_, pos, neg, not_)
 
 
+# Local memory sector declaration
 MEMORY_SECTORS = (
     ('global_', 10_000),
     ('temporal', 130_000),
@@ -16,39 +17,56 @@ MEMORY_SECTORS = (
     ('end', 350_000),
 )
 
-
+# Actual runtime memory. It has a type dictionary for each sector
 memory = {sector[0]: {type_ : {} for type_ in Types}
           for sector in MEMORY_SECTORS[:-1]}
 
+# Activation records used to initialize a function's context
 activation_records = []
+# List for keeping track of where to return after a function
 stored_program_counters = []
 
+# Function parameters (special and user-defined)
 parameters = []
+# List of print calls
 output = []
 
 class UninitializedError(Exception):
-    pass
+    """ Raised when a variable address has no value in memory """
 
 
 class ChangeContext(Exception):
+    """ Indicate a content change to trigger a storage of context """
     def __init__(self, goto_line):
         self.goto_line = goto_line
 
 
 def generate_memory_addresses(end_addresses=False):
+    """Generate a tuple of memory addresses
+
+    This function is used by the VM and the parser. It returns the starting and
+    ending address of every sector and type to allow a fast lookup of what the
+    type of an address is and to count how many variables of the same type have
+    been assigned per sector
+    """
     ADDRESS_TUPLE = namedtuple('ADDRESSES', [address[0] for address
                                              in MEMORY_SECTORS[:-1]])
 
+    # Begin with the global starting address
     current_address = MEMORY_SECTORS[0][1]
     addresses = []
     for sector in MEMORY_SECTORS[1:]:
+        # Get the address of the next sector to calculate sector sizes
         next_address = sector[1]
         sector_size = next_address - current_address
 
+        # Determine where the address of each type in the sector starts
         type_start_addresses = [starting_address for starting_address in
                                 range(current_address, next_address,
                                       int(sector_size / len(Types)))]
 
+        # Generate an additional field indicating the end of each type
+        # address if requested by the caller
         if end_addresses:
             type_end_addresses = type_start_addresses[1:] + [next_address]
 
@@ -67,6 +85,7 @@ addresses = generate_memory_addresses(end_addresses=True)
 
 
 def value(address):
+    """ Return the memory's value associated with an address """
     try:
         address = int(address)
     except ValueError:
@@ -81,6 +100,7 @@ def value(address):
 
 
 def store(value_to_store, address):
+    """ Store a value inside a memory address """
     try:
         address = int(address)
     except ValueError:
@@ -91,11 +111,14 @@ def store(value_to_store, address):
 
 
 def get_address_container(address):
+    """ Get the internal list containing an address. Used by value and store """
     for i, sector in enumerate(MEMORY_SECTORS[-2::-1], start=1):
         sector_name, sector_address = sector
+        # If the address is bigger than this sector, it is contained here
         if address >= sector_address:
             for type_address in addresses[-i].items():
                 type_, (start_address, end_address) = type_address
+                # If an address is between the start and end, it belongs here
                 if start_address <= address < end_address:
                     return memory[sector_name][type_]
 
@@ -105,6 +128,7 @@ def store_param(address):
 
 
 def print_(end='\n'):
+    """ Add a print call to the output """
     parameter = value(parameters.pop())
 
     if isinstance(parameter, bool):
@@ -117,6 +141,7 @@ def print_(end='\n'):
 
 
 def get(return_address):
+    """ Special function to get the nth character of a string """
     index = value(parameters.pop())
     string = value(parameters.pop())
     char = string[index]
@@ -124,16 +149,19 @@ def get(return_address):
 
 
 def copy():
+    """ Special function to copy a string into another """
     destination_address = parameters.pop()
     source_value = value(parameters.pop())
     store(source_value, destination_address)
 
 
 def length(return_address):
+    """ Special function to calculate the length """
     store(len(value(parameters.pop())), return_address)
 
 
 def sqrt_(return_address):
+    """ Special function to get the square root """
     store(sqrt(value(parameters.pop())), return_address)
 
 
@@ -147,6 +175,7 @@ def gotof(address, jump):
 
 
 def verify_limits(offset_address, min_, array_size):
+    """ Check if an array access is off limits """
     offset = value(offset_address)
     array_size = int(array_size)
     min_ = int(min_)
@@ -157,30 +186,36 @@ def verify_limits(offset_address, min_, array_size):
                          f"{array_size}")
 
 def array_access(base_dir, offset_address, address_pointer):
+    """ Access a validated offset """
     offset = value(offset_address)
     base_dir = int(base_dir)
     store(base_dir + offset, address_pointer)
 
 
 def end_proc(function_name):
+    """ Finish a function definition, Restoring a previous activation record """
     return_address = directory.functions[function_name].return_address
     if return_address != None:
         return_type = directory.functions[function_name].return_type
         try:
+            # Copy the return value of a context into the previous one
             return_value = memory['local'][return_type][return_address]
             activation_records[-1][return_type][return_address] = return_value
         except KeyError:
             pass
 
+    # Restore the previous context
     memory['local'] = activation_records.pop()
     return stored_program_counters.pop() + 1
 
 
 def gosub(function_name):
+    """ Save the current activation record and trigger a context change """
     activation_records.append(deepcopy(memory['local']))
 
     global directory
     function = directory.functions[function_name]
+    # Load each argument into the function's new context
     for type_, address, argument in zip(function.parameter_types,
                                         function.parameter_addresses,
                                         parameters):
@@ -191,14 +226,17 @@ def gosub(function_name):
 
 
 def log_(return_address):
+    """ Special function to get the natural logarithm """
     store(log(value(parameters.pop())), return_address)
 
 
 def random_(return_address):
+    """ Special function to get a random seed """
     store(random(), return_address)
 
 
 def little_star():
+    """ Sample song """
     C()
     C()
     G()
@@ -245,21 +283,26 @@ def G():
 
 
 def to_str(return_address):
+    """ Special function to convert to string """
     store(str(value(parameters.pop())), return_address)
 
 
 def floor_(return_address):
+    """ Special function for the floor operation """
     store(floor(value(parameters.pop())), return_address)
 
 
 def ceil_(return_address):
+    """ Special function for the ceil operation """
     store(ceil(value(parameters.pop())), return_address)
 
 
 def input_(return_address):
+    """ Special function to read from a user """
     store("proximamente", return_address)
 
 
+# Arithmetic operations
 OPERATIONS = {
     '+' : add,
     '-' : sub,
@@ -282,6 +325,7 @@ OPERATIONS = {
     '=' : lambda value: value,
 }
 
+# VM functions, which operate mainly through addressess, not values
 VM_FUNCTIONS = {
     'PARAM' : store_param,
     'print' : partial(print_, end=''),
@@ -312,6 +356,7 @@ VM_FUNCTIONS = {
     'ENDPROC' : end_proc,
 }
 
+# Signature of special functions
 SPECIAL_SIGNATURES = {
     'print' : (None, [{type_ for type_ in Types}]),
     'println' : (None, [{type_ for type_ in Types}]),
@@ -338,6 +383,7 @@ SPECIAL_SIGNATURES = {
 
 
 def handle_vm_function(quad, current_quad_idx):
+    """ Manage a vm function """
     try:
         operation = VM_FUNCTIONS[quad[0]]
         address1 = quad[1]
@@ -364,6 +410,7 @@ def handle_vm_function(quad, current_quad_idx):
 
 
 def handle_operation(operation, quad):
+    """ Handle an arithmetical operation """
     address1 = quad[1]
     address2 = quad[2]
 
@@ -386,6 +433,7 @@ def handle_operation(operation, quad):
 
 
 def play_note(lines, constants, directory_):
+    """ Entry point for orchestra """
     global directory
     directory = directory_
 
