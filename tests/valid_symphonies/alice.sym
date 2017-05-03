@@ -1,0 +1,4 @@
+program a;
+str message;
+message = input();
+print(message);
