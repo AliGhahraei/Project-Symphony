@@ -28,8 +28,8 @@ stored_program_counters = []
 
 # Function parameters (special and user-defined)
 parameters = []
-# List of print calls
-output = []
+# List of print calls and musical notes
+output = ([], [])
 
 class UninitializedError(Exception):
     """ Raised when a variable address has no value in memory """
@@ -136,7 +136,7 @@ def print_(end='\n'):
     else:
         parameter = str(parameter)
 
-    output.append(parameter + end)
+    output[0].append(parameter + end)
     # print(printed_value, end=end)
 
 
@@ -255,31 +255,31 @@ def little_star():
 
 
 def A():
-    pass
+    output[1].append("A")
 
 
 def B():
-    pass
+    output[1].append("B")
 
 
 def C():
-    pass
+    output[1].append("C")
 
 
 def D():
-    pass
+    output[1].append("D")
 
 
 def E():
-    pass
+    output[1].append("E")
 
 
 def F():
-    pass
+    output[1].append("F")
 
 
 def G():
-    pass
+    output[1].append("G")
 
 
 def to_str(return_address):
@@ -438,7 +438,10 @@ def play_note(lines, constants, directory_):
     directory = directory_
 
     memory['constant'] = constants
-    output.clear()
+
+    # Clean the output
+    for list_ in output:
+        list_.clear()
 
     line_list = [line.split() for line in lines.split('\n')]
 

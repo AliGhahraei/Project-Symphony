@@ -1250,14 +1250,15 @@ def parse_file(path):
                      quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
 
         global directory
-        return ''.join(play_note(file.read(), constants, directory))
+        prints, notes = play_note(file.read(), constants, directory)
+        return ''.join(prints), ''.join(notes)
 
 
 def parse(files=argv[1:]):
     """ Parse all files in an interactive manner """
     for file in files:
         try:
-            program_output = parse_file(file)
+            program_output, _ = parse_file(file)
         except FileNotFoundError as e:
             print_red("File", file, "was not found. Skipping...")
         except Exception as e:
