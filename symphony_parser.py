@@ -243,7 +243,7 @@ class QuadrupleGenerator():
     def __init__(self, filepath, inputs):
         self.ADDRESSES = generate_memory_addresses()
         self.filepath = filepath
-        self.inputs = inputs
+        self.inputs = inputs.split('\n')
         self.operands = []
         self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
         self.quadruples = []
@@ -1224,7 +1224,7 @@ def p_error(p):
     raise GrammaticalError(p)
 
 
-def create_parser(filepath, inputs=[]):
+def create_parser(filepath, inputs=""):
     global quadruple_generator
     global directory
     quadruple_generator = QuadrupleGenerator(filepath, inputs)
@@ -1232,7 +1232,7 @@ def create_parser(filepath, inputs=[]):
     return yacc()
 
 
-def parse_file(path, inputs=[]):
+def parse_file(path, inputs=""):
     """ Parse a single file from a path. Returns a list with the output """
     parser = create_parser(path, inputs)
 
