@@ -15,6 +15,7 @@ println("log: " + to_str(log(10)));
 println("random: " + to_str(random()));
 println("floor & ceil: " + to_str(floor(val)) + " " + to_str(ceil(val)));
 println("input: " + input());
+println("input2: " + input());
 
 little_star();
 A();
