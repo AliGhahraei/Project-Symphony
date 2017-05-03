@@ -35,6 +35,10 @@ class UninitializedError(Exception):
     """ Raised when a variable address has no value in memory """
 
 
+class ArityError(Exception):
+    """ Raise when some structure is repeated an invalid number of times """
+
+
 class ChangeContext(Exception):
     """ Indicate a content change to trigger a storage of context """
     def __init__(self, goto_line):
@@ -299,7 +303,9 @@ def ceil_(return_address):
 
 def input_(return_address):
     """ Special function to read from a user """
-    store("proximamente", return_address)
+    global input_counter
+    store(inputs[input_counter], return_address)
+    input_counter += 1
 
 
 # Arithmetic operations
@@ -399,7 +405,11 @@ def handle_vm_function(quad, current_quad_idx):
             return operation(address1, address2, address3)
     except IndexError:
         # No quad 0: parameterless
-        return operation()
+        try:
+            return operation()
+        except TypeError:
+            # Only input would raise such an exception here
+            raise ArityError(f"The wrong amount of input lines was submitted")
     except ChangeContext as e:
         stored_program_counters.append(current_quad_idx)
 
@@ -432,10 +442,14 @@ def handle_operation(operation, quad):
                                     f'Please correct your program') from e
 
 
-def play_note(lines, constants, directory_):
+def play_note(lines, constants, directory_, inputs_):
     """ Entry point for orchestra """
     global directory
     directory = directory_
+    global inputs
+    inputs = inputs_
+    global input_counter
+    input_counter = 0
 
     memory['constant'] = constants
 

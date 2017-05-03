@@ -14,7 +14,7 @@ from ply.yacc import yacc
 from sys import exit, argv
 
 from print_colors import print_red, print_green
-from orchestra import (generate_memory_addresses, play_note,
+from orchestra import (generate_memory_addresses, play_note, ArityError,
                        SPECIAL_SIGNATURES)
 
 
@@ -240,9 +240,10 @@ class QuadrupleGenerator():
     operands, jumps, recursive calls (They are created when a function
     definition is not finished and must receive a return address later on).
     """
-    def __init__(self, filepath):
+    def __init__(self, filepath, inputs):
         self.ADDRESSES = generate_memory_addresses()
         self.filepath = filepath
+        self.inputs = inputs
         self.operands = []
         self.CONSTANT_ADDRESS_DICT = {type_: {} for type_ in Types}
         self.quadruples = []
@@ -712,10 +713,6 @@ class RedeclarationError(Exception):
 
 class MisplacedStatementError(Exception):
     """ Raise when a statement is misplaced (like a break outside a loop) """
-
-
-class ArityError(Exception):
-    """ Raise when some structure is repeated an invalid number of times """
 
 
 def finalize():
@@ -1227,17 +1224,17 @@ def p_error(p):
     raise GrammaticalError(p)
 
 
-def create_parser(filepath):
+def create_parser(filepath, inputs=[]):
     global quadruple_generator
     global directory
-    quadruple_generator = QuadrupleGenerator(filepath)
+    quadruple_generator = QuadrupleGenerator(filepath, inputs)
     directory = Directory()
     return yacc()
 
 
-def parse_file(path):
+def parse_file(path, inputs=[]):
     """ Parse a single file from a path. Returns a list with the output """
-    parser = create_parser(path)
+    parser = create_parser(path, inputs)
 
     with open(path) as file:
         parser.parse(file.read())
@@ -1250,7 +1247,8 @@ def parse_file(path):
                      quadruple_generator.CONSTANT_ADDRESS_DICT.items()}
 
         global directory
-        prints, notes = play_note(file.read(), constants, directory)
+        prints, notes = play_note(file.read(), constants, directory,
+                                  quadruple_generator.inputs)
         return ''.join(prints), notes
 
 
