@@ -1251,7 +1251,7 @@ def parse_file(path):
 
         global directory
         prints, notes = play_note(file.read(), constants, directory)
-        return ''.join(prints), ''.join(notes)
+        return ''.join(prints), notes
 
 
 def parse(files=argv[1:]):
