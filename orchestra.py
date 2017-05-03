@@ -442,6 +442,16 @@ def handle_operation(operation, quad):
                                     f'Please correct your program') from e
 
 
+def output_after_cleanup():
+    global inputs
+    global input_counter
+
+    if input_counter != len(inputs):
+        raise ArityError(f"The wrong amount of input lines was submitted")
+
+    return output
+
+
 def play_note(lines, constants, directory_, inputs_):
     """ Entry point for orchestra """
     global directory
@@ -465,7 +475,7 @@ def play_note(lines, constants, directory_, inputs_):
             quad = line_list[current_quad_idx]
         except IndexError:
             # Finish when accessing non-existent quadruple (naive GOTO did it)
-            return output
+            return output_after_cleanup()
 
         try:
             operation = OPERATIONS[quad[0]]
@@ -478,9 +488,9 @@ def play_note(lines, constants, directory_, inputs_):
                 current_quad_idx += 1
         except IndexError:
             # Empty operation (empty line) might only be found at the end
-            return output
+            return output_after_cleanup()
         else:
             handle_operation(operation, quad)
             current_quad_idx += 1
 
-    return output
+    return output_after_cleanup()
