@@ -1,5 +1,5 @@
 [![Stories in Ready](https://badge.waffle.io/AliGhahraei/Project-Simphony.png?label=ready&title=Ready)](https://waffle.io/AliGhahraei/Project-Simphony)
-# Project-Symphony
+# Project-Symphony (School Project)
 A language for music lovers
 
 ## Installation
